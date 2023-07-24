@@ -1,0 +1,21 @@
+* {
+  font-size: 14px;
+  min-height: 0;
+  color: #aac1e2;
+}
+
+#waybar {
+    padding: 0 12px;
+    background: unset;
+}
+
+.modules-left > *,
+.modules-center > *,
+.modules-right > * {
+  background-color: #192435;
+  border-radius: 16px;
+}
+
+#workspaces, #mode, #tray, #pulseaudio, #network, #cpu, #memory, #temperature, #clock {
+  padding: 0 16px;
+}
