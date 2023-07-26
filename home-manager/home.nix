@@ -12,6 +12,7 @@
     ./services/waybar/waybar.nix
     ./services/wallpaper/wallpaper.nix
     # ./programs/vscode/vscode.nix
+    ./programs/zsh/zsh.nix
   ];
 
   # Home Manager needs a bit of information about you and the
@@ -85,9 +86,6 @@
       size = 24;
     };
   };
-
-  # home.file.".xinitrc".source = ./.xinitrc;
-  # home.file."wallpaper.png".source = ./wallpaper.png;
 
   services.wallpaper.enable = true;
 

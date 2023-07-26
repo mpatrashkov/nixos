@@ -14,7 +14,7 @@
           scale = "1.75";
           pos = "0 0";
         };
-        DP-4 = {
+        DP-6 = {
           scale = "1.75";
           pos = "2194 0";
         };
@@ -26,6 +26,7 @@
         right = 5;
       };
       keybindings = lib.mkOptionDefault {
+        "${modifier}+Return" = "exec alacritty -e $SHELL -c 'neofetch && $SHELL'";
         "${modifier}+d" = "exec --no-startup-id rofi -show drun -show-icons";
         # "${modifier}+Shift+d" = "exec --no-startup-id fuzzel";
         "XF86AudioRaiseVolume" = "exec 'pactl set-sink-volume @DEFAULT_SINK@ +1%'";
