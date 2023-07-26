@@ -17,16 +17,6 @@
   # Amd Driver
   boot.initrd.kernelModules = [ "amdgpu" ];
 
-  networking.hostName = "nixos"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
-  networking.networkmanager.enable = true;
-
   # Set your time zone.
   time.timeZone = "Europe/Sofia";
 
@@ -175,13 +165,38 @@
   xdg.portal.enable = true;
   xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 
-  # Disable IPv6
-  networking.enableIPv6 = false;
+  # Networking config
+  networking = {
+    hostName = "nixos";
+    nameservers = [ "127.0.0.1" "::1" ];
+    networkmanager = {
+      enable = true;
+      dns = "none";
+    };
+  };
 
-  # Dns Cache
-  services.dnsmasq.enable = true;
-  services.dnsmasq.alwaysKeepRunning = true;
-  services.dnsmasq.servers = [ "8.8.8.8" "1.1.1.1" "208.67.222.222" ];
-  services.dnsmasq.extraConfig = "cache-size=500";
+  services.dnscrypt-proxy2 = {
+    enable = true;
+    settings = {
+      ipv6_servers = true;
+      require_dnssec = true;
+
+      sources.public-resolvers = {
+        urls = [
+          "https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/public-resolvers.md"
+          "https://download.dnscrypt.info/resolvers-list/v3/public-resolvers.md"
+        ];
+        cache_file = "/var/lib/dnscrypt-proxy2/public-resolvers.md";
+        minisign_key = "RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3";
+      };
+
+      # You can choose a specific set of servers from https://github.com/DNSCrypt/dnscrypt-resolvers/blob/master/v3/public-resolvers.md
+      # server_names = [ ... ];
+    };
+  };
+
+  systemd.services.dnscrypt-proxy2.serviceConfig = {
+    StateDirectory = "dnscrypt-proxy";
+  };
 }
 
