@@ -26,7 +26,7 @@
         right = 5;
       };
       keybindings = lib.mkOptionDefault {
-        "${modifier}+d" = "exec --no-startup-id fuzzel";
+        "${modifier}+d" = "exec --no-startup-id wofi --show drun";
         # "${modifier}+Shift+d" = "exec --no-startup-id fuzzel";
         "XF86AudioRaiseVolume" = "exec 'pactl set-sink-volume @DEFAULT_SINK@ +1%'";
         "XF86AudioLowerVolume" = "exec 'pactl set-sink-volume @DEFAULT_SINK@ -1%'";

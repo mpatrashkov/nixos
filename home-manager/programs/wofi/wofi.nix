@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 {
-  programs.fuzzel = {
+  programs.wofi = {
     enable = true;
     # theme = ./theme.rasi;
   };

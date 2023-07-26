@@ -3,7 +3,7 @@
 {
   imports = [
     ./services/polybar/polybar.nix
-    ./programs/fuzzel/fuzzel.nix
+    ./programs/wofi/wofi.nix
     ./services/picom/picom.nix
     ./programs/alacritty/alacritty.nix
     # ./programs/android/android.nix
