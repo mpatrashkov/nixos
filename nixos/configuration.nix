@@ -174,5 +174,14 @@
   services.flatpak.enable = true;
   xdg.portal.enable = true;
   xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+
+  # Disable IPv6
+  networking.enableIPv6 = false;
+
+  # Dns Cache
+  services.dnsmasq.enable = true;
+  services.dnsmasq.alwaysKeepRunning = true;
+  services.dnsmasq.servers = [ "8.8.8.8" "1.1.1.1" "208.67.222.222" ];
+  services.dnsmasq.extraConfig = "cache-size=500";
 }
 

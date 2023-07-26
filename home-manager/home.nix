@@ -51,6 +51,7 @@
 
     gnome.gnome-software
     networkmanager_dmenu
+    spotify
   ];
 
   # Let Home Manager install and manage itself.

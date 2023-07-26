@@ -31,6 +31,10 @@
         "XF86AudioRaiseVolume" = "exec 'pactl set-sink-volume @DEFAULT_SINK@ +1%'";
         "XF86AudioLowerVolume" = "exec 'pactl set-sink-volume @DEFAULT_SINK@ -1%'";
         "XF86AudioMute" = "exec 'pactl set-sink-mute @DEFAULT_SINK@ toggle'";
+        "${modifier}+Control+Right" = "move workspace to output right";
+        "${modifier}+Control+Left" = "move workspace to output left";
+        "${modifier}+Control+Down" = "move workspace to output down";
+        "${modifier}+Control+Up" = "move workspace to output up";
       };
     };
     extraConfig = ''
