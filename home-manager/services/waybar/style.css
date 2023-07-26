@@ -19,3 +19,20 @@
 #workspaces, #mode, #tray, #pulseaudio, #network, #cpu, #memory, #temperature, #clock {
   padding: 0 16px;
 }
+
+#workspaces button {
+  border: none;
+  border-top: 3px solid #192435;
+  border-bottom: 3px solid #192435;
+}
+
+#workspaces button.visible {
+  border-bottom: 3px solid #aac1e2;
+}
+
+#workspaces button:hover {
+  box-shadow: inherit;
+  text-shadow: inherit;
+  background: inherit;
+  transition: inherit;
+}
