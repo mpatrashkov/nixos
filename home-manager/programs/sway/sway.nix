@@ -46,7 +46,7 @@
 
       input "type:keyboard" {
         xkb_layout us,bg
-        xkb_variant intl,phonetic
+        xkb_variant altgr-intl,phonetic
         xkb_options grp:win_space_toggle
       }
     '';
