@@ -43,6 +43,12 @@
       exec_always swww init
 
       exec sleep 1; systemctl --user start waybar.service
+
+      input "type:keyboard" {
+        xkb_layout us,bg
+        xkb_variant intl,phonetic
+        xkb_options grp:win_space_toggle
+      }
     '';
   };
 }
