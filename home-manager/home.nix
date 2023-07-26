@@ -55,6 +55,8 @@
     spotify
 
     gnome.adwaita-icon-theme
+
+    (import ./programs/set-wallpaper/set-wallpaper.nix { inherit pkgs; })
   ];
 
   # Let Home Manager install and manage itself.

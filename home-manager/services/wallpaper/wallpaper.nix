@@ -55,12 +55,10 @@ in {
 
         Service = {
             Type = "oneshot";
-            ExecStart = ''
-                ${pkgs.swww}/bin/swww img "$HOME/wallpaper/$(date +%H).jpg"
-            '';
+            ExecStart = 
+              let setWalllpaper = (import ../../programs/set-wallpaper/set-wallpaper.nix { inherit pkgs; });
+              in "${setWalllpaper}/bin/set-wallpaper";
         };
-
-        Install = { WantedBy = [ "graphical-session.target" ]; };
     };
   };
 }
