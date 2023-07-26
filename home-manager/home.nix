@@ -3,7 +3,7 @@
 {
   imports = [
     ./services/polybar/polybar.nix
-    ./programs/wofi/wofi.nix
+    ./programs/rofi-wayland-unwrapped/rofi-wayland-unwrapped.nix
     ./services/picom/picom.nix
     ./programs/alacritty/alacritty.nix
     # ./programs/android/android.nix
@@ -52,6 +52,8 @@
     gnome.gnome-software
     networkmanager_dmenu
     spotify
+
+    gnome.adwaita-icon-theme
   ];
 
   # Let Home Manager install and manage itself.
@@ -67,7 +69,22 @@
     x11.enable = true;
   };
 
-  gtk.theme.name = "Adwaita-dark";
+  gtk = {
+    enable = true;
+    theme = {
+      name = "Adwaita-dark";
+      package = pkgs.gnome.gnome-themes-extra;
+    };
+    iconTheme = {
+      name = "Adwaita";
+      package = pkgs.gnome.adwaita-icon-theme;
+    };
+    cursorTheme = {
+      name = "Bibata-Modern-Classic";
+      package = pkgs.bibata-cursors;
+      size = 24;
+    };
+  };
 
   # home.file.".xinitrc".source = ./.xinitrc;
   # home.file."wallpaper.png".source = ./wallpaper.png;
@@ -76,7 +93,7 @@
 
   xdg.configFile."networkmanager-dmenu/config.ini".text = ''
     [dmenu]
-    dmenu_command = fuzzel --dmenu
+    dmenu_command = rofi -dmenu -i
     [editor]
     gui_if_available = True
   '';
