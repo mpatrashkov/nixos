@@ -57,6 +57,11 @@
     gnome.adwaita-icon-theme
 
     (import ./programs/set-wallpaper/set-wallpaper.nix { inherit pkgs; })
+
+    htop
+    playerctl
+    qbittorrent
+    mangohud
   ];
 
   # Let Home Manager install and manage itself.
@@ -86,6 +91,14 @@
       name = "Bibata-Modern-Classic";
       package = pkgs.bibata-cursors;
       size = 24;
+    };
+  };
+
+  qt = {
+    enable = true;
+    platformTheme = "gnome";
+    style = {
+      name = "adwaita-dark";
     };
   };
 

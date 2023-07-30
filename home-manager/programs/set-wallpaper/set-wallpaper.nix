@@ -6,6 +6,6 @@ pkgs.writeShellApplication {
     runtimeInputs = [ pkgs.swww pkgs.coreutils ];
 
     text = ''
-        swww img "$HOME/wallpaper/$(date +%H).jpg"
+        swww img "$HOME/wallpaper/$(date +%-H).jpg"
     '';
 }

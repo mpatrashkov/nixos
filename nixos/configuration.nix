@@ -66,6 +66,7 @@
     neofetch
     virt-manager
     pulseaudio
+    steam-run
   ];
 
   services.gvfs.enable = true;    
@@ -162,8 +163,11 @@
 
   # Flatpack
   services.flatpak.enable = true;
-  xdg.portal.enable = true;
-  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  xdg.portal = {
+    enable = true;
+    gtkUsePortal = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-wlr ];
+  };
 
   # Networking config
   networking = {
