@@ -62,6 +62,18 @@
     playerctl
     qbittorrent
     mangohud
+    bitwarden-cli
+    ngrok
+    ddcutil
+    
+    # jdk17
+    prismlauncher
+    # android-studio
+
+    gnome.gnome-system-monitor
+    libreoffice
+    chromium
+    gnome.dconf-editor
   ];
 
   # Let Home Manager install and manage itself.
@@ -74,18 +86,20 @@
     package = pkgs.bibata-cursors;
     size = 32;
     gtk.enable = true;
-    x11.enable = true;
   };
 
   gtk = {
     enable = true;
     theme = {
-      name = "Adwaita-dark";
-      package = pkgs.gnome.gnome-themes-extra;
+      # name = "Materia-dark";
+      # package = pkgs.materia-theme;
+      name = "Gruvbox-Dark-B";
+      package = pkgs.gruvbox-gtk-theme;
+      # package = pkgs.gnome.gnome-themes-extra;
     };
     iconTheme = {
       name = "Adwaita";
-      package = pkgs.gnome.adwaita-icon-theme;
+      package = pkgs.gruvbox-dark-icons-gtk;
     };
     cursorTheme = {
       name = "Bibata-Modern-Classic";
@@ -94,13 +108,13 @@
     };
   };
 
-  qt = {
-    enable = true;
-    platformTheme = "gnome";
-    style = {
-      name = "adwaita-dark";
-    };
-  };
+  # qt = {
+  #   enable = true;
+  #   platformTheme = "gnome";
+  #   style = {
+  #     name = "adwaita-dark";
+  #   };
+  # };
 
   services.wallpaper.enable = true;
 

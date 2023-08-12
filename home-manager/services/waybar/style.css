@@ -17,7 +17,7 @@
 }
 
 #workspaces, #mode, #tray, #pulseaudio, #network, #cpu, #memory, #temperature, #clock {
-  padding: 0 16px;
+  padding: 4px 16px;
 }
 
 #workspaces button {
@@ -36,4 +36,8 @@
   text-shadow: inherit;
   background: inherit;
   transition: inherit;
+}
+
+#workspaces > * {
+  padding: 0;
 }

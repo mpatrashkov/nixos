@@ -2,6 +2,7 @@
 
 {
   wayland.windowManager.sway = {
+    package = pkgs.swayfx;
     enable = true;
     systemd.enable = true;
     config = rec {
@@ -10,14 +11,13 @@
       terminal = "alacritty"; 
       bars = [];
       output = {
-        HDMI-A-1 = {
+        "Dell Inc. DELL S2722QC D8JRLD3" = {
           scale = "1.75";
           pos = "0 0";
         };
-        DP-6 = {
+        "Dell Inc. DELL U2723QE J3KBYN3" = {
           scale = "1.75";
           pos = "2194 0";
-          # pos = "3840 0";
         };
 	    };
       gaps = {
@@ -37,6 +37,9 @@
         "${modifier}+Control+Left" = "move workspace to output left";
         "${modifier}+Control+Down" = "move workspace to output down";
         "${modifier}+Control+Up" = "move workspace to output up";
+        "${modifier}+Shift+c" = "reload";
+        "${modifier}+Shift+g" = "output 'Dell Inc. DELL U2723QE J3KBYN3' pos 2194 0 scale 1";
+        "${modifier}+g" = "output 'Dell Inc. DELL U2723QE J3KBYN3' pos 2194 0 scale 1.75";
       };
     };
     extraConfig = ''
@@ -51,6 +54,17 @@
         xkb_variant altgr-intl,phonetic
         xkb_options grp:win_space_toggle
       }
+
+      input "Razer Razer Basilisk X HyperSpeed" {
+          left_handed enabled
+          tap enabled
+          natural_scroll disabled
+          dwt enabled
+          pointer_accel 0.1 # set mouse sensitivity (between -1 and 1)
+      }
+
+      corner_radius 16
+      shadows enable
     '';
   };
 }

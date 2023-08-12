@@ -45,7 +45,7 @@
   users.users.miro = {
     isNormalUser = true;
     description = "Miroslav Patrashkov";
-    extraGroups = [ "networkmanager" "wheel" "libvirtd" "docker" "input" ];
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "docker" "input" "kvm" "adbusers" "i2c" ];
     packages = with pkgs; [];
   };
 
@@ -60,6 +60,7 @@
     firefox
     gnome.nautilus
     gnome.eog
+    gnome.gnome-tweaks
     vscode
     git
     pavucontrol
@@ -67,6 +68,7 @@
     virt-manager
     pulseaudio
     steam-run
+    gamescope
   ];
 
   services.gvfs.enable = true;    
@@ -97,11 +99,6 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
-
-  # services.xserver.enable = true;
-  # services.xserver.displayManager.gdm.enable = true;
-  # services.xserver.desktopManager.gnome.enable = true;
-  # services.xserver.desktopManager.default = "gnome";
 
   # Needed by Wayland
   hardware = {
@@ -207,5 +204,20 @@
   programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
   environment.shells = with pkgs; [ zsh ];
+
+  # KVM
+  boot.kernelModules = [ "kvm-intel" "i2c-dev" ];
+
+  # KDE
+  # services.xserver.enable = true;
+  # services.xserver.displayManager.sddm.enable = true;
+  # services.xserver.desktopManager.plasma5.enable = true;
+
+  # GNOME
+  # services.xserver.enable = true;
+  # services.xserver.displayManager.gdm.enable = true;
+  # services.xserver.desktopManager.gnome.enable = true;
+  # services.xserver.desktopManager.default = "gnome";
+  # hardware.pulseaudio.enable = false;
 }
 
