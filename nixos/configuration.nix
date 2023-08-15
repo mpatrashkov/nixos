@@ -121,6 +121,10 @@ in
     dbus-sway-environment
     configure-gtk
     wayland
+    grim
+    slurp
+    wl-clipboard
+    imagemagick
   ];
 
   services.gvfs.enable = true;    

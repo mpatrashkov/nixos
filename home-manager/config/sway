@@ -199,6 +199,8 @@ bindsym $mod+Control+Down move workspace to output down
 bindsym $mod+Control+Up move workspace to output up
 bindsym $mod+Shift+g output 'Dell Inc. DELL U2723QE J3KBYN3' pos 2194 0 scale 1
 bindsym $mod+g output 'Dell Inc. DELL U2723QE J3KBYN3' pos 2194 0 scale 1.75
+bindsym $mod+Shift+s exec grim  -g "$(slurp)" - | wl-copy -t image/png
+bindsym $mod+Shift+p exec grim -g "$(slurp -p)" -t ppm - | convert - -format '%[pixel:p{0,0}]' txt:- | tail -n 1 | cut -d ' ' -f 4 | wl-copy 
 
 gaps inner 10
 gaps bottom 5
