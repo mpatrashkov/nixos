@@ -7,7 +7,7 @@
     ./services/picom/picom.nix
     ./programs/alacritty/alacritty.nix
     # ./programs/android/android.nix
-    ./programs/sway/sway.nix
+    # ./programs/sway/sway.nix
     # ./programs/hyprland/hyprland.nix
     ./services/waybar/waybar.nix
     ./services/wallpaper/wallpaper.nix
@@ -74,6 +74,11 @@
     libreoffice
     chromium
     gnome.dconf-editor
+
+    cinnamon.nemo
+    insomnia
+    gtkcord4
+    webcord
   ];
 
   # Let Home Manager install and manage itself.
@@ -98,13 +103,25 @@
       # package = pkgs.gnome.gnome-themes-extra;
     };
     iconTheme = {
-      name = "Adwaita";
+      name = "oomox-gruvbox-dark";
       package = pkgs.gruvbox-dark-icons-gtk;
     };
     cursorTheme = {
       name = "Bibata-Modern-Classic";
       package = pkgs.bibata-cursors;
       size = 24;
+    };
+  
+    gtk3.extraConfig = {
+      Settings = ''
+        gtk-application-prefer-dark-theme=1
+      '';
+    };
+
+    gtk4.extraConfig = {
+      Settings = ''
+        gtk-application-prefer-dark-theme=1
+      '';
     };
   };
 
@@ -124,4 +141,18 @@
     [editor]
     gui_if_available = True
   '';
+
+  xdg.desktopEntries = {
+    insomnia = {
+      # TODO: Add icon
+      name = "Insomnia";
+      genericName = "GraphQL;REST;gRPC;SOAP;openAPI;GitOps;";
+      exec = "insomnia --enable-features=UseOzonePlatform --ozone-platform=wayland %U";
+      terminal = false;
+      categories = [ "Development" ];
+      mimeType = [ "text/html" "text/xml" ];
+    };
+  };
+
+  xdg.configFile."sway/config".source = ./config/sway;
 }
