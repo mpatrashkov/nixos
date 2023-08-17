@@ -14,14 +14,15 @@
       pkgs = import nixpkgs {
         inherit system;
         config = {
-            allowUnfree = true;
-            permittedInsecurePackages = [
-                # Required for sublime4
-              "openssl-1.1.1u"
-            ];
+          allowUnfree = true;
+          permittedInsecurePackages = [
+            # Required for sublime4
+            "openssl-1.1.1u"
+          ];
         };
       };
-    in {
+    in
+    {
       nixosConfigurations = {
         nixos = nixpkgs.lib.nixosSystem {
           modules = [

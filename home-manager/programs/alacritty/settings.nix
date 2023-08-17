@@ -39,26 +39,26 @@
 
     # Normal colors
     normal = {
-      black =   "0x32302f";
-      red =     "0xea6962";
-      green =   "0xa9b665";
-      yellow =  "0xd8a657";
-      blue =    "0x7daea3";
+      black = "0x32302f";
+      red = "0xea6962";
+      green = "0xa9b665";
+      yellow = "0xd8a657";
+      blue = "0x7daea3";
       magenta = "0xd3869b";
-      cyan =    "0x89b482";
-      white =   "0xd4be98";
+      cyan = "0x89b482";
+      white = "0xd4be98";
     };
 
     # Bright colors
     bright = {
-      black =   "0x32302f";
-      red =     "0xea6962";
-      green =   "0xa9b665";
-      yellow =  "0xd8a657";
-      blue =    "0x7daea3";
+      black = "0x32302f";
+      red = "0xea6962";
+      green = "0xa9b665";
+      yellow = "0xd8a657";
+      blue = "0x7daea3";
       magenta = "0xd3869b";
-      cyan =    "0x89b482";
-      white =   "0xd4be98";
+      cyan = "0x89b482";
+      white = "0xd4be98";
     };
   };
 }

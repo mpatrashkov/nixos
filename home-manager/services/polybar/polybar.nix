@@ -9,15 +9,15 @@ let
     i3Support = true;
   };
 
-#   weatherScript = pkgs.callPackage ./modules/weather/weather.nix {};
+  #   weatherScript = pkgs.callPackage ./modules/weather/weather.nix {};
 
-#   weather = ''
-# [module/weather]
-# type = custom/script
-# exec = ${weatherScript}/bin/weather
-# tail = false
-# interval = 960
-# '';
+  #   weather = ''
+  # [module/weather]
+  # type = custom/script
+  # exec = ${weatherScript}/bin/weather
+  # tail = false
+  # interval = 960
+  # '';
 
 in
 {

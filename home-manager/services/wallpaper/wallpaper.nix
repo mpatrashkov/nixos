@@ -18,13 +18,14 @@
 #     };
 # }
 
-{ config, lib, pkgs, ...}:
+{ config, lib, pkgs, ... }:
 
 with lib;
 
 let
   cfg = config.services.wallpaper;
-in {
+in
+{
   options = {
     services.wallpaper = {
       enable = mkOption {
@@ -37,28 +38,28 @@ in {
   };
   config = mkIf cfg.enable {
     systemd.user.timers."swww" = {
-        Install = {
-            WantedBy = [ "timers.target" ];
-        };
-        Timer = {
-            OnBootSec = "1s";
-            OnCalendar = "hourly";
-            Unit = "swww.service";
-        };
+      Install = {
+        WantedBy = [ "timers.target" ];
+      };
+      Timer = {
+        OnBootSec = "1s";
+        OnCalendar = "hourly";
+        Unit = "swww.service";
+      };
     };
 
     systemd.user.services."swww" = {
-        Unit = {
-          Description = "Manage time sensitive wallpapers with swww";
-          After = [ "sway-session.target" ];
-        };
+      Unit = {
+        Description = "Manage time sensitive wallpapers with swww";
+        After = [ "sway-session.target" ];
+      };
 
-        Service = {
-            Type = "oneshot";
-            ExecStart = 
-              let setWalllpaper = (import ../../programs/set-wallpaper/set-wallpaper.nix { inherit pkgs; });
-              in "${setWalllpaper}/bin/set-wallpaper";
-        };
+      Service = {
+        Type = "oneshot";
+        ExecStart =
+          let setWalllpaper = (import ../../programs/set-wallpaper/set-wallpaper.nix { inherit pkgs; });
+          in "${setWalllpaper}/bin/set-wallpaper";
+      };
     };
   };
 }

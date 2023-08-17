@@ -8,8 +8,8 @@
     config = rec {
       modifier = "Mod4";
       # Use kitty as default terminal
-      terminal = "alacritty"; 
-      bars = [];
+      terminal = "alacritty";
+      bars = [ ];
       output = {
         "Dell Inc. DELL S2722QC D8JRLD3" = {
           scale = "1.75";
@@ -19,7 +19,7 @@
           scale = "1.75";
           pos = "2194 0";
         };
-	    };
+      };
       gaps = {
         inner = 10;
         bottom = 5;

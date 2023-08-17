@@ -4,7 +4,7 @@ let
   androidSdkModule = import ((builtins.fetchGit {
     url = "https://github.com/tadfisher/android-nixpkgs.git";
     rev = "032e8a39894c3a8a50c77ab1d2e9daa9b27bcaaa";
-    ref = "main";  # Or "stable", "beta", "preview", "canary"
+    ref = "main"; # Or "stable", "beta", "preview", "canary"
   }) + "/hm-module.nix");
 
 in

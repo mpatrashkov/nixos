@@ -16,13 +16,13 @@ buildPythonPackage rec {
   };
 
   # has no tests
-#   doCheck = false;
+  #   doCheck = false;
 
-#   pythonImportsCheck = [
-#     "toolz.itertoolz"
-#     "toolz.functoolz"
-#     "toolz.dicttoolz"
-#   ];
+  #   pythonImportsCheck = [
+  #     "toolz.itertoolz"
+  #     "toolz.functoolz"
+  #     "toolz.dicttoolz"
+  #   ];
 
   meta = with lib; {
     # changelog = "https://github.com/pytoolz/toolz/releases/tag/${version}";
