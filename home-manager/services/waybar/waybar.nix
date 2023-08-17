@@ -15,7 +15,7 @@
       margin-left = 15;
       margin-right = 15;
       tray = { spacing = 10; };
-    #   modules-center = [ "sway/window" ];
+      #   modules-center = [ "sway/window" ];
       modules-left = [ "sway/workspaces" "sway/mode" ];
       modules-right = [
         "tray"

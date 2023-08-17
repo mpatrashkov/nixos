@@ -64,7 +64,7 @@
     bitwarden-cli
     ngrok
     ddcutil
-    
+
     # jdk17
     prismlauncher
     # android-studio
@@ -110,7 +110,7 @@
       package = pkgs.bibata-cursors;
       size = 24;
     };
-  
+
     gtk3.extraConfig = {
       Settings = ''
         gtk-application-prefer-dark-theme=1

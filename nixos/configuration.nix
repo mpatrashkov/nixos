@@ -125,6 +125,8 @@ in
     slurp
     wl-clipboard
     imagemagick
+    nil
+    nixpkgs-fmt
   ];
 
   services.gvfs.enable = true;    
