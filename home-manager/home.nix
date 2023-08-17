@@ -154,4 +154,10 @@
   };
 
   xdg.configFile."sway/config".source = ./config/sway;
+
+  programs.direnv = {
+    enable = true;
+    enableZshIntegration = true;
+    nix-direnv.enable = true;
+  };
 }
