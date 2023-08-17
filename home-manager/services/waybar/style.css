@@ -1,7 +1,7 @@
 * {
   font-size: 14px;
   min-height: 0;
-  color: #aac1e2;
+  color: #B7B6A1;
 }
 
 #waybar {
@@ -12,7 +12,7 @@
 .modules-left > *,
 .modules-center > *,
 .modules-right > * {
-  background-color: #192435;
+  background-color: #1D2021;
   border-radius: 16px;
 }
 
@@ -23,12 +23,12 @@
 #workspaces button {
   border: none;
   border-radius: 0;
-  border-top: 3px solid #192435;
-  border-bottom: 3px solid #192435;
+  border-top: 3px solid #1D2021;
+  border-bottom: 3px solid #1D2021;
 }
 
 #workspaces button.visible {
-  border-bottom: 3px solid #aac1e2;
+  border-bottom: 3px solid #d4be98;
 }
 
 #workspaces button:hover {

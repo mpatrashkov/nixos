@@ -41,7 +41,6 @@
     ]))
     cascadia-code
     feh
-    discord
     nodejs
     gh
     nodePackages.zx
@@ -77,8 +76,8 @@
 
     cinnamon.nemo
     insomnia
-    gtkcord4
     webcord
+    github-desktop
   ];
 
   # Let Home Manager install and manage itself.
