@@ -130,6 +130,10 @@ in
     imagemagick
     nil
     nixpkgs-fmt
+
+    wineWowPackages.unstableFull
+    winetricks
+    wineWowPackages.waylandFull
   ];
 
   services.gvfs.enable = true;
@@ -296,5 +300,8 @@ in
     package = (pkgs.swayfx.overrideAttrs (old: { passthru.providedSessions = [ "sway" ]; }));
     wrapperFeatures.gtk = true;
   };
+
+  # gnome keyring
+  services.gnome.gnome-keyring.enable = true;
 }
 

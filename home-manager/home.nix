@@ -83,8 +83,6 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  services.gnome-keyring.enable = true;
-
   home.pointerCursor = {
     name = "Bibata-Modern-Classic";
     package = pkgs.bibata-cursors;
