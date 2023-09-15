@@ -16,7 +16,7 @@
       margin-right = 15;
       tray = { spacing = 10; };
       #   modules-center = [ "sway/window" ];
-      modules-left = [ "sway/workspaces" "sway/mode" ];
+      modules-left = [ "hyprland/workspaces" "sway/mode" ];
       modules-right = [
         "tray"
         "pulseaudio"
@@ -72,7 +72,7 @@
         format-source-muted = "";
         on-click = "pavucontrol";
       };
-      "sway/mode" = { format = ''<span style="italic">{}</span>''; };
+      # "sway/mode" = { format = ''<span style="italic">{}</span>''; };
       temperature = {
         critical-threshold = 80;
         format = "{icon} {temperatureC}°C";

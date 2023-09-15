@@ -151,11 +151,17 @@
     };
   };
 
-  xdg.configFile."sway/config".source = ./config/sway;
+  # xdg.configFile."sway/config".source = ./config/sway;
+  # xdg.configFile."hyprland/config".source = ./config/hyprland.conf;
+  # home.file.".config/hypr/hyprland-start.sh".source = ./config/hyprland-start.sh;
 
   programs.direnv = {
     enable = true;
     enableZshIntegration = true;
     nix-direnv.enable = true;
+  };
+
+  services.xembed-sni-proxy = {
+    enable = true;
   };
 }
