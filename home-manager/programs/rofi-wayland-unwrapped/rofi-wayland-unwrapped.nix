@@ -4,6 +4,6 @@
   programs.rofi = {
     package = pkgs.rofi-wayland;
     enable = true;
-    theme = ./spotlight-dark.rasi;
+    theme = ./windows11-grid-dark.rasi;
   };
 }

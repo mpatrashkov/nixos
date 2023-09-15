@@ -2,16 +2,9 @@
 
 {
   imports = [
-    ./services/polybar/polybar.nix
     ./programs/rofi-wayland-unwrapped/rofi-wayland-unwrapped.nix
-    ./services/picom/picom.nix
     ./programs/alacritty/alacritty.nix
-    # ./programs/android/android.nix
-    # ./programs/sway/sway.nix
-    # ./programs/hyprland/hyprland.nix
     ./services/waybar/waybar.nix
-    ./services/wallpaper/wallpaper.nix
-    # ./programs/vscode/vscode.nix
     ./programs/zsh/zsh.nix
   ];
 
@@ -129,8 +122,6 @@
   #     name = "adwaita-dark";
   #   };
   # };
-
-  services.wallpaper.enable = true;
 
   xdg.configFile."networkmanager-dmenu/config.ini".text = ''
     [dmenu]
