@@ -156,4 +156,10 @@
   services.xembed-sni-proxy = {
     enable = true;
   };
+
+  # services.wlsunset = {
+  #   enable = true;
+  #   latitude = "42.5048";
+  #   longitude = "27.4626";
+  # };
 }

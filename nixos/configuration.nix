@@ -90,6 +90,9 @@
     protonup-qt
     eza
     grc
+    wlsunset
+
+    (import ./programs/wlsunset-toggle/wlsunset-toggle.nix { inherit pkgs; })
   ];
 
   services.gvfs.enable = true;
@@ -272,7 +275,7 @@
   };
 
   # Icon font
-  fonts.fonts = with pkgs; [
+  fonts.packages = with pkgs; [
     (nerdfonts.override { fonts = [ "CascadiaCode" ]; })
   ];
 
