@@ -89,6 +89,7 @@
     wineWowPackages.waylandFull
     protonup-qt
     eza
+    grc
   ];
 
   services.gvfs.enable = true;
@@ -221,9 +222,14 @@
   };
 
   # Zsh
-  programs.zsh.enable = true;
-  users.defaultUserShell = pkgs.zsh;
-  environment.shells = with pkgs; [ zsh ];
+  # programs.zsh.enable = true;
+  # users.defaultUserShell = pkgs.zsh;
+  # environment.shells = with pkgs; [ zsh ];
+
+  # Fish
+  programs.fish.enable = true;
+  users.defaultUserShell = pkgs.fish;
+  environment.shells = with pkgs; [ fish ];
 
   # KVM
   boot.kernelModules = [ "kvm-intel" "i2c-dev" ];
@@ -264,5 +270,14 @@
     package = inputs.hyprland.packages.${pkgs.system}.hyprland;
     xwayland.enable = true;
   };
+
+  # Icon font
+  fonts.fonts = with pkgs; [
+    (nerdfonts.override { fonts = [ "CascadiaCode" ]; })
+  ];
+
+  # Bluetooth
+  hardware.bluetooth.enable = true;
+  services.blueman.enable = true;
 }
 

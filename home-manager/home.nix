@@ -5,7 +5,8 @@
     ./programs/rofi-wayland-unwrapped/rofi-wayland-unwrapped.nix
     ./programs/alacritty/alacritty.nix
     ./services/waybar/waybar.nix
-    ./programs/zsh/zsh.nix
+    # ./programs/zsh/zsh.nix
+    ./programs/fish/fish.nix
   ];
 
   # Home Manager needs a bit of information about you and the
