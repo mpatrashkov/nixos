@@ -1,0 +1,13 @@
+* {
+  all: unset;
+}
+
+.workspace-entry {
+  &.empty {
+    display: none;
+  }
+}
+
+.empty {
+  display: none;
+}

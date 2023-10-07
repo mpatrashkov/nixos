@@ -7,6 +7,7 @@
     ./services/waybar/waybar.nix
     # ./programs/zsh/zsh.nix
     ./programs/fish/fish.nix
+    ./programs/eww/eww.nix
   ];
 
   # Home Manager needs a bit of information about you and the
