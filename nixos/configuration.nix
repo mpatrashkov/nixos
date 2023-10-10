@@ -282,5 +282,8 @@
   # Bluetooth
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
+
+  # Windows time fix
+  time.hardwareClockInLocalTime = true;
 }
 
