@@ -1,12 +1,9 @@
 #! /usr/bin/env nix-shell
-#! nix-shell -i bash -p bash jq socat
+#! nix-shell -i bash -p bash socat
 
-spaces() {
-    WORKSPACE_WINDOWS=$(hyprctl workspaces -j | jq 'map({key: .id | tostring, value: .windows}) | from_entries')
-    seq 1 10 | jq --argjson windows "${WORKSPACE_WINDOWS}" --slurp -Mc 'map(tostring) | map({id: ., windows: ($windows[.]//0)})'
-}
+CURRENT_DIR="$(dirname "$(readlink -f "$0")")"
 
-spaces
+$CURRENT_DIR/get-workspaces.mjs
 socat -u UNIX-CONNECT:/tmp/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock - | while read -r line; do
-    spaces
+    $CURRENT_DIR/get-workspaces.mjs
 done
