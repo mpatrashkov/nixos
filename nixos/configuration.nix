@@ -40,6 +40,7 @@
 
   nixpkgs.config.permittedInsecurePackages = [
     "openssl-1.1.1u"
+    "electron-25.9.0"
   ];
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -93,6 +94,8 @@
     wlsunset
 
     (import ./programs/wlsunset-toggle/wlsunset-toggle.nix { inherit pkgs; })
+
+    obsidian
   ];
 
   services.gvfs.enable = true;
@@ -282,5 +285,8 @@
   # Bluetooth
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
+
+  # Windows time fix
+  time.hardwareClockInLocalTime = true;
 }
 
