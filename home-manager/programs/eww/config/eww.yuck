@@ -1,12 +1,12 @@
-(deflisten workspaces :initial "[]" "~/.config/eww/scripts/get-workspaces.sh")
-(deflisten current_workspace :initial "1" "~/.config/eww/scripts/get-active-workspace.sh")
+(deflisten workspaces :initial "[]" "~/.config/eww/scripts/get-workspaces.mjs")
+(deflisten current_workspace :initial "1" "~/.config/eww/scripts/get-active-workspace.mjs")
 (defwidget workspaces []
-  (eventbox :onscroll "~/.config/eww/scripts/change-active-workspace.sh {} ${current_workspace}" :class "workspaces-widget"
-    (box :space-evenly true
+  (eventbox :class "workspaces-widget"
+    (box :space-evenly true :halign "start" :spacing 10
       (label :text "${workspaces}${current_workspace}" :visible false)
       (for workspace in workspaces
         (eventbox :onclick "hyprctl dispatch workspace ${workspace.id}"
-          (box :class "workspace-entry ${workspace.id == current_workspace ? "current" : ""} ${workspace.windows > 0 ? "occupied" : "empty"}"
+          (box :class "workspace-entry ${current_workspace?.[workspace.id] != 'null' ? "current-${current_workspace[workspace.id]}" : ""}"
             (label :text "${workspace.id}")
           )
         )
@@ -14,6 +14,38 @@
     )
   )
 )
+
+(defwidget metric [label value onchange]
+  (box :orientation "h"
+    :class "metric"
+    :space-evenly false
+    (box :class "label" label)
+    (scale :min 0
+      :max 101
+      :active {onchange != ""}
+      :value value
+    :onchange onchange)))
+
+(defpoll time :interval "10s"
+"date '+%H:%M %b %d, %Y'")
+(defwidget sidestuff []
+  (box :class "sidestuff" :orientation "h" :space-evenly false :halign "end"
+    ; (metric :label "🔊"
+      ;   :value volume
+    ; :onchange "amixer -D pulse sset Master {}%")
+    (metric :label ""
+      :value {EWW_RAM.used_mem_perc}
+    :onchange "")
+    (metric :label "💾"
+      :value {round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0)}
+    :onchange "")
+  time))
+
+(defwidget bar []
+  (centerbox :orientation "h"
+    (workspaces)
+    (sidestuff)
+    (sidestuff)))
 
 (defwindow example
   :monitor 0
@@ -24,4 +56,4 @@
   :anchor "top center")
   :stacking "fg"
   :exclusive true
-  (workspaces))
+  (bar))
