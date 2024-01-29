@@ -10,10 +10,20 @@
   background-color: red;
 }
 
-.example {
+.bar0,
+.bar1 {
   background-color: #121212;
   color: #b0b4bc;
-  padding: 10px;
+}
+
+.icon {
+  font-family: "Font Awesome 6 Free Solid";
+}
+
+.sidestuff {
+  .info {
+    font-size: 14px;
+  }
 }
 
 .sidestuff slider {
@@ -23,7 +33,7 @@
 
 .metric scale trough highlight {
   all: unset;
-  background-color: #d35d6e;
+  background-color: #d4be98;
   color: #000000;
   border-radius: 10px;
 }
@@ -38,7 +48,7 @@
 }
 .metric scale trough highlight {
   all: unset;
-  background-color: #d35d6e;
+  background-color: #d4be98;
   color: #000000;
   border-radius: 10px;
 }
@@ -56,4 +66,25 @@
 }
 .workspaces button:hover {
   color: #d35d6e;
+}
+
+.container {
+  padding: 0 16px;
+}
+
+.workspace-entry {
+  padding: 0 8px;
+  border-bottom: 3px solid #121212;
+  border-top: 3px solid #121212;
+}
+
+.current {
+  border-top: 3px solid #d4be98;
+  border-bottom: 3px solid #d4be98;
+  background-color: #d4be98;
+  color: #121212;
+}
+
+.time {
+  font-weight: bold;
 }

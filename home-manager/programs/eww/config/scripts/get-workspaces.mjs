@@ -7,6 +7,8 @@ $.verbose = false;
 
 import net from "net";
 
+const monitor = parseInt(process.env.MONITOR);
+
 async function getWorkspaces() {
   const workspaces = JSON.parse(await $`hyprctl workspaces -j`);
 
@@ -16,7 +18,9 @@ async function getWorkspaces() {
         .map((workspace) => ({
           id: workspace.id.toString(),
           windows: workspace.windows,
+          monitorId: workspace.monitorID,
         }))
+        .filter((workspace) => workspace.monitorId === monitor)
         .sort((a, b) => a.id - b.id)
     )
   );

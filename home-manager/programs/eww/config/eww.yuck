@@ -1,12 +1,15 @@
-(deflisten workspaces :initial "[]" "~/.config/eww/scripts/get-workspaces.mjs")
+(deflisten workspaces0 :initial "[]" "MONITOR=0 ~/.config/eww/scripts/get-workspaces.mjs")
+(deflisten workspaces1 :initial "[]" "MONITOR=1 ~/.config/eww/scripts/get-workspaces.mjs")
+(deflisten volume :initial 0 "~/.config/eww/scripts/get-volume.sh")
+
 (deflisten current_workspace :initial "1" "~/.config/eww/scripts/get-active-workspace.mjs")
-(defwidget workspaces []
+(defwidget workspaces [workspaces]
   (eventbox :class "workspaces-widget"
-    (box :space-evenly true :halign "start" :spacing 10
+    (box :space-evenly true :halign "start"
       (label :text "${workspaces}${current_workspace}" :visible false)
       (for workspace in workspaces
         (eventbox :onclick "hyprctl dispatch workspace ${workspace.id}"
-          (box :class "workspace-entry ${current_workspace?.[workspace.id] != 'null' ? "current-${current_workspace[workspace.id]}" : ""}"
+          (box :class "workspace-entry ${current_workspace?.[workspace.id] != 'null' ? "current" : ""}"
             (label :text "${workspace.id}")
           )
         )
@@ -17,34 +20,44 @@
 
 (defwidget metric [label value onchange]
   (box :orientation "h"
-    :class "metric"
+    :class "metric icon"
     :space-evenly false
-    (box :class "label" label)
+    (box :class "label icon" label)
     (scale :min 0
       :max 101
       :active {onchange != ""}
       :value value
     :onchange onchange)))
 
-(defpoll time :interval "10s"
-"date '+%H:%M %b %d, %Y'")
 (defwidget sidestuff []
   (box :class "sidestuff" :orientation "h" :space-evenly false :halign "end"
-    ; (metric :label "🔊"
-      ;   :value volume
-    ; :onchange "amixer -D pulse sset Master {}%")
-    (metric :label ""
+    ; (box :class "info"
+      ;   (label :text "" :class "icon")
+      ;   (label :text "${volume}%"))
+    ; (box :class "info"
+      ;   (label :text "" :class "icon")
+      ;   (label :text "${round(EWW_RAM.used_mem_perc, 0)}%"))
+    ; (box :class "info"
+      ;   (label :text "" :class "icon")
+      ;   (label :text "${round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0)}%"))
+    (metric :label ""
+      :value volume
+    :onchange "amixer -D pulse sset Master {}%")
+    (metric :label ""
       :value {EWW_RAM.used_mem_perc}
     :onchange "")
-    (metric :label "💾"
+    (metric :label ""
       :value {round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0)}
-    :onchange "")
-  time))
+    :onchange "")))
 
-(defwidget bar []
-  (centerbox :orientation "h"
-    (workspaces)
-    (sidestuff)
+(defwidget time []
+  (box :class "time" :orientation "h" :space-evenly false :halign "end"
+    {formattime(EWW_TIME, "%b %d %H:%M")}))
+
+(defwidget bar [workspaces_data]
+  (centerbox :orientation "h" :class "container"
+    (workspaces :workspaces workspaces_data)
+    (time)
     (sidestuff)))
 
 (defwindow bar0
@@ -56,7 +69,7 @@
   :anchor "top center")
   :stacking "fg"
   :exclusive true
-  (bar))
+  (bar :workspaces_data workspaces0))
 
 (defwindow bar1
   :monitor 1
@@ -67,4 +80,4 @@
   :anchor "top center")
   :stacking "fg"
   :exclusive true
-  (bar))
+  (bar :workspaces_data workspaces1))

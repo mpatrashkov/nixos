@@ -96,6 +96,8 @@
     (import ./programs/wlsunset-toggle/wlsunset-toggle.nix { inherit pkgs; })
 
     obsidian
+    pamixer
+    work-sans
   ];
 
   services.gvfs.enable = true;
