@@ -97,7 +97,6 @@
 
     obsidian
     pamixer
-    work-sans
   ];
 
   services.gvfs.enable = true;
