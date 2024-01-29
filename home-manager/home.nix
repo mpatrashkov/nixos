@@ -8,6 +8,7 @@
     # ./programs/zsh/zsh.nix
     ./programs/fish/fish.nix
     ./programs/eww/eww.nix
+    ./programs/hyprland/hyprland.nix
   ];
 
   # Home Manager needs a bit of information about you and the
@@ -143,10 +144,6 @@
       mimeType = [ "text/html" "text/xml" ];
     };
   };
-
-  # xdg.configFile."sway/config".source = ./config/sway;
-  # xdg.configFile."hyprland/config".source = ./config/hyprland.conf;
-  # home.file.".config/hypr/hyprland-start.sh".source = ./config/hyprland-start.sh;
 
   programs.direnv = {
     enable = true;
