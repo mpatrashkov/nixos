@@ -47,7 +47,7 @@
   users.users.miro = {
     isNormalUser = true;
     description = "Miroslav Patrashkov";
-    extraGroups = [ "networkmanager" "wheel" "libvirtd" "docker" "input" "kvm" "adbusers" "i2c" ];
+    extraGroups = [ "networkmanager" "wheel" "libvirtd" "docker" "input" "kvm" "adbusers" "i2c" "dialout" ];
     packages = with pkgs; [ ];
   };
 
