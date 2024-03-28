@@ -4,6 +4,27 @@
 
 { inputs, config, pkgs, lib, ... }:
 
+let
+  disableSuspensionPackage = pkgs.writeTextDir
+    "share/wireplumber/main.lua.d/51-disable-suspension.lua"
+    ''
+        table.insert (alsa_monitor.rules, {
+        matches = {
+          {
+            -- Matches all sources.
+            { "node.name", "matches", "alsa_input.*" },
+          },
+          {
+            -- Matches all sinks.
+            { "node.name", "matches", "alsa_output.*" },
+          },
+        },
+        apply_properties = {
+          ["session.suspend-timeout-seconds"] = 0,  -- 0 disables suspend
+        },
+      })
+    '';
+in
 {
   imports =
     [
@@ -90,6 +111,7 @@
     wineWowPackages.waylandFull
     protonup-qt
     eza
+    bat
     grc
     wlsunset
 
@@ -97,6 +119,8 @@
 
     obsidian
     pamixer
+
+    chromium
   ];
 
   services.gvfs.enable = true;
@@ -148,25 +172,29 @@
     #jack.enable = true;
   };
 
-  environment.etc."wireplumber/main.lua.d/51-disable-suspension.lua" = {
-    text = ''
-        table.insert (alsa_monitor.rules, {
-        matches = {
-          {
-            -- Matches all sources.
-            { "node.name", "matches", "alsa_input.*" },
-          },
-          {
-            -- Matches all sinks.
-            { "node.name", "matches", "alsa_output.*" },
-          },
-        },
-        apply_properties = {
-          ["session.suspend-timeout-seconds"] = 0,  -- 0 disables suspend
-        },
-      })
-    '';
-  };
+  services.pipewire.wireplumber.configPackages = [
+    disableSuspensionPackage
+  ];
+
+  # environment.etc."wireplumber/main.lua.d/51-disable-suspension.lua" = {
+  #   text = ''
+  #       table.insert (alsa_monitor.rules, {
+  #       matches = {
+  #         {
+  #           -- Matches all sources.
+  #           { "node .name", "matches", "alsa_input.*" },
+  #         },
+  #         {
+  #           -- Matches all sinks.
+  #           { "node.name", "matches", "alsa_output.*" },
+  #         },
+  #       },
+  #       apply_properties = {
+  #         ["session.suspend-timeout-seconds"] = 0,  -- 0 disables suspend
+  #       },
+  #     })
+  #   '';
+  # };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
@@ -271,7 +299,7 @@
   # services.xserver.enable = true;
   # services.xserver.displayManager.gdm.enable = true;
   # services.xserver.desktopManager.gnome.enable = true;
-  # services.xserver.desktopManager.default = "gnome";
+  # services.xserver.displayManager.defaultSession = "gnome";
   # hardware.pulseaudio.enable = false;
 
   # Sway

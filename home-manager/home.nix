@@ -67,7 +67,7 @@
 
     gnome.gnome-system-monitor
     libreoffice
-    chromium
+    # chromium
     gnome.dconf-editor
 
     cinnamon.nemo

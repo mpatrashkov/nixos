@@ -13,6 +13,7 @@
     ];
     shellAliases = {
       ls = "eza --icons -l -s=type -I=node_modules --hyperlink";
+      cat = "bat";
     };
   };
 }

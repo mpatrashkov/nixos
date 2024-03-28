@@ -15,6 +15,7 @@
   outputs = { nixpkgs, home-manager, ... } @ inputs:
     let
       system = "x86_64-linux";
+      tools = import ./tools/default.nix { inherit inputs; };
       pkgs = import nixpkgs {
         inherit system;
         config = {
@@ -30,12 +31,7 @@
     in
     {
       nixosConfigurations = {
-        nixos = nixpkgs.lib.nixosSystem {
-          specialArgs = { inherit inputs; };
-          modules = [
-            ./nixos/configuration.nix
-          ];
-        };
+        nixos = tools.mkSystem ./nixos/configuration.nix;
       };
       homeConfigurations = {
         miro = home-manager.lib.homeManagerConfiguration {
@@ -45,5 +41,7 @@
           ];
         };
       };
+
+      nixosModules.default = ./nixos-modules;
     };
 }
