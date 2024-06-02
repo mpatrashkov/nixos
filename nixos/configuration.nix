@@ -184,7 +184,8 @@ in
   security.polkit.enable = true;
 
   # Latest kernel
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # TODO: there is some issue with the latest kernel and AMDGPU. Wait for a newer version and try to upgrade again
+  boot.kernelPackages = pkgs.linuxPackages_6_8;
 
   # # Fix dual monitors
   # boot.kernelParams = [
