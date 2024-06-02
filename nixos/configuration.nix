@@ -122,7 +122,6 @@ in
     obsidian
     pamixer
 
-    chromium
     mkcert
   ];
 
