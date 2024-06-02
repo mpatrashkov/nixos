@@ -17,7 +17,22 @@ let
       }
     )
     (tools.filesIn ./services);
+  programs = tools.extendModules
+    (
+      name: {
+        extraOptions = {
+          myNixOS.programs.${name}.enable = lib.mkOption {
+            type = lib.types.bool;
+            default = true;
+            description = "Whether to enable ${name} service";
+          };
+        };
+
+        configExtension = config: (lib.mkIf cfg.programs.${name}.enable config);
+      }
+    )
+    (tools.filesIn ./programs);
 in
 {
-  imports = [ ] ++ services;
+  imports = [ ] ++ services ++ programs;
 }

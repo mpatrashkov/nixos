@@ -32,6 +32,8 @@ in
       ./hardware-configuration.nix
     ];
 
+  # myNixOS.services.dnscrypt-proxy2.enable = false;
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -121,28 +123,10 @@ in
     pamixer
 
     chromium
+    mkcert
   ];
 
   services.gvfs.enable = true;
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
-
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
@@ -175,26 +159,6 @@ in
   services.pipewire.wireplumber.configPackages = [
     disableSuspensionPackage
   ];
-
-  # environment.etc."wireplumber/main.lua.d/51-disable-suspension.lua" = {
-  #   text = ''
-  #       table.insert (alsa_monitor.rules, {
-  #       matches = {
-  #         {
-  #           -- Matches all sources.
-  #           { "node .name", "matches", "alsa_input.*" },
-  #         },
-  #         {
-  #           -- Matches all sinks.
-  #           { "node.name", "matches", "alsa_output.*" },
-  #         },
-  #       },
-  #       apply_properties = {
-  #         ["session.suspend-timeout-seconds"] = 0,  -- 0 disables suspend
-  #       },
-  #     })
-  #   '';
-  # };
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
@@ -247,34 +211,6 @@ in
   networking = {
     hostName = "nixos";
     nameservers = [ "127.0.0.1" "::1" ];
-    networkmanager = {
-      enable = true;
-      dns = "none";
-    };
-  };
-
-  services.dnscrypt-proxy2 = {
-    enable = true;
-    settings = {
-      ipv6_servers = true;
-      require_dnssec = true;
-
-      sources.public-resolvers = {
-        urls = [
-          "https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/public-resolvers.md"
-          "https://download.dnscrypt.info/resolvers-list/v3/public-resolvers.md"
-        ];
-        cache_file = "/var/lib/dnscrypt-proxy2/public-resolvers.md";
-        minisign_key = "RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3";
-      };
-
-      # You can choose a specific set of servers from https://github.com/DNSCrypt/dnscrypt-resolvers/blob/master/v3/public-resolvers.md
-      # server_names = [ ... ];
-    };
-  };
-
-  systemd.services.dnscrypt-proxy2.serviceConfig = {
-    StateDirectory = "dnscrypt-proxy";
   };
 
   # Zsh

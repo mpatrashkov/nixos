@@ -21,14 +21,23 @@
 
   cursor.style = "Beam";
 
-  # shell = {
-  #   program = "bash";
-
-  #   args = [
-  #     "-C"
-  #     "neofetch; bash"
-  #   ];
-  # };
+  keyboard.bindings = [
+    {
+      key = "C";
+      mods = "Control";
+      action = "Copy";
+    }
+    {
+      key = "V";
+      mods = "Control";
+      action = "Paste";
+    }
+    {
+      key = "C";
+      mods = "Super";
+      chars = "\\u0003";
+    }
+  ];
 
   colors = {
     # Default colors
