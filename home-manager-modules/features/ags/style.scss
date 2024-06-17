@@ -1,0 +1,67 @@
+/* .volume-indicator {
+  min-width: 100px;
+  min-height: 100px;
+  background-color: #121212;
+
+  margin-bottom: 100px;
+} */
+
+.volume-indicator-container {
+  background-color: #121212;
+  border-radius: 8px;
+}
+
+.volume-indicator-bar-container {
+  padding: 8px;
+}
+
+/* Bar */
+.bar {
+  background-color: #121212;
+
+  &-container {
+    padding: 4px;
+  }
+
+  .workspace-group {
+    margin: 0 4px;
+  }
+
+  .workspace-label {
+    font-size: 0;
+    min-width: 14px;
+    min-height: 14px;
+    border-radius: 1000px;
+    /* background-color: red; */
+    margin: 0 4px;
+
+    &.monitor-0 {
+      border: 2px solid red;
+    }
+
+    &.monitor-1 {
+      border: 2px solid yellow;
+    }
+
+    &.occupied {
+      background-color: #4e4e4e;
+    }
+
+    &.active {
+      min-width: 45px;
+
+      &.monitor-0 {
+        background-color: red;
+      }
+      &.monitor-1 {
+        background-color: yellow;
+      }
+    }
+  }
+}
+
+/* Screen Corners */
+.screen-corner box.border {
+  border-radius: 8px;
+  box-shadow: 0 0 0 8px #121212;
+}

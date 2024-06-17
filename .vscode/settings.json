@@ -4,5 +4,5 @@
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
   "python.formatting.provider": "none",
-  "cSpell.words": ["Hyprland"]
+  "cSpell.words": ["Hyprland", "sassc"]
 }
