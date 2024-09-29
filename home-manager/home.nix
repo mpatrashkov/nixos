@@ -3,7 +3,7 @@
 {
   imports = [
     ./programs/rofi-wayland-unwrapped/rofi-wayland-unwrapped.nix
-    ./programs/alacritty/alacritty.nix
+    # ./programs/alacritty/alacritty.nix
     ./services/waybar/waybar.nix
     # ./programs/zsh/zsh.nix
     ./programs/fish/fish.nix

@@ -1,1 +1,1 @@
-/nix/store/vx3635lx4k0wp016vnzxwik2lx3qjs7p-home-manager-files/.config/hypr/start.sh
+/nix/store/nj3ngb5dsgdxk87h564v2d532is67gly-home-manager-files/.config/hypr/start.sh

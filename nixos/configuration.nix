@@ -125,6 +125,7 @@ in
     mkcert
 
     pnpm
+    alacritty
   ];
 
   services.gvfs.enable = true;
@@ -136,14 +137,6 @@ in
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
-
-  # Needed by Wayland
-  hardware = {
-    opengl = {
-      enable = true;
-      driSupport = true;
-    };
-  };
 
 
   security.rtkit.enable = true;
@@ -185,8 +178,8 @@ in
   security.polkit.enable = true;
 
   # Latest kernel
-  # TODO: there is some issue with the latest kernel and AMDGPU. Wait for a newer version and try to upgrade again
-  boot.kernelPackages = pkgs.linuxPackages_6_8;
+  # TODO: https://gitlab.freedesktop.org/drm/amd/-/issues/3513
+  boot.kernelPackages = pkgs.linuxPackages_6_6;
 
   # # Fix dual monitors
   # boot.kernelParams = [
