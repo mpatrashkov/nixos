@@ -3,16 +3,13 @@
 {
   config = {
     environment.systemPackages = with pkgs; [
-      chromium
+      (chromium.override {
+        commandLineArgs = [
+          "--enable-features=VaapiVideoDecoder,VaapiIgnoreDriverChecks,Vulkan,DefaultANGLEVulkan,VulkanFromANGLE,UseOzonePlatform"
+          "--ozone-platform=wayland"
+        ];
+      })
     ];
-
-    environment.etc = {
-      "chromium-flags.conf".text = ''
-        --enable-features=VaapiVideoDecodeLinuxGL
-        --ozone-platform=wayland
-        --ignore-gpu-blocklist
-        --enable-zero-copy
-      '';
-    };
   };
 }
+ 
