@@ -32,7 +32,22 @@ let
       }
     )
     (tools.filesIn ./programs);
+  features = tools.extendModules
+    (
+      name: {
+        extraOptions = {
+          myNixOS.features.${name}.enable = lib.mkOption {
+            type = lib.types.bool;
+            default = true;
+            description = "Whether to enable ${name} service";
+          };
+        };
+
+        configExtension = config: (lib.mkIf cfg.features.${name}.enable config);
+      }
+    )
+    (tools.filesIn ./features);
 in
 {
-  imports = [ ] ++ services ++ programs;
+  imports = [ ] ++ services ++ programs ++ features;
 }

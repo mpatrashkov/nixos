@@ -73,13 +73,6 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  home.pointerCursor = {
-    name = "Bibata-Modern-Classic";
-    package = pkgs.bibata-cursors;
-    size = 32;
-    gtk.enable = true;
-  };
-
   gtk = {
     enable = true;
     iconTheme = {
