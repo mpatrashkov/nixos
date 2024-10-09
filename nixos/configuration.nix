@@ -4,27 +4,6 @@
 
 { inputs, config, pkgs, lib, ... }:
 
-let
-  disableSuspensionPackage = pkgs.writeTextDir
-    "share/wireplumber/main.lua.d/51-disable-suspension.lua"
-    ''
-        table.insert (alsa_monitor.rules, {
-        matches = {
-          {
-            -- Matches all sources.
-            { "node.name", "matches", "alsa_input.*" },
-          },
-          {
-            -- Matches all sinks.
-            { "node.name", "matches", "alsa_output.*" },
-          },
-        },
-        apply_properties = {
-          ["session.suspend-timeout-seconds"] = 0,  -- 0 disables suspend
-        },
-      })
-    '';
-in
 {
   imports =
     [
@@ -137,22 +116,6 @@ in
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
-
-
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    wireplumber.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-  };
-
-  services.pipewire.wireplumber.configPackages = [
-    disableSuspensionPackage
-  ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
