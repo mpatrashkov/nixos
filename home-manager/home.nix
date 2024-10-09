@@ -4,10 +4,7 @@
   imports = [
     ./programs/rofi-wayland-unwrapped/rofi-wayland-unwrapped.nix
     # ./programs/alacritty/alacritty.nix
-    ./services/waybar/waybar.nix
-    # ./programs/zsh/zsh.nix
     ./programs/fish/fish.nix
-    ./programs/eww/eww.nix
     ./programs/hyprland/hyprland.nix
   ];
 
@@ -45,13 +42,11 @@
     distrobox
     swww
 
-    gnome.gnome-software
+    gnome-software
     networkmanager_dmenu
     spotify
 
-    gnome.adwaita-icon-theme
-
-    (import ./programs/set-wallpaper/set-wallpaper.nix { inherit pkgs; })
+    adwaita-icon-theme
 
     htop
     playerctl
@@ -67,7 +62,6 @@
 
     gnome.gnome-system-monitor
     libreoffice
-    # chromium
     gnome.dconf-editor
 
     cinnamon.nemo
@@ -88,21 +82,9 @@
 
   gtk = {
     enable = true;
-    theme = {
-      # name = "Materia-dark";
-      # package = pkgs.materia-theme;
-      name = "Gruvbox-Dark-B";
-      package = pkgs.gruvbox-gtk-theme;
-      # package = pkgs.gnome.gnome-themes-extra;
-    };
     iconTheme = {
       name = "oomox-gruvbox-dark";
       package = pkgs.gruvbox-dark-icons-gtk;
-    };
-    cursorTheme = {
-      name = "Bibata-Modern-Classic";
-      package = pkgs.bibata-cursors;
-      size = 24;
     };
 
     gtk3.extraConfig = {
@@ -117,14 +99,6 @@
       '';
     };
   };
-
-  # qt = {
-  #   enable = true;
-  #   platformTheme = "gnome";
-  #   style = {
-  #     name = "adwaita-dark";
-  #   };
-  # };
 
   xdg.configFile."networkmanager-dmenu/config.ini".text = ''
     [dmenu]

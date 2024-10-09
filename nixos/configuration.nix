@@ -38,9 +38,6 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Amd Driver
-  boot.initrd.kernelModules = [ "amdgpu" ];
-
   # Set your time zone.
   time.timeZone = "Europe/Sofia";
 
@@ -126,6 +123,9 @@ in
 
     pnpm
     alacritty
+    tor-browser
+    libsForQt5.kleopatra
+    bisq-desktop
   ];
 
   services.gvfs.enable = true;
@@ -176,6 +176,17 @@ in
 
   # Sway
   security.polkit.enable = true;
+
+  # Hardware acceleration
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+  hardware.amdgpu.initrd.enable = true;
+  environment.sessionVariables = {
+    LIBVA_DRIVER_NAME = "radeonsi";
+    VA_DRIVER_NAME = "radeonsi";
+  };
 
   # Latest kernel
   # TODO: https://gitlab.freedesktop.org/drm/amd/-/issues/3513

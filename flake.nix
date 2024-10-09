@@ -14,6 +14,7 @@
       inputs.nixpkgs.follows = "nixpkgs"; # MESA/OpenGL HW workaround
     };
     ags.url = "github:Aylur/ags";
+    stylix.url = "github:danth/stylix";
   };
   outputs = { nixpkgs, home-manager, ... } @ inputs:
     let

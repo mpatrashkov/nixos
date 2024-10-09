@@ -10,6 +10,8 @@
       "chromium-flags.conf".text = ''
         --enable-features=VaapiVideoDecodeLinuxGL
         --ozone-platform=wayland
+        --ignore-gpu-blocklist
+        --enable-zero-copy
       '';
     };
   };
