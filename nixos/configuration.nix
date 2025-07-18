@@ -12,6 +12,8 @@
     ];
 
   # myNixOS.services.dnscrypt-proxy2.enable = false;
+  # myNixOS.programs.stylix.enable = false;
+  myNixOS.services.smb.enable = false;
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -60,8 +62,8 @@
     #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     #  wget
     firefox
-    gnome.eog
-    gnome.gnome-tweaks
+    eog
+    gnome-tweaks
     vscode
     git
     pavucontrol
@@ -105,7 +107,6 @@
     alacritty
     tor-browser
     libsForQt5.kleopatra
-    bisq-desktop
   ];
 
   services.gvfs.enable = true;
@@ -153,8 +154,7 @@
   };
 
   # Latest kernel
-  # TODO: https://gitlab.freedesktop.org/drm/amd/-/issues/3513
-  boot.kernelPackages = pkgs.linuxPackages_6_6;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # # Fix dual monitors
   # boot.kernelParams = [
@@ -235,7 +235,7 @@
 
   # Icon font
   fonts.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "CascadiaCode" ]; })
+    nerd-fonts.caskaydia-cove
   ];
 
   # Bluetooth

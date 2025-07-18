@@ -60,11 +60,11 @@
     prismlauncher
     # android-studio
 
-    gnome.gnome-system-monitor
+    gnome-system-monitor
     libreoffice
-    gnome.dconf-editor
+    dconf-editor
 
-    cinnamon.nemo
+    nemo
     webcord
     github-desktop
   ];
