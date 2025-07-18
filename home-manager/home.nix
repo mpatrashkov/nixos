@@ -65,7 +65,6 @@
     gnome.dconf-editor
 
     cinnamon.nemo
-    insomnia
     webcord
     github-desktop
   ];
@@ -100,18 +99,6 @@
     gui_if_available = True
   '';
 
-  xdg.desktopEntries = {
-    insomnia = {
-      # TODO: Add icon
-      name = "Insomnia";
-      genericName = "GraphQL;REST;gRPC;SOAP;openAPI;GitOps;";
-      exec = "insomnia --enable-features=UseOzonePlatform --ozone-platform=wayland %U";
-      terminal = false;
-      categories = [ "Development" ];
-      mimeType = [ "text/html" "text/xml" ];
-    };
-  };
-
   programs.direnv = {
     enable = true;
     enableZshIntegration = true;
@@ -121,10 +108,4 @@
   services.xembed-sni-proxy = {
     enable = true;
   };
-
-  # services.wlsunset = {
-  #   enable = true;
-  #   latitude = "42.5048";
-  #   longitude = "27.4626";
-  # };
 }

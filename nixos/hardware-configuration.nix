@@ -21,6 +21,19 @@
       options = [ "subvol=@" ];
     };
 
+  fileSystems."/mnt/shared" =
+    {
+      device = "/dev/disk/by-label/Shared";
+      fsType = "ntfs-3g";
+      options = [ "rw" "uid=1000" ];
+    };
+
+  fileSystems."/export/shared" =
+    {
+      device = "/mnt/shared";
+      options = [ "bind" ];
+    };
+
   fileSystems."/boot" =
     {
       device = "/dev/disk/by-uuid/4A7E-3AD0";

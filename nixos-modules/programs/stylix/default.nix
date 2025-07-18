@@ -43,12 +43,12 @@
       #   name = "DejaVu Serif";
       # };
 
-      # sizes = {
-      #   applications = 12;
-      #   terminal = 15;
-      #   desktop = 10;
-      #   popups = 10;
-      # };
+      sizes = {
+        applications = 12;
+        terminal = 15;
+        desktop = 10;
+        popups = 10;
+      };
     };
 
     cursor = {
