@@ -3,7 +3,7 @@
 {
   config = {
     environment.sessionVariables = {
-      FLAKE = "/home/miro/flake";
+      NH_FLAKE = "/home/miro/flake";
     };
 
     environment.systemPackages = with pkgs; [

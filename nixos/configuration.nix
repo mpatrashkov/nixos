@@ -2,14 +2,19 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ inputs, config, pkgs, lib, ... }:
+{
+  inputs,
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
-  imports =
-    [
-      # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+  ];
 
   # myNixOS.services.dnscrypt-proxy2.enable = false;
   # myNixOS.programs.stylix.enable = false;
@@ -49,7 +54,17 @@
   users.users.miro = {
     isNormalUser = true;
     description = "Miroslav Patrashkov";
-    extraGroups = [ "networkmanager" "wheel" "libvirtd" "docker" "input" "kvm" "adbusers" "i2c" "dialout" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "libvirtd"
+      "docker"
+      "input"
+      "kvm"
+      "adbusers"
+      "i2c"
+      "dialout"
+    ];
     packages = with pkgs; [ ];
   };
 
@@ -87,7 +102,7 @@
     wl-clipboard
     imagemagick
     nil
-    nixpkgs-fmt
+    nixfmt-rfc-style
 
     wineWowPackages.waylandFull
     protonup-qt
@@ -119,7 +134,10 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "23.05"; # Did you read the comment?
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   programs.dconf.enable = true;
 
@@ -180,7 +198,10 @@
   # Networking config
   networking = {
     hostName = "nixos";
-    nameservers = [ "127.0.0.1" "::1" ];
+    nameservers = [
+      "127.0.0.1"
+      "::1"
+    ];
   };
 
   # Zsh
@@ -194,7 +215,10 @@
   environment.shells = with pkgs; [ fish ];
 
   # KVM
-  boot.kernelModules = [ "kvm-intel" "i2c-dev" ];
+  boot.kernelModules = [
+    "kvm-intel"
+    "i2c-dev"
+  ];
 
   # KDE
   # services.xserver.enable = true;
@@ -234,9 +258,7 @@
   };
 
   # Icon font
-  fonts.packages = with pkgs; [
-    nerd-fonts.caskaydia-cove
-  ];
+  fonts.packages = with pkgs; [ nerd-fonts.caskaydia-cove ];
 
   # Bluetooth
   hardware.bluetooth.enable = true;
@@ -244,5 +266,11 @@
 
   # Windows time fix
   time.hardwareClockInLocalTime = true;
-}
 
+  specialisation = {
+    gnome.configuration = {
+      services.displayManager.gdm.enable = true;
+      services.desktopManager.gnome.enable = true;
+    };
+  };
+}
