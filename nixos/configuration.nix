@@ -4,7 +4,6 @@
 
 {
   inputs,
-  config,
   pkgs,
   lib,
   ...
@@ -16,8 +15,6 @@
     ./hardware-configuration.nix
   ];
 
-  # myNixOS.services.dnscrypt-proxy2.enable = false;
-  # myNixOS.programs.stylix.enable = false;
   myNixOS.services.smb.enable = false;
 
   # Bootloader.
@@ -65,7 +62,6 @@
       "i2c"
       "dialout"
     ];
-    packages = with pkgs; [ ];
   };
 
   # Allow unfree packages
@@ -101,8 +97,6 @@
     slurp
     wl-clipboard
     imagemagick
-    nil
-    nixfmt-rfc-style
 
     wineWowPackages.waylandFull
     protonup-qt
