@@ -1,7 +1,3 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 {
   inputs,
   pkgs,
@@ -168,12 +164,6 @@
   # Latest kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  # # Fix dual monitors
-  # boot.kernelParams = [
-  #   "video=HDMI-A-5:3840x2160@60"
-  #   "video=DP-4:3840x2160@60"
-  # ];
-
   # Docker
   virtualisation.docker.enable = true;
   virtualisation.docker.storageDriver = "btrfs";
@@ -183,11 +173,6 @@
 
   # Flatpack
   services.flatpak.enable = true;
-  # xdg.portal = {
-  #   enable = true;
-  #   gtkUsePortal = true;
-  #   extraPortals = [ pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-wlr ];
-  # };
 
   # Networking config
   networking = {
@@ -197,11 +182,6 @@
       "::1"
     ];
   };
-
-  # Zsh
-  # programs.zsh.enable = true;
-  # users.defaultUserShell = pkgs.zsh;
-  # environment.shells = with pkgs; [ zsh ];
 
   # Fish
   programs.fish.enable = true;
@@ -213,18 +193,6 @@
     "kvm-intel"
     "i2c-dev"
   ];
-
-  # KDE
-  # services.xserver.enable = true;
-  # services.xserver.displayManager.sddm.enable = true;
-  # services.xserver.desktopManager.plasma5.enable = true;
-
-  # GNOME
-  # services.xserver.enable = true;
-  # services.xserver.displayManager.gdm.enable = true;
-  # services.xserver.desktopManager.gnome.enable = true;
-  # services.xserver.displayManager.defaultSession = "gnome";
-  # hardware.pulseaudio.enable = false;
 
   # Sway
   services.dbus.enable = true;
@@ -260,11 +228,4 @@
 
   # Windows time fix
   time.hardwareClockInLocalTime = true;
-
-  specialisation = {
-    gnome.configuration = {
-      services.displayManager.gdm.enable = true;
-      services.desktopManager.gnome.enable = true;
-    };
-  };
 }
