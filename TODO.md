@@ -1,1 +1,0 @@
-- [ ] Replace `neofetch` with `fastfetch`

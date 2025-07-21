@@ -74,7 +74,7 @@
     vscode
     git
     pavucontrol
-    neofetch
+    fastfetch
     virt-manager
     pulseaudio
     steam-run
