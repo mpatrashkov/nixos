@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   imports = [
@@ -20,7 +25,7 @@
   #
   # You can update Home Manager without changing this value. See
   # the Home Manager release notes for a list of state version
-  # changes in each release.  
+  # changes in each release.
   home.stateVersion = "23.05";
 
   fonts.fontconfig.enable = true;
@@ -30,8 +35,10 @@
     killall
     sublime4
     font-awesome
-    (python311.withPackages (ps: with ps; [
-    ]))
+    (python311.withPackages (
+      ps: with ps; [
+      ]
+    ))
     cascadia-code
     feh
     nodejs
@@ -51,7 +58,6 @@
     htop
     playerctl
     qbittorrent
-    mangohud
     bitwarden-cli
     ngrok
     ddcutil
