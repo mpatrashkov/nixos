@@ -17,6 +17,7 @@
     "nixpkgs",
     "pkgs",
     "sassc",
-    "stylix"
+    "stylix",
+    "xwayland"
   ]
 }

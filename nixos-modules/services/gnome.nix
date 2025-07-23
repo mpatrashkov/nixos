@@ -13,6 +13,12 @@
           switch-windows = lib.gvariant.mkArray [ "<Alt>Tab" ];
           switch-windows-backward = lib.gvariant.mkArray [ "['<Shift><Alt>Tab']" ];
         };
+        "org/gnome/mutter" = {
+          experimental-features = lib.gvariant.mkArray [
+            "scale-monitor-framebuffer"
+            "xwayland-native-scaling"
+          ];
+        };
       };
     }
   ];
