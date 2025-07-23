@@ -71,7 +71,6 @@
     dconf-editor
 
     nemo
-    webcord
     github-desktop
   ];
 
