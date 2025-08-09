@@ -71,7 +71,7 @@
     firefox
     eog
     gnome-tweaks
-    vscode
+    vscode.fhs
     git
     pavucontrol
     fastfetch

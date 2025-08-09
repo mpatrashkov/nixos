@@ -20,7 +20,7 @@
           ];
         };
 
-        "/org/gnome/desktop/input-sources" = {
+        "org/gnome/desktop/input-sources" = {
           sources = lib.gvariant.mkArray [
             "('xkb', 'us')"
             "('xkb', 'bg+phonetic')"
