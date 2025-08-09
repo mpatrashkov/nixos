@@ -19,6 +19,14 @@
             "xwayland-native-scaling"
           ];
         };
+
+        "/org/gnome/desktop/input-sources" = {
+          sources = lib.gvariant.mkArray [
+            "('xkb', 'us')"
+            "('xkb', 'bg+phonetic')"
+          ];
+          mru-sources = lib.gvariant.mkArray [ "('xkb', 'us')" ];
+        };
       };
     }
   ];
