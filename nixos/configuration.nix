@@ -71,14 +71,13 @@
     firefox
     eog
     gnome-tweaks
-    vscode.fhs
+    vscode
     git
     pavucontrol
     fastfetch
     virt-manager
     pulseaudio
     steam-run
-    gamescope
     (lutris.override {
       extraLibraries = pkgs: [
         # List library dependencies here
