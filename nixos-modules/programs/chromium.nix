@@ -9,7 +9,8 @@
           "--ozone-platform=wayland"
         ];
       })
+
+      google-chrome
     ];
   };
 }
- 

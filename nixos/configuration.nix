@@ -13,6 +13,9 @@
 
   myNixOS.services.smb.enable = false;
 
+  # TODO: this speeds up build times, remove when https://github.com/NixOS/nixpkgs/pull/414076 is merged
+  documentation.man.generateCaches = false;
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -110,7 +113,7 @@
     pnpm
     alacritty
     tor-browser
-    libsForQt5.kleopatra
+    kdePackages.kleopatra
   ];
 
   services.gvfs.enable = true;

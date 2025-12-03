@@ -1,7 +1,12 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 {
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
+
+  # Extensions
+  environment.systemPackages = with pkgs.gnomeExtensions; [
+    dash-to-dock
+  ];
 
   programs.dconf.profiles.user.databases = [
     {
@@ -18,6 +23,10 @@
             "scale-monitor-framebuffer"
             "xwayland-native-scaling"
           ];
+        };
+
+        "org/gnome/settings-daemon/plugins/power" = {
+          sleep-inactive-ac-type = lib.gvariant.mkString "nothing";
         };
 
         # "org/gnome/desktop/input-sources" = {
@@ -37,4 +46,16 @@
       settings."org/gnome/desktop/interface".scaling-factor = lib.gvariant.mkUint32 2;
     }
   ];
+
+  environment.sessionVariables.GST_PLUGIN_SYSTEM_PATH_1_0 =
+    lib.makeSearchPathOutput "lib" "lib/gstreamer-1.0"
+      (
+        with pkgs.gst_all_1;
+        [
+          gst-plugins-good
+          gst-plugins-bad
+          gst-plugins-ugly
+          gst-libav
+        ]
+      );
 }
