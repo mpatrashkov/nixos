@@ -221,9 +221,6 @@
     xwayland.enable = true;
   };
 
-  # Icon font
-  fonts.packages = with pkgs; [ nerd-fonts.caskaydia-cove ];
-
   # Bluetooth
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
