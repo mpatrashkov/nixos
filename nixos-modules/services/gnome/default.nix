@@ -4,6 +4,7 @@
   services.desktopManager.gnome.enable = true;
 
   # Extensions
+  imports = [ ./extensions/multi-monitors.nix ];
   environment.systemPackages = with pkgs.gnomeExtensions; [
     dash-to-dock
   ];
