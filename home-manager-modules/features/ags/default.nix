@@ -1,4 +1,10 @@
-{ pkgs, config, inputs, ... }: {
+{
+  pkgs,
+  config,
+  inputs,
+  ...
+}:
+{
   imports = [ inputs.ags.homeManagerModules.default ];
 
   programs.ags = {

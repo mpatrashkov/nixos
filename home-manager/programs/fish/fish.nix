@@ -5,7 +5,7 @@
     enable = true;
     interactiveShellInit = ''
       set fish_greeting # Disable greeting
-      fastfetch
+      fastfetch --config "$HOME/.config/fastfetch/short-config.jsonc"
     '';
     plugins = [
       # Enable a plugin (here grc for colorized command output) from nixpkgs

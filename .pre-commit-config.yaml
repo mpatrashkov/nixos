@@ -1,7 +1,0 @@
-repos:
-  - repo: local
-    hooks:
-      - id: switch-nix-generation
-        name: Switch Nix Generation
-        entry: bash -c "nh os switch -s gnome"
-        language: system

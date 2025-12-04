@@ -76,7 +76,6 @@
     gnome-tweaks
     vscode
     pavucontrol
-    fastfetch
     virt-manager
     pulseaudio
     steam-run
