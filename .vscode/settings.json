@@ -9,8 +9,10 @@
     "Bibata",
     "cantarell",
     "caskaydia",
+    "coolssor",
     "dconf",
     "dnscrypt",
+    "eveiscoull",
     "fastfetch",
     "gamescope",
     "gvariant",
@@ -21,7 +23,9 @@
     "nixos",
     "nixpkgs",
     "pkgs",
+    "pname",
     "sassc",
+    "stdenv",
     "stylix",
     "xwayland"
   ]
