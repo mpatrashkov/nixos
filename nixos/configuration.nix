@@ -75,7 +75,6 @@
     eog
     gnome-tweaks
     vscode
-    git
     pavucontrol
     fastfetch
     virt-manager

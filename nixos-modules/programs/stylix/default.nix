@@ -20,4 +20,6 @@
 
     polarity = "dark";
   };
+
+  stylix.targets.gnome.enable = false;
 }
