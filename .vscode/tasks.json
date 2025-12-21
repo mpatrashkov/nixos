@@ -7,7 +7,8 @@
     {
       "label": "Test Nix Config",
       "type": "shell",
-      "command": "git add . && nh os test",
+      // See `flake.nix` for why the input needs to be overridden like this.
+      "command": "git add . && nh os test -- --override-input last-commit-message \"path:./last-commit-message\"",
       "group": {
         "kind": "test",
         "isDefault": true
@@ -16,7 +17,8 @@
     {
       "label": "Switch Nix Config",
       "type": "shell",
-      "command": "git add . && git commit -m \"${input:commitMessage}\" && git push && nh os switch",
+      // See `flake.nix` for why the input needs to be overridden like this.
+      "command": "git add . && git commit -m \"${input:commitMessage}\" && git push && nh os switch -- --override-input last-commit-message \"path:./last-commit-message\"",
       "group": {
         "kind": "build",
         "isDefault": true
