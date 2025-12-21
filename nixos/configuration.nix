@@ -11,30 +11,9 @@
 
   myNixOS.services.smb.enable = false;
 
-  # TODO: this speeds up build times, remove when https://github.com/NixOS/nixpkgs/pull/414076 is merged
-  documentation.man.generateCaches = false;
-
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
-  # Set your time zone.
-  time.timeZone = "Europe/Sofia";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "bg_BG.UTF-8";
-    LC_IDENTIFICATION = "bg_BG.UTF-8";
-    LC_MEASUREMENT = "bg_BG.UTF-8";
-    LC_MONETARY = "bg_BG.UTF-8";
-    LC_NAME = "bg_BG.UTF-8";
-    LC_NUMERIC = "bg_BG.UTF-8";
-    LC_PAPER = "bg_BG.UTF-8";
-    LC_TELEPHONE = "bg_BG.UTF-8";
-    LC_TIME = "en_US.UTF-8";
-  };
 
   environment.pathsToLink = [ "/libexec" ];
 
@@ -180,7 +159,4 @@
   # Bluetooth
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
-
-  # Windows time fix
-  time.hardwareClockInLocalTime = true;
 }
