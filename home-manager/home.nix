@@ -82,21 +82,10 @@
 
   gtk = {
     enable = true;
+    # TODO: move into stylix
     iconTheme = {
       name = "oomox-gruvbox-dark";
       package = pkgs.gruvbox-dark-icons-gtk;
-    };
-
-    gtk3.extraConfig = {
-      Settings = ''
-        gtk-application-prefer-dark-theme=1
-      '';
-    };
-
-    gtk4.extraConfig = {
-      Settings = ''
-        gtk-application-prefer-dark-theme=1
-      '';
     };
   };
 

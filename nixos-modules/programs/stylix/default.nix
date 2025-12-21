@@ -21,5 +21,15 @@
     polarity = "dark";
   };
 
-  stylix.targets.gnome.enable = false;
+  stylix.fonts = {
+    serif = {
+      package = pkgs.dejavu_fonts;
+      name = "DejaVu Serif";
+    };
+
+    sansSerif = {
+      package = pkgs.ubuntu-sans;
+      name = "Ubuntu Sans";
+    };
+  };
 }
