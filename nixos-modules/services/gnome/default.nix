@@ -3,6 +3,10 @@
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
 
+  environment.gnome.excludePackages = with pkgs; [
+    gnome-console
+  ];
+
   # Extensions
   imports = [ ./extensions/multi-monitors.nix ];
   environment.systemPackages = with pkgs.gnomeExtensions; [

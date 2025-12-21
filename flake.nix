@@ -15,8 +15,14 @@
     };
     ags.url = "github:Aylur/ags";
     stylix.url = "github:danth/stylix";
+
+    nixpkgs-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
+
+    nix-index-database.url = "github:nix-community/nix-index-database";
+    nix-index-database.inputs.nixpkgs.follows = "nixpkgs-small";
   };
-  outputs = { nixpkgs, ... } @ inputs:
+  outputs =
+    { nixpkgs, ... }@inputs:
     let
       system = "x86_64-linux";
       tools = import ./tools/default.nix { inherit inputs; };
@@ -26,7 +32,7 @@
         nixos = tools.mkSystem ./nixos/configuration.nix;
       };
 
-      homeManagerModules. default = ./home-manager-modules;
-      nixosModules. default = ./nixos-modules;
+      homeManagerModules.default = ./home-manager-modules;
+      nixosModules.default = ./nixos-modules;
     };
 }

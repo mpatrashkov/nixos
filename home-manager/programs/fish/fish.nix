@@ -4,6 +4,7 @@
   programs.fish = {
     enable = true;
     interactiveShellInit = ''
+      ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
       set fish_greeting # Disable greeting
       fastfetch --config "$HOME/.config/fastfetch/short-config.jsonc"
     '';
