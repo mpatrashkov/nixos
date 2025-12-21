@@ -9,6 +9,7 @@
     efi.efiSysMountPoint = "/boot";
     limine = {
       enable = true;
+      efiInstallAsRemovable = true;
     };
   };
 
