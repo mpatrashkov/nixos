@@ -132,15 +132,6 @@
   # Flatpack
   services.flatpak.enable = true;
 
-  # Networking config
-  networking = {
-    hostName = "nixos";
-    nameservers = [
-      "127.0.0.1"
-      "::1"
-    ];
-  };
-
   # KVM
   boot.kernelModules = [
     "kvm-intel"
