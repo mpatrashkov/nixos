@@ -14,6 +14,14 @@
 
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs-small";
+
+    # This input gets overridden by a command line argument when building the flake.
+    # For some reason untracked files do not get included in the store, otherwise
+    # https://github.com/NixOS/nix/issues/11930
+    last-commit-message = {
+      url = "path:./last-commit-message";
+      flake = false;
+    };
   };
   outputs =
     { nixpkgs, ... }@inputs:
