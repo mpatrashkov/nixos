@@ -1,15 +1,9 @@
 {
-  config,
   pkgs,
-  lib,
   ...
 }:
 
 {
-  imports = [
-    ./programs/rofi-wayland-unwrapped/rofi-wayland-unwrapped.nix
-    ./programs/fish/fish.nix
-  ];
 
   myHomeManager.ags.enable = false;
   myHomeManager.hyprlock.enable = false;

@@ -95,9 +95,6 @@
 
     wineWowPackages.waylandFull
     protonup-qt
-    eza
-    bat
-    grc
     wlsunset
 
     (import ./programs/wlsunset-toggle/wlsunset-toggle.nix { inherit pkgs; })
@@ -177,11 +174,6 @@
       "::1"
     ];
   };
-
-  # Fish
-  programs.fish.enable = true;
-  users.defaultUserShell = pkgs.fish;
-  environment.shells = with pkgs; [ fish ];
 
   # KVM
   boot.kernelModules = [
