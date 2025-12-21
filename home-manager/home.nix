@@ -37,12 +37,6 @@
     };
   };
 
-  programs.direnv = {
-    enable = true;
-    enableZshIntegration = true;
-    nix-direnv.enable = true;
-  };
-
   services.xembed-sni-proxy = {
     enable = true;
   };
