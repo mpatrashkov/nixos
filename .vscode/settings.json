@@ -22,6 +22,7 @@
     "nixfmt",
     "nixos",
     "nixpkgs",
+    "npins",
     "pkgs",
     "pname",
     "sassc",
