@@ -25,50 +25,6 @@
 
   fonts.fontconfig.enable = true;
 
-  home.packages = with pkgs; [
-    httpie
-    killall
-    sublime4
-    font-awesome
-    (python311.withPackages (
-      ps: with ps; [
-      ]
-    ))
-    cascadia-code
-    feh
-    nodejs
-    gh
-    nodePackages.zx
-    # wdisplays
-    # kanshi
-    distrobox
-    swww
-
-    gnome-software
-    networkmanager_dmenu
-    spotify
-
-    adwaita-icon-theme
-
-    htop
-    playerctl
-    qbittorrent
-    bitwarden-cli
-    ngrok
-    ddcutil
-
-    # jdk17
-    prismlauncher
-    # android-studio
-
-    gnome-system-monitor
-    libreoffice
-    dconf-editor
-
-    nemo
-    github-desktop
-  ];
-
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
@@ -80,13 +36,6 @@
       package = pkgs.gruvbox-dark-icons-gtk;
     };
   };
-
-  xdg.configFile."networkmanager-dmenu/config.ini".text = ''
-    [dmenu]
-    dmenu_command = rofi -dmenu -i
-    [editor]
-    gui_if_available = True
-  '';
 
   programs.direnv = {
     enable = true;
