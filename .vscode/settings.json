@@ -17,6 +17,7 @@
     "fastfetch",
     "gamescope",
     "gvariant",
+    "limine",
     "networkmanager",
     "nixd",
     "nixfmt",

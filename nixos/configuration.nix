@@ -11,10 +11,6 @@
 
   myNixOS.services.smb.enable = false;
 
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
   environment.pathsToLink = [ "/libexec" ];
 
   nixpkgs.config.permittedInsecurePackages = [
@@ -105,8 +101,6 @@
 
   programs.dconf.enable = true;
 
-  boot.supportedFilesystems = [ "ntfs" ];
-
   virtualisation.libvirtd = {
     enable = true;
 
@@ -127,9 +121,6 @@
     LIBVA_DRIVER_NAME = "radeonsi";
     VA_DRIVER_NAME = "radeonsi";
   };
-
-  # Latest kernel
-  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Docker
   virtualisation.docker.enable = true;
