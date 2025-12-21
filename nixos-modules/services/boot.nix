@@ -10,6 +10,7 @@
     limine = {
       enable = true;
       efiInstallAsRemovable = true;
+      style.wallpapers = [ ../../22.png ];
     };
   };
 
