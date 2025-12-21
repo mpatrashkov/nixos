@@ -139,9 +139,6 @@
     };
   };
 
-  # Sway
-  security.polkit.enable = true;
-
   # Hardware acceleration
   hardware.graphics = {
     enable = true;
