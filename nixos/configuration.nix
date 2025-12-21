@@ -1,5 +1,4 @@
 {
-  inputs,
   pkgs,
   lib,
   ...
@@ -189,18 +188,6 @@
     "kvm-intel"
     "i2c-dev"
   ];
-
-  # Sway
-  services.dbus.enable = true;
-  xdg.portal = {
-    enable = true;
-    wlr.enable = lib.mkForce true;
-    # gtk portal needed to make gtk apps happy
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-  };
-
-  # gnome keyring
-  services.gnome.gnome-keyring.enable = true;
 
   # Bluetooth
   hardware.bluetooth.enable = true;
