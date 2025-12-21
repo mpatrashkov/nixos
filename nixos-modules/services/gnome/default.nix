@@ -34,6 +34,29 @@
           sleep-inactive-ac-type = lib.gvariant.mkString "nothing";
         };
 
+        "org/gnome/shell" = {
+          enabled-extensions = lib.gvariant.mkArray [
+            "dash-to-dock@micxgx.gmail.com"
+            "multi-monitor-panel@coolssor"
+            # TODO: not sure about this one
+            "user-theme@gnome-shell-extensions.gcampax.github.com"
+          ];
+
+          favorite-apps = lib.gvariant.mkArray [
+            "google-chrome.desktop"
+            "code.desktop"
+            "Alacritty.desktop"
+            "org.gnome.Nautilus.desktop"
+          ];
+        };
+
+        "org/gnome/shell/extensions/dash-to-dock" = {
+          dock-position = lib.gvariant.mkString "LEFT";
+          dock-fixed = lib.gvariant.mkBoolean true;
+          extend-height = lib.gvariant.mkBoolean true;
+          disable-overview-on-startup = lib.gvariant.mkBoolean true;
+        };
+
         # "org/gnome/desktop/input-sources" = {
         #   sources = lib.gvariant.mkArray [
         #     "('xkb', 'us')"
