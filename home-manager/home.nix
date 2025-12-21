@@ -10,7 +10,6 @@
     ./programs/rofi-wayland-unwrapped/rofi-wayland-unwrapped.nix
     # ./programs/alacritty/alacritty.nix
     ./programs/fish/fish.nix
-    ./programs/hyprland/hyprland.nix
   ];
 
   myHomeManager.ags.enable = false;
