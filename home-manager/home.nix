@@ -8,7 +8,6 @@
 {
   imports = [
     ./programs/rofi-wayland-unwrapped/rofi-wayland-unwrapped.nix
-    # ./programs/alacritty/alacritty.nix
     ./programs/fish/fish.nix
   ];
 
