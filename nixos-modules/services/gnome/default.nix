@@ -57,13 +57,18 @@
           disable-overview-on-startup = lib.gvariant.mkBoolean true;
         };
 
-        # "org/gnome/desktop/input-sources" = {
-        #   sources = lib.gvariant.mkArray [
-        #     "('xkb', 'us')"
-        #     "('xkb', 'bg+phonetic')"
-        #   ];
-        #   # mru-sources = lib.gvariant.mkArray [ "('xkb', 'us')" ];
-        # };
+        "org/gnome/desktop/input-sources" = {
+          sources = [
+            (lib.gvariant.mkTuple [
+              "xkb"
+              "us"
+            ])
+            (lib.gvariant.mkTuple [
+              "xkb"
+              "bg+phonetic"
+            ])
+          ];
+        };
       };
     }
   ];
