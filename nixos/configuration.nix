@@ -122,10 +122,6 @@
     VA_DRIVER_NAME = "radeonsi";
   };
 
-  # Docker
-  virtualisation.docker.enable = true;
-  virtualisation.docker.storageDriver = "btrfs";
-
   # Fix Electron Apps Fractional Scaling
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
