@@ -32,4 +32,12 @@
       name = "Ubuntu Sans";
     };
   };
+
+  stylix.icons = {
+    enable = true;
+
+    package = pkgs.yaru-theme;
+    dark = "Yaru-dark";
+    light = "Yaru-dark";
+  };
 }

@@ -28,15 +28,6 @@
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  gtk = {
-    enable = true;
-    # TODO: move into stylix
-    iconTheme = {
-      name = "oomox-gruvbox-dark";
-      package = pkgs.gruvbox-dark-icons-gtk;
-    };
-  };
-
   services.xembed-sni-proxy = {
     enable = true;
   };
