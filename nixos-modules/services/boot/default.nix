@@ -10,6 +10,12 @@
     limine = {
       enable = true;
       efiInstallAsRemovable = true;
+
+      extraEntries = ''
+        /Windows 11
+        protocol: efi
+        path: uuid(b1a860f6-3e30-4262-aefb-93b85625b83e):/EFI/Microsoft/Boot/bootmgfw.efi
+      '';
     };
   };
 
