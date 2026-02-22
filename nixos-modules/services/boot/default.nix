@@ -6,10 +6,13 @@
 {
   # Bootloader
   boot.loader = {
-    efi.efiSysMountPoint = "/boot";
+    efi = {
+      efiSysMountPoint = "/boot";
+      canTouchEfiVariables = true;
+    };
+
     limine = {
       enable = true;
-      efiInstallAsRemovable = true;
 
       extraEntries = ''
         /Windows 11
