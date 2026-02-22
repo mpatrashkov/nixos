@@ -5,6 +5,6 @@
 
 {
   environment.systemPackages = with pkgs; [
-    gnome-mines
+    pinta
   ];
 }
