@@ -13,6 +13,7 @@
 
     limine = {
       enable = true;
+      efiInstallAsRemovable = true;
 
       extraEntries = ''
         /Windows 11
