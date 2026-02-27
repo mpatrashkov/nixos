@@ -8,7 +8,7 @@
   boot.loader = {
     efi = {
       efiSysMountPoint = "/boot";
-      canTouchEfiVariables = true;
+      canTouchEfiVariables = false;
     };
 
     limine = {
@@ -18,7 +18,7 @@
       extraEntries = ''
         /Windows 11
         protocol: efi
-        path: boot():/EFI/Microsoft/Boot/bootmgfw.efi
+        path: uuid(0c96b87f-8fdf-431b-b63e-f028ce90a4ea):/EFI/Microsoft/Boot/bootmgfw.efi
       '';
     };
   };
