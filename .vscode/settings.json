@@ -27,6 +27,7 @@
     "npins",
     "pkgs",
     "pname",
+    "qbittorrent",
     "sassc",
     "stdenv",
     "stylix",
