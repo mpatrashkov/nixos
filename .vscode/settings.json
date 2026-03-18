@@ -6,31 +6,37 @@
   },
 
   "cSpell.words": [
+    "adbusers",
     "Bibata",
     "bootmgfw",
     "cantarell",
     "caskaydia",
     "coolssor",
     "dconf",
+    "dialout",
     "direnv",
     "dnscrypt",
     "eveiscoull",
     "fastfetch",
     "gamescope",
     "gvariant",
+    "libvirtd",
     "limine",
+    "Miroslav",
     "networkmanager",
     "nixd",
     "nixfmt",
     "nixos",
     "nixpkgs",
     "npins",
+    "Patrashkov",
     "pkgs",
     "pname",
     "qbittorrent",
     "sassc",
     "stdenv",
     "stylix",
-    "xwayland"
+    "xwayland",
+    "ydotool"
   ]
 }
