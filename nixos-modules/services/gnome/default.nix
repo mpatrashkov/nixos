@@ -8,7 +8,10 @@
   ];
 
   # Extensions
-  imports = [ ./extensions/multi-monitors.nix ];
+  imports = [
+    ./extensions/multi-monitors.nix
+    ./extensions/another-window-session-manager.nix
+  ];
   environment.systemPackages = with pkgs.gnomeExtensions; [
     dash-to-dock
   ];
@@ -38,6 +41,7 @@
           enabled-extensions = lib.gvariant.mkArray [
             "dash-to-dock@micxgx.gmail.com"
             "multi-monitor-panel@coolssor"
+            "another-window-session-manager@gmail.com"
             # TODO: not sure about this one
             "user-theme@gnome-shell-extensions.gcampax.github.com"
           ];

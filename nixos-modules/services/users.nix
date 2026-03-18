@@ -15,6 +15,7 @@
       "adbusers"
       "i2c"
       "dialout"
+      "ydotool"
     ];
   };
 }
