@@ -10,7 +10,8 @@
   # Extensions
   imports = [
     ./extensions/multi-monitors.nix
-    ./extensions/another-window-session-manager.nix
+    # Disabling AWSM fow now, as I can't make it work for apps with multiple windows (e.g. Chrome, VSCode, Alacritty)
+    # ./extensions/another-window-session-manager.nix
   ];
   environment.systemPackages = with pkgs.gnomeExtensions; [
     dash-to-dock
