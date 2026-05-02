@@ -18,4 +18,8 @@
       "ydotool"
     ];
   };
+
+  security.sudo.extraConfig = ''
+    Defaults pwfeedback
+  '';
 }
