@@ -26,9 +26,9 @@ Present the following options:
 2. **Verify the configuration (test)**: This will stage the changes and test the configuration without applying it permanently.
 3. **Do nothing**
 
+Both options run autonomously via the Bash tool. Passwordless sudo for `nh` is configured for user `miro` in `nixos-modules/services/users.nix`, and `--bypass-root-check` is required because `nh` otherwise refuses to run as root. Stream output back to me.
+
 * If I select "Apply the change (switch)", immediately ask me for the commit message using a text input prompt. **CRITICAL**: Use a short `header` (max 12 chars), e.g., `header: "Git Commit"`. Once provided, run:
-  `git add . && git commit -m "<commit_message>" && git push && nh os switch -- --override-input last-commit-message "path:./last-commit-message"`
-  This option remains user-driven (run it yourself in the terminal where I can see output) because it pushes to git and applies system-wide.
-* If I select "Verify the configuration (test)", run the command yourself via the Bash tool — passwordless sudo for `nixos-rebuild` is configured for user `miro`, so this works non-interactively. Stream the output back to me. Command:
-  `git add . && sudo nh os test -- --override-input last-commit-message "path:./last-commit-message"`
-  The asymmetry with `switch` is intentional: `test` is local and reversible, `switch` is not.
+  `git add . && git commit -m "<commit_message>" && git push && sudo nh os switch --bypass-root-check -- --override-input last-commit-message "path:./last-commit-message"`
+* If I select "Verify the configuration (test)", run:
+  `git add . && sudo nh os test --bypass-root-check -- --override-input last-commit-message "path:./last-commit-message"`
