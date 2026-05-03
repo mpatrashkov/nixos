@@ -28,6 +28,8 @@ in
       set-option -g prefix M-a
       bind-key M-a send-prefix
 
+      bind & kill-window
+
       set -g mouse on
 
       set -g status-right '#{?client_prefix,#[bg=yellow]#[fg=black] PREFIX #[default] ,}"#{=21:pane_title}"'
