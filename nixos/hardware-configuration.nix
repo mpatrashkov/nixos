@@ -52,7 +52,9 @@
     fsType = "vfat";
   };
 
-  swapDevices = [ ];
+  swapDevices = [ { device = "/swapfile"; } ];
+  boot.resumeDevice = "/dev/disk/by-uuid/1319c0da-475f-4b05-8fcf-9e334f341f92";
+  boot.kernelParams = [ "resume_offset=97527040" ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
   # (the default) this is the recommended approach. When using systemd-networkd it's

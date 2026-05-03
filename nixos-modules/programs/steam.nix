@@ -1,10 +1,14 @@
 { pkgs, ... }:
 {
-  # programs.gamescope = {
-  #   enable = true;
-  #   capSysNice = true;
-  #   package = pkgs.gamescope-wsi;
-  # };
+  environment.systemPackages = with pkgs; [
+    steam-tui
+    steamcmd
+  ];
+
+  programs.gamescope = {
+    enable = true;
+    capSysNice = false;
+  };
 
   programs.steam = {
     enable = true;
