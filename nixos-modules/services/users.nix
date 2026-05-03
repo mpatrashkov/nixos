@@ -22,4 +22,16 @@
   security.sudo.extraConfig = ''
     Defaults pwfeedback
   '';
+
+  security.sudo.extraRules = [
+    {
+      users = [ "miro" ];
+      commands = [
+        {
+          command = "/run/current-system/sw/bin/nixos-rebuild";
+          options = [ "NOPASSWD" "SETENV" ];
+        }
+      ];
+    }
+  ];
 }
