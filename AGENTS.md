@@ -30,5 +30,5 @@ Present the following options:
   `git add . && git commit -m "<commit_message>" && git push && nh os switch -- --override-input last-commit-message "path:./last-commit-message"`
   This option remains user-driven (run it yourself in the terminal where I can see output) because it pushes to git and applies system-wide.
 * If I select "Verify the configuration (test)", run the command yourself via the Bash tool — passwordless sudo for `nixos-rebuild` is configured for user `miro`, so this works non-interactively. Stream the output back to me. Command:
-  `git add . && nh os test -- --override-input last-commit-message "path:./last-commit-message"`
+  `git add . && sudo nh os test -- --override-input last-commit-message "path:./last-commit-message"`
   The asymmetry with `switch` is intentional: `test` is local and reversible, `switch` is not.

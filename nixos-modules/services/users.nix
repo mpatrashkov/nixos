@@ -21,6 +21,6 @@
 
   security.sudo.extraConfig = ''
     Defaults pwfeedback
-    miro ALL=(ALL:ALL) NOPASSWD: SETENV: /run/current-system/sw/bin/nixos-rebuild
+    miro ALL=(ALL:ALL) NOPASSWD: SETENV: /run/current-system/sw/bin/nh
   '';
 }
