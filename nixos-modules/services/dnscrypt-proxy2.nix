@@ -2,7 +2,7 @@
 
 {
   config = {
-    services.dnscrypt-proxy2 = {
+    services.dnscrypt-proxy = {
       enable = true;
       settings = {
         ipv6_servers = true;
@@ -22,7 +22,7 @@
       };
     };
 
-    systemd.services.dnscrypt-proxy2.serviceConfig = {
+    systemd.services.dnscrypt-proxy.serviceConfig = {
       StateDirectory = "dnscrypt-proxy";
     };
 

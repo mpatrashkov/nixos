@@ -18,7 +18,6 @@ let
 in
 {
   imports = [ ];
-  services.xserver.desktopManager.gnome.enable = true;
 
   environment.systemPackages = [
     multiMonitors

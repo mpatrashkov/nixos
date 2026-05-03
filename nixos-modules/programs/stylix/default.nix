@@ -1,6 +1,7 @@
 {
   pkgs,
   inputs,
+  lib,
   ...
 }:
 {
@@ -19,6 +20,13 @@
     };
 
     polarity = "dark";
+
+    # Stylix auto-detects GNOME and picks `platform = "gnome"`, but its
+    # GNOME platform is a no-op (only "qtct" is actually implemented),
+    # which triggers stylix's own "unsupported platform" warning and a
+    # downstream HM deprecation warning for `qt.platformTheme.name = "gnome"`.
+    # Pinning to "qtct" enables real Qt theming via qt5ct/qt6ct + Kvantum.
+    targets.qt.platform = lib.mkForce "qtct";
   };
 
   stylix.fonts = {

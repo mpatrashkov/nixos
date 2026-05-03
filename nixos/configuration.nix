@@ -57,7 +57,7 @@
     wl-clipboard
     imagemagick
 
-    wineWowPackages.waylandFull
+    wineWow64Packages.waylandFull
     protonup-qt
     wlsunset
 

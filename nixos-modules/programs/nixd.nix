@@ -3,7 +3,7 @@
 {
   config.environment.systemPackages = [
     pkgs.nixd
-    pkgs.nixfmt-rfc-style
+    pkgs.nixfmt
   ];
 
   config.nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];

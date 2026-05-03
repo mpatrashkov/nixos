@@ -23,6 +23,10 @@
   # changes in each release.
   home.stateVersion = "23.05";
 
+  # Adopt HM 26.05's new default: GTK4 apps fall back to system Adwaita
+  # rather than reusing the GTK3 theme (adw-gtk3 has no GTK4 build).
+  gtk.gtk4.theme = null;
+
   fonts.fontconfig.enable = true;
 
   # Let Home Manager install and manage itself.

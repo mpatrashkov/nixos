@@ -34,5 +34,5 @@
   # Disable man page cache generation for fish, because it slows down nix builds a lot
   # See https://wiki.nixos.org/wiki/Fish#Disable_man_page_generation.
   # Remove when https://github.com/NixOS/nixpkgs/pull/414076 gets merged
-  documentation.man.generateCaches = false;
+  documentation.man.cache.enable = false;
 }

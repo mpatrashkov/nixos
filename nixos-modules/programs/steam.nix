@@ -19,7 +19,7 @@
         pkgs: with pkgs; [
           libkrb5
           keyutils
-          xorg.libxcb
+          libxcb
         ];
     };
   };

@@ -21,17 +21,5 @@ let
   }) (tools.filesIn ./features);
 in
 {
-  nixpkgs = {
-    config = {
-      allowUnfree = true;
-      permittedInsecurePackages = [
-        "openssl-1.1.1u"
-        "openssl-1.1.1v"
-        "openssl-1.1.1w"
-      ];
-      # experimental-features = "nix-command flakes";
-    };
-  };
-
   imports = [ ] ++ features;
 }
