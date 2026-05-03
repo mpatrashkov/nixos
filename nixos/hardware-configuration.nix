@@ -43,6 +43,7 @@
 
   fileSystems."/export/shared" = {
     device = "/mnt/shared";
+    fsType = "none";
     options = [ "bind" ];
   };
 

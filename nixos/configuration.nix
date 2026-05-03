@@ -22,6 +22,13 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  # Override openldap to skip flaky tests
+  nixpkgs.config.packageOverrides = pkgs: {
+    openldap = pkgs.openldap.overrideAttrs (oldAttrs: {
+      doCheck = false;
+    });
+  };
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [

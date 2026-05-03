@@ -1,0 +1,8 @@
+# Build artifacts
+result
+result-*
+.direnv/
+
+# Large or generated files
+*.qcow2
+*.iso

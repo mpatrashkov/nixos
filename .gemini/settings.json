@@ -1,5 +1,10 @@
 {
-  "tools": {
-    "approvalMode": "auto_edit"
+  "context": {
+    "fileName": ["AGENTS.md"]
+  },
+  "tools": {},
+  "skills.enabled": true,
+  "general": {
+    "defaultApprovalMode": "auto_edit"
   }
 }

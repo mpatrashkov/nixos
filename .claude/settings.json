@@ -1,0 +1,14 @@
+{
+  "context": {
+    "fileName": ["AGENTS.md"]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(nh os *)",
+      "Bash(nix *)",
+      "Bash(nixos-rebuild *)"
+    ]
+  },
+  "plansDirectory": ".plans"
+}
