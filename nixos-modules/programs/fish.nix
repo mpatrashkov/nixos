@@ -10,6 +10,7 @@
       ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
       set fish_greeting # Disable greeting
       fastfetch --config "$HOME/.config/fastfetch/short-config.jsonc"
+      ${pkgs.worktrunk}/bin/wt config shell init fish | source
     '';
     shellAliases = {
       ls = "eza --icons -l -s=type -I=node_modules --hyperlink";

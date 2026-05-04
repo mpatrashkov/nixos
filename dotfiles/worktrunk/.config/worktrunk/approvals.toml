@@ -1,0 +1,8 @@
+# Worktrunk project hook approvals.
+# Schema: [projects."<id>"] approved-commands = ["<cmd>", ...]
+# Project ID derives from the git remote: github.com/mpatrashkov/nixos.
+
+[projects."github.com/mpatrashkov/nixos"]
+approved-commands = [
+    "wt step copy-ignored",
+]
