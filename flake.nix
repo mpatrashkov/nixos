@@ -34,7 +34,6 @@
         nixos = tools.mkSystem ./nixos/configuration.nix;
       };
 
-      homeManagerModules.default = ./home-manager-modules;
       nixosModules.default = ./nixos-modules;
     };
 }

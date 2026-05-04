@@ -14,7 +14,6 @@
     home-manager.useUserPackages = true;
 
     home-manager.extraSpecialArgs = { inherit inputs outputs tools; };
-    home-manager.sharedModules = [ outputs.homeManagerModules.default ];
 
     home-manager.users.miro = ../../home-manager/home.nix;
   };
