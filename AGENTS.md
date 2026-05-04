@@ -35,6 +35,6 @@ Present the following options:
 Both options run autonomously via the Bash tool. Passwordless sudo for `nh` is configured for user `miro` in `nixos-modules/services/users.nix`, and `--bypass-root-check` is required because `nh` otherwise refuses to run as root. Stream output back to me.
 
 * If I select "Apply the change (switch)", immediately ask me for the commit message using a text input prompt. **CRITICAL**: Use a short `header` (max 12 chars), e.g., `header: "Git Commit"`. Once provided, run:
-  `git add . && git commit -m "<commit_message>" && git push && sudo nh os switch --bypass-root-check -- --override-input last-commit-message "path:./last-commit-message"`
+  `./scripts/nix-switch "<commit_message>"`
 * If I select "Verify the configuration (test)", run:
-  `git add . && sudo nh os test --bypass-root-check -- --override-input last-commit-message "path:./last-commit-message"`
+  `./scripts/nix-test`

@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+
+if [[ $# -lt 1 || -z "${1:-}" ]]; then
+  echo "usage: $(basename "$0") <commit_message>" >&2
+  exit 2
+fi
+
+git add .
+git commit -m "$1"
+git push
+sudo nh os switch -u --bypass-root-check -- \
+  --override-input last-commit-message "path:./last-commit-message"

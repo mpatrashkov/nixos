@@ -7,7 +7,9 @@
       "Bash(git *)",
       "Bash(nh os *)",
       "Bash(nix *)",
-      "Bash(nixos-rebuild *)"
+      "Bash(nixos-rebuild *)",
+      "Bash(./scripts/nix-* *)",
+      "Bash(./scripts/nix-*)"
     ]
   },
   "plansDirectory": ".plans"

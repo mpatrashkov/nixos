@@ -8,7 +8,7 @@
       "label": "Test Nix Config",
       "type": "shell",
       // See `flake.nix` for why the input needs to be overridden like this.
-      "command": "git add . && sudo nh os test --bypass-root-check -- --override-input last-commit-message \"path:./last-commit-message\"",
+      "command": "./scripts/nix-test",
       "group": {
         "kind": "test",
         "isDefault": true
@@ -18,7 +18,7 @@
       "label": "Switch Nix Config",
       "type": "shell",
       // See `flake.nix` for why the input needs to be overridden like this.
-      "command": "git add . && git commit -m \"${input:commitMessage}\" && git push && sudo nh os switch --bypass-root-check -- --override-input last-commit-message \"path:./last-commit-message\"",
+      "command": "./scripts/nix-switch \"${input:commitMessage}\"",
       "group": {
         "kind": "build",
         "isDefault": true
