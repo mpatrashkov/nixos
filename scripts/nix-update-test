@@ -2,5 +2,5 @@
 set -euo pipefail
 cd "$(git rev-parse --show-toplevel)"
 
-sudo nh os test -u --bypass-root-check -- \
+sudo nh os test -u --bypass-root-check . -- \
   --override-input last-commit-message "path:./last-commit-message"

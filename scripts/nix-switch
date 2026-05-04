@@ -10,5 +10,5 @@ fi
 git add .
 git commit -m "$1"
 git push
-sudo nh os switch --bypass-root-check -- \
+sudo nh os switch --bypass-root-check . -- \
   --override-input last-commit-message "path:./last-commit-message"

@@ -14,6 +14,6 @@ UNFORMATTED_COMMIT_MSG=`head -n1 $COMMIT_MSG_FILE`
 COMMIT_MSG="${UNFORMATTED_COMMIT_MSG// /__}"
 
 # The `last-commit-message` file is stored in the flake root directory.
-LAST_COMMIT_MESSAGE_FILE=$NH_FLAKE/last-commit-message
+LAST_COMMIT_MESSAGE_FILE="$(git rev-parse --show-toplevel)/last-commit-message"
 
 echo -n $COMMIT_MSG > $LAST_COMMIT_MESSAGE_FILE
