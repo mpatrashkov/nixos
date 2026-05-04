@@ -15,4 +15,4 @@ Whenever the user asks to update flake inputs (e.g., "update my flake", "bump fl
    **CRITICAL**: You must provide a short `header` for the question that is 12 characters or less (e.g., `header: "Flake Update"`).
    Present the following options:
    - **Apply (Switch)**: Stage the changes, prompt for a commit message (using a text prompt with `header: "Git Commit"`), commit, push, and apply the configuration using `nh os switch -- --override-input last-commit-message "path:./last-commit-message"`.
-   - **Revert**: Discard all changes by running the rollback script located at `scripts/src/rollback-test-changes.ts`.
+   - **Revert**: Discard all changes by running the rollback script located at `scripts/rollback-test-changes.ts`.

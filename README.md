@@ -1,3 +1,7 @@
+## Scripts
+
+Helper scripts live in `scripts/` and are run with `zx` (e.g. `zx scripts/rollback-test-changes.ts`). The root `package.json`/`pnpm-lock.yaml` exist solely to provide their dependencies; run `pnpm install` from the repo root to set them up.
+
 ## Useful commands
 
 ### Reset monitor config - https://unix.stackexchange.com/a/801854
