@@ -34,7 +34,13 @@ Present the following options:
 
 Both options run autonomously via the Bash tool. Passwordless sudo for `nh` is configured for user `miro` in `nixos-modules/services/users.nix`, and `--bypass-root-check` is required because `nh` otherwise refuses to run as root. Stream output back to me.
 
+**Command reference (do not confuse these):**
+- `./scripts/nix-test` — stages changes and tests the config without making it permanent (`nh os test`)
+- `./scripts/nix-switch "<msg>"` — stages, commits, pushes, and applies the config permanently (`nh os switch`)
+
 * If I select "Apply the change (switch)", immediately ask me for the commit message using a text input prompt. **CRITICAL**: Use a short `header` (max 12 chars), e.g., `header: "Git Commit"`. Once provided, run:
   `./scripts/nix-switch "<commit_message>"`
+  Run the command exactly as shown — no output redirection.
 * If I select "Verify the configuration (test)", run:
   `./scripts/nix-test`
+  Run the command exactly as shown — no output redirection (no `2>&1 | tail -N` or similar). The raw output must be streamed directly to the Bash tool output so the user can see it in full.

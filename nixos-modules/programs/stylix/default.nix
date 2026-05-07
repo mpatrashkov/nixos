@@ -4,6 +4,9 @@
   lib,
   ...
 }:
+let
+  hatter-icon-theme = pkgs.callPackage ./hatter-icon-theme.nix { };
+in
 {
   imports = [
     inputs.stylix.nixosModules.stylix
@@ -44,8 +47,8 @@
   stylix.icons = {
     enable = true;
 
-    package = pkgs.yaru-theme;
-    dark = "Yaru-dark";
-    light = "Yaru-dark";
+    package = hatter-icon-theme;
+    dark = "Hatter-Yaru";
+    light = "Hatter-Yaru";
   };
 }

@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
     steam-tui
@@ -25,6 +25,18 @@
           keyutils
           libxcb
         ];
+    };
+  };
+
+  systemd.user.services.steam = {
+    description = "Steam (silent autostart)";
+    after = [ "graphical-session.target" ];
+    wantedBy = [ "graphical-session.target" ];
+    path = [ pkgs.gamescope ];
+    serviceConfig = {
+      ExecStart = "${config.programs.steam.package}/bin/steam -silent";
+      Restart = "on-failure";
+      RestartSec = 5;
     };
   };
 }
