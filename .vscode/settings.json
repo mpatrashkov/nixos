@@ -7,8 +7,10 @@
 
   "cSpell.words": [
     "adbusers",
+    "ananicy",
     "Bibata",
     "bootmgfw",
+    "cachyos",
     "cantarell",
     "caskaydia",
     "coolssor",
@@ -20,8 +22,13 @@
     "fastfetch",
     "gamescope",
     "gvariant",
+    "keyutils",
+    "libkrb",
     "libvirtd",
+    "libxcb",
     "limine",
+    "mangoapp",
+    "mangohud",
     "Miroslav",
     "networkmanager",
     "nixd",
@@ -33,9 +40,13 @@
     "pkgs",
     "pname",
     "qbittorrent",
+    "renice",
     "sassc",
+    "SCHED",
     "stdenv",
+    "steamcmd",
     "stylix",
+    "userspace",
     "xwayland",
     "ydotool"
   ]

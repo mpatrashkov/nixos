@@ -1,3 +1,14 @@
+# Configuration Tooling: No Home Manager
+
+**Home Manager is deprecated in this repo. Do not use it.** When you need to manage user-level files, dotfiles, or per-user configuration, choose between:
+
+1. **NixOS configuration** (preferred for system-integrated config) — declare files, services, and packages via NixOS modules under `nixos-modules/`. Use `environment.etc`, system-level services, `users.users.<name>.packages`, or activation scripts as appropriate.
+2. **Stow** (preferred for plain dotfiles in `$HOME`) — place dotfiles in the stow directory structure and let GNU Stow symlink them into place.
+
+Do **not** introduce `home-manager`, `home.file`, `programs.<x>.enable` under a `home-manager` namespace, or any `home.nix` / `homeConfigurations` entries. If you find yourself reaching for Home Manager to solve a problem, stop and pick NixOS config or stow instead. If neither fits cleanly, ask before proceeding.
+
+---
+
 # Primary Workflow: Planning Mode
 
 Whenever I request a new feature, a bug fix, a refactor, or any significant change to the codebase, you MUST follow this Cursor-inspired planning workflow:
