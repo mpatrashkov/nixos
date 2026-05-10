@@ -5,6 +5,7 @@
 
   environment.gnome.excludePackages = with pkgs; [
     gnome-console
+    gnome-system-monitor
   ];
 
   # Extensions
