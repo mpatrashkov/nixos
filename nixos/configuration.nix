@@ -35,43 +35,24 @@
     #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     #  wget
     firefox
-    eog
     gnome-tweaks
     vscode
-    pavucontrol
-    virt-manager
+
     pulseaudio
     steam-run
-    (lutris.override {
-      extraLibraries = pkgs: [
-        # List library dependencies here
-      ];
-    })
 
     xdg-utils
     glib
 
-    wayland
-    grim
-    slurp
-    wl-clipboard
-    imagemagick
-
     wineWow64Packages.waylandFull
     protonup-qt
-    wlsunset
-
-    (import ./programs/wlsunset-toggle/wlsunset-toggle.nix { inherit pkgs; })
 
     obsidian
-    pamixer
 
     mkcert
 
     pnpm
     alacritty
-    tor-browser
-    kdePackages.kleopatra
   ];
 
   services.gvfs.enable = true;
