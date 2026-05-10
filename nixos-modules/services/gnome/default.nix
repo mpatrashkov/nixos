@@ -53,6 +53,8 @@
             "Alacritty.desktop"
             "org.gnome.Nautilus.desktop"
           ];
+
+          last-selected-power-profile = lib.gvariant.mkString "performance";
         };
 
         "org/gnome/shell/extensions/dash-to-dock" = {
@@ -73,6 +75,10 @@
               "bg+phonetic"
             ])
           ];
+        };
+
+        "org/gnome/desktop/session" = {
+          idle-delay = lib.gvariant.mkUint32 900;
         };
       };
     }
