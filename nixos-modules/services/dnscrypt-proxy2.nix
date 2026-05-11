@@ -27,8 +27,14 @@
     };
 
     networking.networkmanager = {
-      enable = true;
       dns = "none";
+
+      ensureProfiles.profiles.enp6s0-static = {
+        ipv4 = {
+          dns = "127.0.0.1;";
+          ignore-auto-dns = true;
+        };
+      };
     };
   };
 }

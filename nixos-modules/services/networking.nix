@@ -6,18 +6,32 @@
       "127.0.0.1"
       "::1"
     ];
-    defaultGateway = "192.168.100.1";
-    interfaces.enp6s0.ipv4.addresses = [
-      {
-        address = "192.168.100.2";
-        prefixLength = 24;
-      }
-    ];
   };
 
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [ 3000 ];
+  };
+
+  networking.networkmanager = {
+    enable = true;
+    ensureProfiles.profiles = {
+      enp6s0-static = {
+        connection = {
+          id = "enp6s0-static";
+          type = "ethernet";
+          interface-name = "enp6s0";
+          autoconnect = true;
+        };
+        ipv4 = {
+          method = "manual";
+          address1 = "192.168.100.2/24,192.168.100.1";
+        };
+        ipv6 = {
+          method = "disabled";
+        };
+      };
+    };
   };
 
   # Fix for random network disconnects on Intel I225-V Ethernet, which is caused by aggressive power management (ASPM).
