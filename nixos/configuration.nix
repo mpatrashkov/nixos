@@ -45,7 +45,6 @@
     glib
 
     wineWow64Packages.waylandFull
-    protonup-qt
 
     obsidian
 

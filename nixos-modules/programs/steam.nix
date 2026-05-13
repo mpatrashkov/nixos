@@ -26,6 +26,7 @@
 #   https://github.com/ValveSoftware/steam-for-linux/issues/11446
 
 { config, pkgs, ... }:
+
 {
   programs.steam = {
     enable = true;
@@ -46,10 +47,14 @@
     };
   };
 
-  # Steam starts very slowly, so a user service to start it in the background at login is added
   systemd.user.services.steam = {
     description = "Steam (silent autostart)";
-    after = [ "graphical-session.target" ];
+    after = [
+      "graphical-session.target"
+      "gnome-session-manager.target"
+    ];
+    requisite = [ "gnome-session-manager.target" ];
+    partOf = [ "graphical-session.target" ];
     wantedBy = [ "graphical-session.target" ];
     path = [ pkgs.gamescope ];
     serviceConfig = {
