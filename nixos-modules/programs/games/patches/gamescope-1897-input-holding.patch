@@ -1,0 +1,667 @@
+diff --git a/src/Backends/SDLBackend.cpp b/src/Backends/SDLBackend.cpp
+index 87bde7e..24c8858 100644
+--- a/src/Backends/SDLBackend.cpp
++++ b/src/Backends/SDLBackend.cpp
+@@ -1,6 +1,7 @@
+ // For the nested case, reads input from the SDL window and send to wayland
+ 
+ #include <X11/Xlib.h>
++#include <linux/input.h>
+ #include <thread>
+ #include <mutex>
+ #include <string>
+@@ -21,6 +22,8 @@
+ #include "Utils/Defer.h"
+ #include "refresh_rate.h"
+ 
++#include "LibInputHandler.h"
++
+ #include "sdlscancodetable.hpp"
+ 
+ static int g_nOldNestedRefresh = 0;
+@@ -194,6 +197,10 @@ namespace gamescope
+ 		uint32_t m_uUserEventIdBase = 0u;
+ 		std::vector<const char *> m_pszInstanceExtensions;
+ 
++
++        std::shared_ptr<CLibInputHandler> m_pLibInput;
++        CAsyncWaiter<CRawPointer<IWaitable>, 16> m_LibInputWaiter;
++
+ 		std::thread m_SDLThread;
+ 		std::atomic<SDLInitState> m_eSDLInit = { SDLInitState::SDLInit_Waiting };
+ 
+@@ -394,12 +401,24 @@ namespace gamescope
+ 
+ 	CSDLBackend::CSDLBackend()
+ 		: m_Connector{ this }
++		, m_LibInputWaiter{ "gamescope-libinput" }
+ 		, m_SDLThread{ [this](){ this->SDLThreadFunc(); } }
+ 	{
+ 	}
+ 
+ 	bool CSDLBackend::Init()
+ 	{
++		if (g_libinputSelectedDevices.size() > 0) { 
++			std::unique_ptr<CLibInputHandler> pLibInput = std::make_unique<CLibInputHandler>();
++			if ( pLibInput->Init() ) {
++				m_pLibInput = std::move( pLibInput );
++				m_LibInputWaiter.AddWaitable( m_pLibInput.get() );
++			} else {
++				fprintf(stderr, "CSDLBackend::Init failed: Unable to register LIBINPUT devices");
++				return false;
++			}
++		}
++
+ 		m_eSDLInit.wait( SDLInitState::SDLInit_Waiting );
+ 
+ 		return m_eSDLInit == SDLInitState::SDLInit_Success;
+@@ -664,6 +683,7 @@ namespace gamescope
+ 
+ 				case SDL_MOUSEMOTION:
+ 				{
++					if (g_bMouseDisabled) break;
+ 					if ( m_bApplicationGrabbed )
+ 					{
+ 						if ( g_bWindowFocused )
+@@ -689,6 +709,7 @@ namespace gamescope
+ 				case SDL_MOUSEBUTTONDOWN:
+ 				case SDL_MOUSEBUTTONUP:
+ 				{
++					if (g_bMouseDisabled) break;
+ 					wlserver_lock();
+ 					wlserver_mousebutton( SDLButtonToLinuxButton( event.button.button ),
+ 										event.button.state == SDL_PRESSED,
+@@ -699,6 +720,7 @@ namespace gamescope
+ 
+ 				case SDL_MOUSEWHEEL:
+ 				{
++					if (g_bMouseDisabled) break;
+ 					wlserver_lock();
+ 					wlserver_mousewheel( -event.wheel.x, -event.wheel.y, fake_timestamp );
+ 					wlserver_unlock();
+@@ -731,6 +753,7 @@ namespace gamescope
+ 
+ 				case SDL_KEYDOWN:
+ 				{
++					if (g_bKeyboardDisabled) break;
+ 					// If this keydown event is super + one of the shortcut keys, consume the keydown event, since the corresponding keyup
+ 					// event will be consumed by the next case statement when the user releases the key
+ 					if ( event.key.keysym.mod & KMOD_LGUI )
+@@ -747,7 +770,39 @@ namespace gamescope
+ 				[[fallthrough]];
+ 				case SDL_KEYUP:
+ 				{
++					if (g_bKeyboardDisabled) break;
+ 					uint32_t key = SDLScancodeToLinuxKey( event.key.keysym.scancode );
++					static std::bitset<KEY_MAX+1> held_keys;
++					static bool toggle_grab_on_all_keys_up;
++
++					if (key <= KEY_MAX) {
++                        held_keys[key] = (event.type == SDL_KEYUP); // Toggle the pressed button
++                    }
++					if (held_keys[KEY_G] && held_keys[KEY_LEFTMETA]) toggle_grab_on_all_keys_up = true;
++
++ 					if (toggle_grab_on_all_keys_up && held_keys.none()) {
++						toggle_grab_on_all_keys_up = false;
++						g_bGrabbed = !g_bGrabbed;
++
++						for (int dev_fd : g_libinputSelectedDevices_grabbed_fds) {
++							if (g_bGrabbed) {
++								if (ioctl(dev_fd, EVIOCGRAB, 1) < 0) {
++									fprintf( stderr,"SDL: Failed to grab exclusive lock on device: %d\n", dev_fd);
++								}
++							} else {
++								if (ioctl(dev_fd, EVIOCGRAB, 0) < 0) {
++									fprintf( stderr,"SDL: Failed to release exclusive grab on device: %d\n", dev_fd);
++								}
++							}
++						}
++
++						SDL_SetWindowKeyboardGrab( m_Connector.GetSDLWindow(), g_bGrabbed ? SDL_TRUE : SDL_FALSE );
++
++						SDL_Event event;
++						event.type = GetUserEventIndex( GAMESCOPE_SDL_EVENT_TITLE );
++						SDL_PushEvent( &event );
++					}
++
+ 
+ 					if ( event.type == SDL_KEYUP && ( event.key.keysym.mod & KMOD_LGUI ) )
+ 					{
+@@ -781,14 +836,6 @@ namespace gamescope
+ 							case KEY_S:
+ 								gamescope::CScreenshotManager::Get().TakeScreenshot( true );
+ 								break;
+-							case KEY_G:
+-								g_bGrabbed = !g_bGrabbed;
+-								SDL_SetWindowKeyboardGrab( m_Connector.GetSDLWindow(), g_bGrabbed ? SDL_TRUE : SDL_FALSE );
+-
+-								SDL_Event event;
+-								event.type = GetUserEventIndex( GAMESCOPE_SDL_EVENT_TITLE );
+-								SDL_PushEvent( &event );
+-								break;
+ 							default:
+ 								handled = false;
+ 						}
+diff --git a/src/Backends/WaylandBackend.cpp b/src/Backends/WaylandBackend.cpp
+index abdf782..6619fc7 100644
+--- a/src/Backends/WaylandBackend.cpp
++++ b/src/Backends/WaylandBackend.cpp
+@@ -12,6 +12,7 @@
+ #include "Utils/TempFiles.h"
+ 
+ #include <cstring>
++#include <linux/input.h>
+ #include <unordered_map>
+ #include <unordered_set>
+ #include <csignal>
+@@ -37,6 +38,8 @@
+ #include <xdg-toplevel-icon-v1-client-protocol.h>
+ #include "wlr_end.hpp"
+ 
++#include "LibInputHandler.h"
++
+ #include "drm_include.h"
+ 
+ #define WL_FRACTIONAL_SCALE_DENOMINATOR 120
+@@ -844,6 +847,11 @@ namespace gamescope
+         wl_surface *m_pCursorSurface = nullptr;
+         std::shared_ptr<INestedHints::CursorInfo> m_pDefaultCursorInfo;
+         wl_surface *m_pDefaultCursorSurface = nullptr;
++
++
++        std::shared_ptr<CLibInputHandler> m_pLibInput;
++        CAsyncWaiter<CRawPointer<IWaitable>, 16> m_LibInputWaiter;
++
+     };
+     const wl_registry_listener CWaylandBackend::s_RegistryListener =
+     {
+@@ -1949,11 +1957,24 @@ namespace gamescope
+     };
+ 
+     CWaylandBackend::CWaylandBackend()
++		: m_LibInputWaiter{ "gamescope-libinput" }
+     {
+     }
+ 
+     bool CWaylandBackend::Init()
+     {
++        if (g_libinputSelectedDevices.size() > 0) { 
++			std::unique_ptr<CLibInputHandler> pLibInput = std::make_unique<CLibInputHandler>();
++			if ( pLibInput->Init() ) {
++				m_pLibInput = std::move( pLibInput );
++				m_LibInputWaiter.AddWaitable( m_pLibInput.get() );
++			} else {
++                xdg_log.errorf( "CWaylandBackend::Init failed: Unable to register LIBINPUT devices" );
++				return false;
++			}
++		}
++
++
+         g_nOutputWidth = g_nPreferredOutputWidth;
+         g_nOutputHeight = g_nPreferredOutputHeight;
+         g_nOutputRefresh = g_nNestedRefresh;
+@@ -2893,8 +2914,36 @@ namespace gamescope
+ 
+     void CWaylandInputThread::HandleKey( uint32_t uKey, bool bPressed )
+     {
++        if (g_bKeyboardDisabled) return;
++
+         if ( m_uKeyModifiers & m_uModMask[ GAMESCOPE_WAYLAND_MOD_META ] )
+         {
++            
++            static std::bitset<KEY_MAX+1> held_keys;
++            static bool toggle_grab_on_all_keys_up;
++
++            if (uKey <= KEY_MAX) {
++                held_keys[uKey] = bPressed; // Toggle the pressed button
++            }
++            if (held_keys[KEY_G] && held_keys[KEY_LEFTMETA]) toggle_grab_on_all_keys_up = true;
++
++            if (toggle_grab_on_all_keys_up && held_keys.none()) {
++                toggle_grab_on_all_keys_up = false;
++                g_bGrabbed = !g_bGrabbed;
++
++                for (int dev_fd : g_libinputSelectedDevices_grabbed_fds) {
++                    if (g_bGrabbed) {
++                        if (ioctl(dev_fd, EVIOCGRAB, 1) < 0) {
++                            fprintf( stderr,"Wayland: Failed to grab exclusive lock on device: %d\n", dev_fd);
++                        }
++                    } else {
++                        if (ioctl(dev_fd, EVIOCGRAB, 0) < 0) {
++                            fprintf( stderr,"Wayland: Failed to release exclusive grab on device: %d\n", dev_fd);
++                        }
++                    }
++                }
++            }
++
+             switch ( uKey )
+             {
+                 case KEY_F:
+@@ -3038,6 +3087,8 @@ namespace gamescope
+ 
+ 	void CWaylandInputThread::Wayland_Pointer_Enter( wl_pointer *pPointer, uint32_t uSerial, wl_surface *pSurface, wl_fixed_t fSurfaceX, wl_fixed_t fSurfaceY )
+ 	{
++		if (g_bMouseDisabled) return;
++
+ 		if ( !IsGamescopeToplevel( pSurface ) )
+ 			return;
+ 
+@@ -3049,6 +3100,8 @@ namespace gamescope
+ 	}
+ 	void CWaylandInputThread::Wayland_Pointer_Leave( wl_pointer *pPointer, uint32_t uSerial, wl_surface *pSurface )
+ 	{
++		if (g_bMouseDisabled) return;
++
+ 		if ( !IsGamescopeToplevel( pSurface ) )
+ 			return;
+ 
+@@ -3057,6 +3110,8 @@ namespace gamescope
+ 	}
+ 	void CWaylandInputThread::Wayland_Pointer_Motion( wl_pointer *pPointer, uint32_t uTime, wl_fixed_t fSurfaceX, wl_fixed_t fSurfaceY )
+ 	{
++		if (g_bMouseDisabled) return;
++
+ 		if ( !m_bMouseEntered )
+ 			return;
+ 
+@@ -3065,6 +3120,7 @@ namespace gamescope
+ 		if ( !pPlane )
+ 			return;
+ 
++
+         if ( m_pRelativePointer.load() != nullptr )
+             return;
+ 
+@@ -3091,6 +3147,8 @@ namespace gamescope
+     }
+     void CWaylandInputThread::Wayland_Pointer_Button( wl_pointer *pPointer, uint32_t uSerial, uint32_t uTime, uint32_t uButton, uint32_t uState )
+     {
++        if (g_bMouseDisabled) return;
++
+         // Don't do any motion/movement stuff if we don't have kb focus
+         if ( !cv_wayland_mouse_warp_without_keyboard_focus && !m_bKeyboardEntered )
+             return;
+@@ -3114,6 +3172,8 @@ namespace gamescope
+     }
+     void CWaylandInputThread::Wayland_Pointer_Axis_Value120( wl_pointer *pPointer, uint32_t uAxis, int32_t nValue120 )
+     {
++        if (g_bMouseDisabled) return;
++
+         if ( !cv_wayland_mouse_warp_without_keyboard_focus && !m_bKeyboardEntered )
+             return;
+ 
+@@ -3124,6 +3184,8 @@ namespace gamescope
+     }
+     void CWaylandInputThread::Wayland_Pointer_Frame( wl_pointer *pPointer )
+     {
++        if (g_bMouseDisabled) return;
++
+         defer( m_uAxisSource = WL_POINTER_AXIS_SOURCE_WHEEL );
+         double flX = m_flScrollAccum[0];
+         double flY = m_flScrollAccum[1];
+@@ -3178,6 +3240,8 @@ namespace gamescope
+     }
+     void CWaylandInputThread::Wayland_Keyboard_Enter( wl_keyboard *pKeyboard, uint32_t uSerial, wl_surface *pSurface, wl_array *pKeys )
+     {
++		if (g_bKeyboardDisabled) return;
++
+ 		if ( !IsGamescopeToplevel( pSurface ) )
+ 			return;
+ 
+@@ -3204,6 +3268,8 @@ namespace gamescope
+     }
+     void CWaylandInputThread::Wayland_Keyboard_Leave( wl_keyboard *pKeyboard, uint32_t uSerial, wl_surface *pSurface )
+     {
++		if (g_bKeyboardDisabled) return;
++
+ 		if ( !IsGamescopeToplevel( pSurface ) )
+ 			return;
+ 
+@@ -3217,6 +3283,8 @@ namespace gamescope
+     }
+     void CWaylandInputThread::Wayland_Keyboard_Key( wl_keyboard *pKeyboard, uint32_t uSerial, uint32_t uTime, uint32_t uKey, uint32_t uState )
+     {
++        if (g_bKeyboardDisabled) return;
++
+         if ( !m_bKeyboardEntered )
+             return;
+ 
+@@ -3244,6 +3312,8 @@ namespace gamescope
+ 
+     void CWaylandInputThread::Wayland_RelativePointer_RelativeMotion( zwp_relative_pointer_v1 *pRelativePointer, uint32_t uTimeHi, uint32_t uTimeLo, wl_fixed_t fDx, wl_fixed_t fDy, wl_fixed_t fDxUnaccel, wl_fixed_t fDyUnaccel )
+     {
++		if (g_bMouseDisabled) return;
++
+ 		// Don't do any motion/movement stuff if we don't have kb focus
+ 		if ( !m_pBackend->m_bPointerLocked || ( !cv_wayland_mouse_relmotion_without_keyboard_focus && !m_bKeyboardEntered ) )
+ 			return;
+diff --git a/src/LibInputHandler.cpp b/src/LibInputHandler.cpp
+index 145a5be..c98c8fc 100644
+--- a/src/LibInputHandler.cpp
++++ b/src/LibInputHandler.cpp
+@@ -1,21 +1,30 @@
+ #include "LibInputHandler.h"
+ 
++#include <cstddef>
+ #include <libinput.h>
+ #include <fcntl.h>
+ #include <unistd.h>
+ #include <poll.h>
++#include <linux/input.h>
++
+ 
+ #include "log.hpp"
+ #include "backend.h"
++#include "main.hpp"
+ #include "wlserver.hpp"
+ #include "Utils/Defer.h"
+ 
++#include <linux/input-event-codes.h>
++
+ // Handles libinput in contexts where we don't have a session
+ // and can't use the wlroots libinput stuff.
+ //
+ // eg. in VR where we want global access to the m + kb
+ // without doing any seat dance.
+ //
++// Used in SDL & Wayland backend when using libinput held devices
++// to prevent handling by base system while still interacting with gamescope.
++//
+ // That may change in the future...
+ // but for now, this solves that problem.
+ 
+@@ -27,11 +36,46 @@ namespace gamescope
+     {
+         .open_restricted = []( const char *pszPath, int nFlags, void *pUserData ) -> int
+         {
++            if (g_libinputSelectedDevices.size() > 0) {
++                int dev_fd = open( pszPath, nFlags );
++                
++                if (dev_fd == -1) {
++                    log_input_stealer.errorf( "Failed to open device: %s", pszPath);
++                    return -1;
++                } 
++                
++                if (g_bGrabbed) {
++                    if (ioctl(dev_fd, EVIOCGRAB, 1) < 0) {
++                        // Do not close here, we can continue with it not exclusive.
++                        log_input_stealer.warnf( "Failed to grab exclusive lock on device: %s", pszPath);
++                    }
++                }
++
++                g_libinputSelectedDevices_grabbed_fds.push_back(dev_fd);
++
++                return dev_fd;
++            }
++
+             return open( pszPath, nFlags );
+         },
+ 
+         .close_restricted = []( int nFd, void *pUserData ) -> void
+         {
++            if (g_libinputSelectedDevices.size() > 0) {
++                if (g_bGrabbed) {
++                    if (ioctl(nFd, EVIOCGRAB, 0) < 0) {
++                        log_input_stealer.warnf("Failed to release exclusive grab");
++                    }
++                }
++                g_libinputSelectedDevices_grabbed_fds.erase(
++                    std::remove(
++                        g_libinputSelectedDevices_grabbed_fds.begin(),
++                        g_libinputSelectedDevices_grabbed_fds.end(),
++                        nFd
++                    )
++                );
++            }
++
+             close( nFd );
+         },
+     };
+@@ -64,18 +108,43 @@ namespace gamescope
+             return false;
+         }
+ 
+-        m_pLibInput = libinput_udev_create_context( &s_LibInputInterface, nullptr, m_pUdev );
+-        if ( !m_pLibInput )
+-        {
+-            log_input_stealer.errorf( "Failed to create libinput context" );
+-            return false;
+-        }
+ 
+-        const char *pszSeatName = "seat0";
+-        if ( libinput_udev_assign_seat( m_pLibInput, pszSeatName ) == -1 )
+-        {
+-            log_input_stealer.errorf( "Could not assign seat \"%s\"", pszSeatName );
+-            return false;
++        if (g_libinputSelectedDevices.size() > 0) {
++            m_pLibInput = libinput_path_create_context(&s_LibInputInterface, nullptr);
++
++            if ( !m_pLibInput )
++            {
++                log_input_stealer.errorf( "Failed to create libinput context" );
++                return false;
++            }
++
++            
++            for (std::string dev_path: g_libinputSelectedDevices) {
++                if (
++                    libinput_path_add_device(m_pLibInput, dev_path.c_str()) == NULL
++                ) {
++                    log_input_stealer.errorf( "Failed to create libinput device: %s", dev_path.c_str());
++                    return false;
++                }
++            }
++            libinput_resume(m_pLibInput);
++
++        } else {
++
++
++            m_pLibInput = libinput_udev_create_context( &s_LibInputInterface, nullptr, m_pUdev );
++            if ( !m_pLibInput )
++            {
++                log_input_stealer.errorf( "Failed to create libinput context" );
++                return false;
++            }
++
++            const char *pszSeatName = "seat0";
++            if ( libinput_udev_assign_seat( m_pLibInput, pszSeatName ) == -1 )
++            {
++                log_input_stealer.errorf( "Could not assign seat \"%s\"", pszSeatName );
++                return false;
++            }
+         }
+ 
+         return true;
+@@ -105,6 +174,7 @@ namespace gamescope
+             {
+                 case LIBINPUT_EVENT_POINTER_MOTION:
+                 {
++                    if (!g_bGrabbed && g_libinputSelectedDevices.size() > 0) continue; // Dont propogate inputs from virtual devices if we dont hold them.
+                     libinput_event_pointer *pPointerEvent = libinput_event_get_pointer_event( pEvent );
+ 
+                     double flDx = libinput_event_pointer_get_dx( pPointerEvent );
+@@ -120,6 +190,7 @@ namespace gamescope
+ 
+                 case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE:
+                 {
++                    if (!g_bGrabbed && g_libinputSelectedDevices.size() > 0) continue; // Dont propogate inputs from virtual devices if we dont hold them.
+                     libinput_event_pointer *pPointerEvent = libinput_event_get_pointer_event( pEvent );
+ 
+                     double flX = libinput_event_pointer_get_absolute_x( pPointerEvent );
+@@ -135,6 +206,7 @@ namespace gamescope
+ 
+                 case LIBINPUT_EVENT_POINTER_BUTTON:
+                 {
++                    if (!g_bGrabbed && g_libinputSelectedDevices.size() > 0) continue; // Dont propogate inputs from virtual devices if we dont hold them.
+                     libinput_event_pointer *pPointerEvent = libinput_event_get_pointer_event( pEvent );
+ 
+                     uint32_t uButton = libinput_event_pointer_get_button( pPointerEvent );
+@@ -148,6 +220,7 @@ namespace gamescope
+ 
+                 case LIBINPUT_EVENT_POINTER_SCROLL_WHEEL:
+                 {
++                    if (!g_bGrabbed && g_libinputSelectedDevices.size() > 0) continue; // Dont propogate inputs from virtual devices if we dont hold them.
+                     libinput_event_pointer *pPointerEvent = libinput_event_get_pointer_event( pEvent );
+ 
+                     static constexpr libinput_pointer_axis eAxes[] =
+@@ -174,7 +247,35 @@ namespace gamescope
+                     libinput_event_keyboard *pKeyboardEvent = libinput_event_get_keyboard_event( pEvent );
+                     uint32_t uKey = libinput_event_keyboard_get_key( pKeyboardEvent );
+                     libinput_key_state eState = libinput_event_keyboard_get_key_state( pKeyboardEvent );
++                    static std::bitset<KEY_MAX+1> held_keys;
++                    static bool toggle_grab_on_all_keys_up = false;
++
++                    if (uKey <= KEY_MAX) {
++                        held_keys[uKey] = (eState == LIBINPUT_KEY_STATE_PRESSED); // Toggle the pressed button
++                    }
++
++                    if (held_keys[KEY_G] && held_keys[KEY_LEFTMETA]) toggle_grab_on_all_keys_up = true;
++
++                    if (toggle_grab_on_all_keys_up && held_keys.none()) {
++                        toggle_grab_on_all_keys_up = false;
++                        g_bGrabbed = !g_bGrabbed;
++
++                        for (int dev_fd : g_libinputSelectedDevices_grabbed_fds) {
++                            if (g_bGrabbed) {
++                                if (ioctl(dev_fd, EVIOCGRAB, 1) < 0) {
++                                    fprintf( stderr,"Libinput: Failed to grab exclusive lock on device: %d\n", dev_fd);
++                                }
++                            } else {
++                                if (ioctl(dev_fd, EVIOCGRAB, 0) < 0) {
++                                    fprintf( stderr,"Libinput: Failed to release exclusive grab on device: %d\n", dev_fd);
++                                }
++                            }
++                        }
++                    } else { // Pass through key release just because if we dont, it would be held.
++                        if (!g_bGrabbed && g_libinputSelectedDevices.size() > 0) continue; // Dont propogate inputs from virtual devices if we dont hold them.
++                    }
+ 
++                    
+                     wlserver_lock();
+                 wlserver_key( uKey, eState == LIBINPUT_KEY_STATE_PRESSED, ++    s_uSequence );
+                     wlserver_unlock();
+diff --git a/src/main.cpp b/src/main.cpp
+index 1397028..be5b7af 100644
+--- a/src/main.cpp
++++ b/src/main.cpp
+@@ -2,6 +2,8 @@
+ 
+ #include <X11/Xlib.h>
+ 
++#include <bits/getopt_core.h>
++#include <cstddef>
+ #include <cstdio>
+ #include <thread>
+ #include <mutex>
+@@ -21,6 +23,8 @@
+ #include <float.h>
+ #include <climits>
+ 
++#include <iostream>
++
+ #include "main.hpp"
+ #include "steamcompmgr.hpp"
+ #include "rendervulkan.hpp"
+@@ -157,6 +161,10 @@ const struct option *gamescope_options = (struct option[]){
+ 	{ "allow-deferred-backend", no_argument, nullptr, 0 },
+ 	{ "keep-alive", no_argument, nullptr, 0 },
+ 
++	{ "libinput-hold-dev", required_argument, nullptr, 0 },
++	{ "backend-disable-keyboard", no_argument, nullptr, 0 },
++	{ "backend-disable-mouse", no_argument, nullptr, 0 },
++
+ 	{} // keep last
+ };
+ 
+@@ -222,7 +230,10 @@ const char usage[] =
+ 	"  -f, --fullscreen               make the window fullscreen\n"
+ 	"  -g, --grab                     grab the keyboard\n"
+ 	"  --force-grab-cursor            always use relative mouse mode instead of flipping dependent on cursor visibility.\n"
+-	"  --display-index                forces gamescope to use a specific display in nested mode."
++	"  --display-index                forces gamescope to use a specific display in nested mode.\n"
++	"  --libinput-hold-dev            Comma seporated list of evdev path devices that will become the handlers on the nested window (WAYLAND & SDL & VR ONLY)\n"
++	"  --backend-disable-keyboard     Disables the normal backend keyboard support (window will not handle keyboard) (WAYLAND & SDL ONLY)\n"
++	"  --backend-disable-mouse        Disables the normal backend mouse support (window will not handle mouse) (WAYLAND & SDL ONLY)\n"
+ 	"\n"
+ 	"Embedded mode options:\n"
+ 	"  -O, --prefer-output            list of connectors in order of preference (ex: DP-1,DP-2,DP-3,HDMI-A-1)\n"
+@@ -304,6 +315,11 @@ bool g_bForceRelativeMouse = false;
+ 
+ bool g_bGrabbed = false;
+ 
++bool g_bKeyboardDisabled = false;
++bool g_bMouseDisabled = false;
++std::vector<std::string> g_libinputSelectedDevices;
++std::vector<int> g_libinputSelectedDevices_grabbed_fds;
++
+ float g_mouseSensitivity = 1.0;
+ 
+ GamescopeUpscaleFilter g_upscaleFilter = GamescopeUpscaleFilter::LINEAR;
+@@ -835,6 +851,16 @@ int main(int argc, char **argv)
+ 								
+ 						}
+ 					}
++				} else if (strcmp(opt_name, "libinput-hold-dev") == 0) {
++					std::string item;
++					std::istringstream ss (optarg);
++					while (std::getline(ss, item, ',')) {
++						g_libinputSelectedDevices.push_back(item);
++					}
++				} else if (strcmp(opt_name, "backend-disable-keyboard") == 0) {
++					g_bKeyboardDisabled = true;
++				} else if (strcmp(opt_name, "backend-disable-mouse") == 0) {
++					g_bMouseDisabled = true;
+ 				}
+ 				break;
+ 			case '?':
+diff --git a/src/main.hpp b/src/main.hpp
+index 2e6fb83..58cc424 100644
+--- a/src/main.hpp
++++ b/src/main.hpp
+@@ -3,6 +3,8 @@
+ #include <getopt.h>
+ 
+ #include <atomic>
++#include <vector>
++#include <string>
+ 
+ extern const char *gamescope_optstring;
+ extern const struct option *gamescope_options;
+@@ -26,6 +28,13 @@ extern bool g_bFullscreen;
+ 
+ extern bool g_bGrabbed;
+ 
++
++extern bool g_bKeyboardDisabled;
++extern bool g_bMouseDisabled;
++
++extern std::vector<std::string> g_libinputSelectedDevices;
++extern std::vector<int> g_libinputSelectedDevices_grabbed_fds;
++
+ extern float g_mouseSensitivity;
+ extern const char *g_sOutputName;
+ 
+diff --git a/src/steamcompmgr.cpp b/src/steamcompmgr.cpp
+index c4cee70..754a432 100644
+--- a/src/steamcompmgr.cpp
++++ b/src/steamcompmgr.cpp
+@@ -2424,7 +2424,7 @@ static void paint_pipewire()
+ gamescope::ConVar<int> cv_cursor_composite{ "cursor_composite", 1, "0 = Never composite a cursor. 1 = Composite cursor when not nested. 2 = Always composite a cursor manually" };
+ bool ShouldDrawCursor()
+ {
+-	if ( cv_cursor_composite == 2 )
++	if (cv_cursor_composite == 2 )
+ 		return true;
+ 
+ 	if ( cv_cursor_composite == 0 )
+@@ -2433,6 +2433,10 @@ bool ShouldDrawCursor()
+ 	if ( g_bForceRelativeMouse )
+ 		return true;
+ 
++	if (g_libinputSelectedDevices.size() > 0 && g_bMouseDisabled) {
++		return true;
++	}
++
+ 	global_focus_t *pFocus = GetCurrentFocus();
+ 	if ( !pFocus )
+ 		return false;

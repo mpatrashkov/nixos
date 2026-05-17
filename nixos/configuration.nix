@@ -22,8 +22,8 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # Override openldap to skip flaky tests
   nixpkgs.config.packageOverrides = pkgs: {
+    # Skip flaky tests in the openldap build.
     openldap = pkgs.openldap.overrideAttrs (oldAttrs: {
       doCheck = false;
     });

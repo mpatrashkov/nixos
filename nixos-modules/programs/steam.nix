@@ -47,6 +47,10 @@
           keyutils
           libxcb
           mangohud
+          # EU4's shipped ELF links libGLU.so.1, which isn't in the default
+          # steam-run FHS. Adding it here makes every steam-run invocation
+          # see it natively, replacing an LD_LIBRARY_PATH workaround.
+          libGLU
         ];
     };
   };
@@ -69,9 +73,9 @@
   };
 
   programs.gamescope = {
-    enable = true;
-    # `capSysNice` is intentionally left at its default (false). See the
+    # `capSysNice` is intentionally set to false. See the
     # ananicy block below for the reason and the workaround.
+    capSysNice = false;
   };
 
   # Gamescope + CAP_SYS_NICE workaround.
