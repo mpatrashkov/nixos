@@ -51,7 +51,6 @@
     mkcert
 
     pnpm
-    alacritty
   ];
 
   services.gvfs.enable = true;
