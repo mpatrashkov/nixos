@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Remove (unstow) a dotfile package's symlinks from $HOME. Source in ./dotfiles is untouched.
+# Usage: stow-remove <package>
+set -euo pipefail
+
+if [ $# -ne 1 ]; then
+  echo "usage: $(basename "$0") <package>" >&2
+  exit 2
+fi
+
+pkg=$1
+repo_root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+cd "$repo_root"
+
+if [ ! -d "./dotfiles/$pkg" ]; then
+  echo "error: package './dotfiles/$pkg' does not exist" >&2
+  exit 1
+fi
+
+exec stow -d ./dotfiles -t "$HOME" --delete --verbose=2 "$pkg"
