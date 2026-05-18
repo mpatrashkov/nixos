@@ -1,0 +1,9 @@
+[metadata]
+name = "nixpkgs"
+requirements = ["nix-search-tv"]
+
+[source]
+command = "nix-search-tv print | grep '^nixpkgs/' | sed 's|^nixpkgs/ ||'"
+
+[preview]
+command = "nix-search-tv preview 'nixpkgs/ {}'"
