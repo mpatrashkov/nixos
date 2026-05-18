@@ -13,6 +13,7 @@
     ./extensions/multi-monitors.nix
     # Disabling AWSM fow now, as I can't make it work for apps with multiple windows (e.g. Chrome, VSCode, Alacritty)
     # ./extensions/another-window-session-manager.nix
+    ./whitesur-wallpapers.nix
   ];
   environment.systemPackages = with pkgs.gnomeExtensions; [
     dash-to-dock
