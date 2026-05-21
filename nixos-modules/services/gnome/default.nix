@@ -52,7 +52,7 @@
           favorite-apps = lib.gvariant.mkArray [
             "google-chrome.desktop"
             "code.desktop"
-            "Alacritty.desktop"
+            "kitty.desktop"
             "org.gnome.Nautilus.desktop"
           ];
 

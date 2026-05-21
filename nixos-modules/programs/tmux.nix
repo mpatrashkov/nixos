@@ -90,11 +90,21 @@ in
 
       bind & kill-window
 
+      set -g visual-activity off
+      set-option -g focus-events on
+
+      # Required for kitty graphics protocol (image previews) to work through tmux.
+      set -gq allow-passthrough on
+
       set -g mouse on
 
       set -g status-right '#{?client_prefix,#[bg=yellow]#[fg=black] PREFIX #[default] ,}"#{=21:pane_title}"'
 
       bind r source-file /etc/tmux.conf \; display-message "tmux.conf reloaded."
+
+      # Rename auto-named session "0" to the lowest unused integer >= 1
+      # so the session switcher starts numbering from 1 instead of 0.
+      set-hook -g session-created 'run-shell -b "{ if [ \"#{hook_session_name}\" = 0 ]; then n=1; while ${pkgs.tmux}/bin/tmux has-session -t==\"$n\" 2>/dev/null; do n=$((n+1)); done; ${pkgs.tmux}/bin/tmux rename-session -t==0 \"$n\"; fi; } >/dev/null 2>&1"'
     '';
   };
 }

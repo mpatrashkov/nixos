@@ -13,6 +13,11 @@ return {
       })
       vim.lsp.enable("nixd")
 
+      vim.lsp.config("svelte", {
+        capabilities = capabilities,
+      })
+      vim.lsp.enable("svelte")
+
       -- Keymaps for LSP actions (only when an LSP is attached to the buffer)
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("UserLspConfig", {}),
