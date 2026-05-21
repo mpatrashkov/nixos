@@ -4,6 +4,10 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+-- Line numbers
+vim.opt.number = true
+vim.opt.relativenumber = true
+
 -- Bootstrap lazy.nvim (https://lazy.folke.io/installation)
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
