@@ -55,22 +55,33 @@
     };
   };
 
-  systemd.user.services.steam = {
-    description = "Steam (silent autostart)";
-    after = [
-      "graphical-session.target"
-      "gnome-session-manager.target"
-    ];
-    requisite = [ "gnome-session-manager.target" ];
-    partOf = [ "graphical-session.target" ];
-    wantedBy = [ "graphical-session.target" ];
-    path = [ pkgs.gamescope ];
-    serviceConfig = {
-      ExecStart = "${config.programs.steam.package}/bin/steam -silent";
-      Restart = "on-failure";
-      RestartSec = 5;
-    };
-  };
+  # Disabled for now, but it is not needed anymore. The steam client starts very fast now
+  # systemd.user.services.steam = {
+  #   description = "Steam (silent autostart)";
+  #   after = [
+  #     "graphical-session.target"
+  #     "gnome-session-manager.target"
+  #     "gnome-session-initialized.target"
+  #   ];
+  #   requisite = [
+  #     "gnome-session-manager.target"
+  #     "gnome-session-initialized.target"
+  #   ];
+  #   partOf = [ "graphical-session.target" ];
+  #   wantedBy = [ "graphical-session.target" ];
+  #   # systemd user units run for EVERY user with a graphical session,
+  #   # including GDM's `gdm-greeter`. When the display manager respawns its
+  #   # greeter, Steam was being launched inside the greeter session, polluting
+  #   # it (and contributing to GDM instability). Restricting to `miro` keeps it
+  #   # out of the greeter entirely.
+  #   unitConfig.ConditionUser = "miro";
+  #   path = [ pkgs.gamescope ];
+  #   serviceConfig = {
+  #     ExecStart = "${config.programs.steam.package}/bin/steam -silent";
+  #     Restart = "on-failure";
+  #     RestartSec = 5;
+  #   };
+  # };
 
   programs.gamescope = {
     # `capSysNice` is intentionally set to false. See the

@@ -1,8 +1,0 @@
-# worktrunk project configuration
-# https://worktrunk.dev/config/
-
-# Copy gitignored files (last-commit-message, .plans/, .claude/settings.local.json,
-# node_modules/) from the main worktree into the new one. Uses reflink so it's near-free.
-# `last-commit-message` in particular is required for ./scripts/nix-* to build.
-[post-start]
-copy = "wt step copy-ignored"

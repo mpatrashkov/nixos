@@ -18,6 +18,15 @@ return {
       })
       vim.lsp.enable("svelte")
 
+      -- clangd for C/C++ (only enable when clangd is on PATH, e.g. inside devenv)
+      vim.lsp.config("clangd", {
+        capabilities = capabilities,
+        cmd = { "clangd", "--query-driver=**/xtensa-esp32-elf-*" },
+      })
+      if vim.fn.executable("clangd") == 1 then
+        vim.lsp.enable("clangd")
+      end
+
       -- Keymaps for LSP actions (only when an LSP is attached to the buffer)
       vim.api.nvim_create_autocmd("LspAttach", {
         group = vim.api.nvim_create_augroup("UserLspConfig", {}),
