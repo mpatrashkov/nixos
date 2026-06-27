@@ -10,7 +10,12 @@
         ];
       })
 
-      google-chrome
+      (google-chrome.override {
+        commandLineArgs = [
+          "--enable-features=Vulkan,DefaultANGLEVulkan,VulkanFromANGLE,UseOzonePlatform"
+          "--ozone-platform=wayland"
+        ];
+      })
     ];
   };
 }

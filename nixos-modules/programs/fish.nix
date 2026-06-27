@@ -7,6 +7,11 @@
   programs.fish = {
     enable = true;
     interactiveShellInit = ''
+      # Source secrets file if it exists (not tracked in git)
+      if test -f ~/.secrets
+          source ~/.secrets
+      end
+
       ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
       set fish_greeting # Disable greeting
       fastfetch --config "$HOME/.config/fastfetch/short-config.jsonc"
