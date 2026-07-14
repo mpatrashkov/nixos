@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Dry-run a stow operation to preview symlinks and conflicts.
+# Dry-run a stow operation to preview symlinks and conflicts across the common and
+# active-host tiers. The active host is read from the .host file at the repo root.
 # Usage: stow-check <package>
 set -euo pipefail
 
@@ -9,12 +10,10 @@ if [ $# -ne 1 ]; then
 fi
 
 pkg=$1
-repo_root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
-cd "$repo_root"
+# shellcheck source=_stow-lib.sh
+source "$(dirname -- "${BASH_SOURCE[0]}")/_stow-lib.sh"
 
-if [ ! -d "./dotfiles/$pkg" ]; then
-  echo "error: package './dotfiles/$pkg' does not exist" >&2
-  exit 1
-fi
-
-exec stow -d ./dotfiles -t "$HOME" --no --verbose=2 --restow "$pkg"
+for tier in "${TIERS[@]}"; do
+  echo "# dry-run: $tier/$pkg" >&2
+  stow -d "$tier" -t "$HOME" --no --verbose=2 --restow "$pkg"
+done
