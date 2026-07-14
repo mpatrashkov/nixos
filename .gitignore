@@ -2,3 +2,4 @@ last-commit-message
 .plans/
 node_modules/
 .sync-gnome.log
+.host
