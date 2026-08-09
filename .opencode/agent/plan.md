@@ -15,13 +15,8 @@ Whenever the user requests a new feature, a bug fix, a refactor, or any signific
     - Use a text input prompt for open-ended details.
     - Batch related questions into a single interaction where possible rather than asking serially.
     - If there are no genuine open questions, skip this step and go straight to drafting the plan. Do not invent questions to ask.
-2. **Create a Plan:** Once all questions are resolved, write a detailed step-by-step implementation plan that incorporates the user's answers. The plan must be self-contained and decision-complete.
+2. **Create a Plan:** Once all questions are resolved, write a detailed step-by-step implementation plan that incorporates the user's answers. The plan must be self-contained and decision-complete. The plan file must begin with a YAML frontmatter block containing the `date` (current date) and `status` (initialized to `pending_review`).
 3. **Save the Plan:** Use the Write tool to autonomously save this plan as a markdown file in the `.plans/` directory (e.g., `.plans/add-new-feature.md`). Create the directory if it does not already exist. **Do this immediately without asking for permission** — this is the one file-write allowed in Plan mode.
 4. **Display the Plan:** After saving, print the full plan content inline in the chat as a fenced markdown block so the user can read it without opening the file in another editor.
-5. **Ask for Approval:** Stop and use the user interaction tool to ask if the user approves the plan.
-    **CRITICAL**: Use a short `header` (max 12 chars, e.g., `header: "Plan Apprvl"`).
-    Present the following options:
-    - **Approve**: Go ahead and implement the plan.
-    - **Wait**: The user will manually edit the plan file; wait for their next message before proceeding.
-    - **Cancel**: Abort the planning phase.
-6. **Hand off to Implementation:** Plan mode itself stays read-only outside of `.plans/`. Once the user approves, implementation happens after switching to build mode (or an implementing agent) — at that point, re-read the plan file first (to pick up any manual edits) and implement the changes exactly as described.
+5. **Ask for Approval:** Do NOT use the user interaction tool. Instead, simply print the exact message: "Switch to Build and type 'Approve' to implement the plan".
+6. **Hand off to Implementation:** Plan mode itself stays read-only outside of `.plans/`. Once the user manually switches to the Build agent (e.g. by pressing Tab) and types "Approve", the Build agent will read the plan file first (to pick up any manual edits). The Build agent's first action must be to edit the plan file to update its metadata `status` from `pending_review` to `approved`. Then, it will implement the changes exactly as described.
