@@ -10,6 +10,17 @@
     ags.url = "github:Aylur/ags";
     stylix.url = "github:danth/stylix";
 
+    yeetmouse = {
+      url = "github:AndyFilter/YeetMouse?dir=nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # Full repo source (not just the nix/ subdir) — needed because the
+    # package's fileset uses `root = ./..`, which must resolve to the repo root.
+    yeetmouse-src = {
+      url = "github:AndyFilter/YeetMouse";
+      flake = false;
+    };
+
     nixpkgs-small.url = "github:NixOS/nixpkgs/nixos-unstable-small";
 
     nix-index-database.url = "github:nix-community/nix-index-database";

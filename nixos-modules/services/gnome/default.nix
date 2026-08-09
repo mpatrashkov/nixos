@@ -82,6 +82,14 @@
         "org/gnome/desktop/session" = {
           idle-delay = lib.gvariant.mkUint32 900;
         };
+
+        # Neutralize GNOME/libinput acceleration so the YeetMouse kernel module
+        # (Windows EPP curve) is the sole source of pointer acceleration.
+        # "flat" = pure 1:1 in libinput, speed 0.0 = no extra scaling.
+        "org/gnome/desktop/peripherals/mouse" = {
+          accel-profile = lib.gvariant.mkString "flat";
+          speed = lib.gvariant.mkDouble 0.0;
+        };
       };
     }
   ];
