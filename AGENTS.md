@@ -32,3 +32,41 @@ Both options run autonomously via the Bash tool. Passwordless sudo for `nh` is c
 * If I select "Verify the configuration (test)", run:
   `./scripts/nix-test`
   Run the command exactly as shown — no output redirection (no `2>&1 | tail -N` or similar). The raw output must be streamed directly to the Bash tool output so the user can see it in full.
+
+---
+
+# Idea & Experiment Tracking
+
+Two directories at the repo root track improvement ideas and active experiments:
+
+- **`.ideas/`** — one markdown file per idea (`<slug>.md`)
+- **`.experiments/`** — one subdirectory per experiment (`<slug>/idea.md` + supporting files)
+
+Both use the same frontmatter schema:
+
+```yaml
+---
+title: ""
+status: idea        # idea | planned | in_progress | testing | done | abandoned
+priority: medium    # high | medium | low
+tags: []
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+---
+```
+
+**Status pipeline:** `idea → planned → in_progress → testing → done / abandoned`
+
+Slug naming: kebab-case derived from the title (e.g. `Add ZRAM Swap` → `add-zram-swap`).
+
+Templates: `.ideas/_template.md` and `.experiments/_template/idea.md`.
+
+## Agent Responsibilities
+
+1. **Read for context** — Before starting any task, glob `.ideas/*.md` and `.experiments/*/idea.md`, filter by matching tags or keywords in the title, and read relevant files to inform your approach.
+
+2. **File new ideas** — When the user mentions something worth tracking (a new improvement, a future task, an experiment idea) and no file exists for it yet, immediately create `.ideas/<slug>.md` with appropriate frontmatter. Use today's date for `created` and `updated`. Set `status: idea` unless the user specifies otherwise.
+
+3. **Update status** — When an idea moves through the pipeline (e.g. you start implementing it, finish it, or it is abandoned), update the `status` and `updated` fields in its frontmatter in-place.
+
+4. **Add findings to experiments** — When working inside an experiment, append notes, results, and observations to `.experiments/<slug>/findings.md` (create it if absent). Place code artifacts (patches, config snippets) as separate files in the same folder.
