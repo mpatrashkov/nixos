@@ -1,6 +1,6 @@
 ---
 title: "Audio Device Switcher Shortcuts"
-status: idea
+status: done
 priority: medium
 tags: [audio, keybindings, desktop, gnome, pipewire]
 created: 2026-08-09

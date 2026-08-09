@@ -19,6 +19,23 @@
         "type": "github"
       }
     },
+    "another-window-session-manager-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1769534356,
+        "narHash": "sha256-8vDZPLM/icjVt/Ts5pgl0a2rn01mB4jeRSUVpVKuFJg=",
+        "owner": "nlpsuge",
+        "repo": "gnome-shell-extension-another-window-session-manager",
+        "rev": "cf23fef152ce90692fc1df984f6fd945725334be",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nlpsuge",
+        "repo": "gnome-shell-extension-another-window-session-manager",
+        "rev": "cf23fef152ce90692fc1df984f6fd945725334be",
+        "type": "github"
+      }
+    },
     "astal": {
       "inputs": {
         "nixpkgs": [
@@ -180,6 +197,23 @@
         "type": "gitlab"
       }
     },
+    "hatter-icon-theme-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1777805341,
+        "narHash": "sha256-I8DLOP2EnlZjLVgS+srIKBhzmofds4iJbI+hj0lTuto=",
+        "owner": "Mibea",
+        "repo": "Hatter",
+        "rev": "a6ad2f74f07f66df9cb4e9e85653cd1bd90539d7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Mibea",
+        "repo": "Hatter",
+        "rev": "a6ad2f74f07f66df9cb4e9e85653cd1bd90539d7",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -321,15 +355,39 @@
         "type": "github"
       }
     },
+    "opencode-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1786085381,
+        "narHash": "sha256-yUPwXDv93O0Ub/giX78FJyFxZyaUzSguDoK2y/YIPBM=",
+        "owner": "anomalyco",
+        "repo": "opencode",
+        "rev": "d7b115f623760e68a4749d16508a9eca350f246f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "anomalyco",
+        "ref": "v1.18.15",
+        "repo": "opencode",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "ags": "ags",
+        "another-window-session-manager-src": "another-window-session-manager-src",
+        "hatter-icon-theme-src": "hatter-icon-theme-src",
         "home-manager": "home-manager",
         "last-commit-message": "last-commit-message",
         "nix-index-database": "nix-index-database",
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-small": "nixpkgs-small",
+        "opencode-src": "opencode-src",
         "stylix": "stylix",
+        "tmux-fzf-links-src": "tmux-fzf-links-src",
+        "tmux-super-fingers-src": "tmux-super-fingers-src",
+        "vlc-pause-click-plugin-src": "vlc-pause-click-plugin-src",
+        "whitesur-wallpapers-src": "whitesur-wallpapers-src",
         "yeetmouse": "yeetmouse",
         "yeetmouse-src": "yeetmouse-src"
       }
@@ -442,6 +500,74 @@
       "original": {
         "owner": "tinted-theming",
         "repo": "base16-zed",
+        "type": "github"
+      }
+    },
+    "tmux-fzf-links-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1775954956,
+        "narHash": "sha256-ZAZNOBE4n7tXpszNFw6Ri8BlV9s/4x9H2NovqRmOrCY=",
+        "owner": "alberti42",
+        "repo": "tmux-fzf-links",
+        "rev": "b3d461d1361cfa0612cf5e809bf5377f9e43ae3d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "alberti42",
+        "ref": "1.4.15",
+        "repo": "tmux-fzf-links",
+        "type": "github"
+      }
+    },
+    "tmux-super-fingers-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1776956630,
+        "narHash": "sha256-GiOkSADuWz19ndsVlKiKatPnplUpmukoZTPakIXWqF0=",
+        "owner": "artemave",
+        "repo": "tmux_super_fingers",
+        "rev": "523dc9b7a79f1ceb8d9be72e22c263c4a7cd3bdf",
+        "type": "github"
+      },
+      "original": {
+        "owner": "artemave",
+        "repo": "tmux_super_fingers",
+        "rev": "523dc9b7a79f1ceb8d9be72e22c263c4a7cd3bdf",
+        "type": "github"
+      }
+    },
+    "vlc-pause-click-plugin-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1589935376,
+        "narHash": "sha256-pBDfvQSLtQTAUPBcSJONh9wrvsZwAPSiRnYnur5mBI4=",
+        "owner": "nurupo",
+        "repo": "vlc-pause-click-plugin",
+        "rev": "049fa152969579a55c1bbba97f1771ae30d30062",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nurupo",
+        "ref": "2.2.0",
+        "repo": "vlc-pause-click-plugin",
+        "type": "github"
+      }
+    },
+    "whitesur-wallpapers-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1743595669,
+        "narHash": "sha256-JnSItAAqbIlnreV5uLAtR3LRCgQm3K0eplM6K58WHHc=",
+        "owner": "vinceliuice",
+        "repo": "WhiteSur-wallpapers",
+        "rev": "5c1d7ca20b8de0a7efe443792c19e49277262e02",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vinceliuice",
+        "repo": "WhiteSur-wallpapers",
+        "rev": "5c1d7ca20b8de0a7efe443792c19e49277262e02",
         "type": "github"
       }
     },

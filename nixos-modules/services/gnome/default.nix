@@ -14,6 +14,7 @@
     # Disabling AWSM fow now, as I can't make it work for apps with multiple windows (e.g. Chrome, VSCode, Alacritty)
     # ./extensions/another-window-session-manager.nix
     ./whitesur-wallpapers.nix
+    ./xkb-overrides.nix
   ];
   environment.systemPackages = with pkgs.gnomeExtensions; [
     dash-to-dock
@@ -64,6 +65,32 @@
           dock-fixed = lib.gvariant.mkBoolean true;
           extend-height = lib.gvariant.mkBoolean true;
           disable-overview-on-startup = lib.gvariant.mkBoolean true;
+        };
+
+        "org/gnome/settings-daemon/plugins/media-keys" = {
+          custom-keybindings = [
+            "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+            "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
+            "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/"
+          ];
+        };
+
+        "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+          name = "Audio Switch: FiiO K11";
+          command = "switch-audio fiio";
+          binding = "F22";
+        };
+
+        "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
+          name = "Audio Switch: Logitech Headset";
+          command = "switch-audio logitech";
+          binding = "F23";
+        };
+
+        "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
+          name = "Audio Switch: HDMI Monitor";
+          command = "switch-audio hdmi";
+          binding = "F24";
         };
 
         "org/gnome/desktop/input-sources" = {

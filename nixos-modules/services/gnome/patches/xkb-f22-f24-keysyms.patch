@@ -1,0 +1,15 @@
+--- a/symbols/inet
++++ b/symbols/inet
+@@ -108,9 +108,9 @@
+ // evdev codes are not routable in X.
+     key <FK20>   {      [ XF86AudioMicMute      ]       };
+     key <FK21>   {      [ XF86TouchpadToggle    ]       };
+-    key <FK22>   {      [ XF86TouchpadOn        ]       };
+-    key <FK23>   {      [ XF86TouchpadOff, XF86Assistant ], type[Group1] = "PC_SHIFT_SUPER_LEVEL2" };
+-    key <FK24>   {      [ F24, XF86TouchpadToggle ], type[Group1] = "PC_CONTROL_SUPER_LEVEL2" };
++    key <FK22>   {      [ F22                   ]       };
++    key <FK23>   {      [ F23                   ]       };
++    key <FK24>   {      [ F24                   ]       };
+     // The F24 scancode was wrongfully bound to the otherwise unused <ZEHA>
+     // keycode since v2.6.2 and only v6.17 finally fixed it. So make <ZEHA>
+     // behave like <FK24>. Actual Hankaku/Zenkaku keys use <HZTG>.
