@@ -1,14 +1,9 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 let
   opencode-latest = pkgs.opencode.overrideAttrs (old: rec {
-    version = "1.18.15";
-    src = pkgs.fetchFromGitHub {
-      owner = "anomalyco";
-      repo = "opencode";
-      tag = "v${version}";
-      hash = "sha256-yUPwXDv93O0Ub/giX78FJyFxZyaUzSguDoK2y/YIPBM=";
-    };
+    version = (builtins.fromJSON (builtins.readFile "${inputs.opencode-src}/packages/opencode/package.json")).version;
+    src = inputs.opencode-src;
     env = old.env // {
       OPENCODE_VERSION = version;
     };

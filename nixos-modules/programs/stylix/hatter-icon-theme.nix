@@ -1,19 +1,14 @@
 {
   lib,
   stdenvNoCC,
-  fetchFromGitHub,
   gtk3,
+  hatter-icon-theme-src,
 }:
 stdenvNoCC.mkDerivation {
   pname = "hatter-icon-theme";
   version = "0-unstable-2026-05-06";
 
-  src = fetchFromGitHub {
-    owner = "Mibea";
-    repo = "Hatter";
-    rev = "a6ad2f74f07f66df9cb4e9e85653cd1bd90539d7";
-    hash = "sha256-I8DLOP2EnlZjLVgS+srIKBhzmofds4iJbI+hj0lTuto=";
-  };
+  src = hatter-icon-theme-src;
 
   nativeBuildInputs = [ gtk3 ];
 
