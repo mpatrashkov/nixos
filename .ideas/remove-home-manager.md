@@ -1,6 +1,6 @@
 ---
 title: "Remove Home Manager"
-status: idea
+status: done
 priority: medium
 tags: [nix, home-manager, dotfiles, cleanup]
 created: 2026-08-09
