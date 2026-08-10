@@ -76,20 +76,20 @@
         };
 
         "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-          name = "Audio Switch: FiiO K11";
-          command = "switch-audio fiio";
+          name = "Audio Switch: HDMI Monitor";
+          command = "switch-audio hdmi";
           binding = "F22";
         };
 
         "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
-          name = "Audio Switch: Logitech Headset";
-          command = "switch-audio logitech";
+          name = "Audio Switch: FiiO K11";
+          command = "switch-audio fiio";
           binding = "F23";
         };
 
         "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
-          name = "Audio Switch: HDMI Monitor";
-          command = "switch-audio hdmi";
+          name = "Audio Switch: Logitech Headset";
+          command = "switch-audio logitech";
           binding = "F24";
         };
 
