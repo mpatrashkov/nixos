@@ -24,47 +24,43 @@
     {
       lockAll = true;
       settings = {
+        "org/gnome/desktop/input-sources" = {
+          sources = [
+            (lib.gvariant.mkTuple [
+              "xkb"
+              "us"
+            ])
+            (lib.gvariant.mkTuple [
+              "xkb"
+              "bg+phonetic"
+            ])
+          ];
+        };
+
+        # Neutralize GNOME/libinput acceleration so the YeetMouse kernel module
+        # (Windows EPP curve) is the sole source of pointer acceleration.
+        # "flat" = pure 1:1 in libinput, speed 0.0 = no extra scaling.
+        "org/gnome/desktop/peripherals/mouse" = {
+          accel-profile = lib.gvariant.mkString "flat";
+          speed = lib.gvariant.mkDouble 0.0;
+        };
+
+        "org/gnome/desktop/session" = {
+          idle-delay = lib.gvariant.mkUint32 900;
+        };
+
         "org/gnome/desktop/wm/keybindings" = {
           switch-applications = lib.gvariant.mkEmptyArray (lib.gvariant.type.string);
           switch-applications-backward = lib.gvariant.mkEmptyArray (lib.gvariant.type.string);
           switch-windows = lib.gvariant.mkArray [ "<Alt>Tab" ];
           switch-windows-backward = lib.gvariant.mkArray [ "['<Shift><Alt>Tab']" ];
         };
+
         "org/gnome/mutter" = {
           experimental-features = lib.gvariant.mkArray [
             "scale-monitor-framebuffer"
             "xwayland-native-scaling"
           ];
-        };
-
-        "org/gnome/settings-daemon/plugins/power" = {
-          sleep-inactive-ac-type = lib.gvariant.mkString "nothing";
-        };
-
-        "org/gnome/shell" = {
-          enabled-extensions = lib.gvariant.mkArray [
-            "dash-to-dock@micxgx.gmail.com"
-            "multi-monitor-panel@coolssor"
-            "another-window-session-manager@gmail.com"
-            # TODO: not sure about this one
-            "user-theme@gnome-shell-extensions.gcampax.github.com"
-          ];
-
-          favorite-apps = lib.gvariant.mkArray [
-            "google-chrome.desktop"
-            "code.desktop"
-            "kitty.desktop"
-            "org.gnome.Nautilus.desktop"
-          ];
-
-          last-selected-power-profile = lib.gvariant.mkString "performance";
-        };
-
-        "org/gnome/shell/extensions/dash-to-dock" = {
-          dock-position = lib.gvariant.mkString "LEFT";
-          dock-fixed = lib.gvariant.mkBoolean true;
-          extend-height = lib.gvariant.mkBoolean true;
-          disable-overview-on-startup = lib.gvariant.mkBoolean true;
         };
 
         "org/gnome/settings-daemon/plugins/media-keys" = {
@@ -93,29 +89,36 @@
           binding = "F24";
         };
 
-        "org/gnome/desktop/input-sources" = {
-          sources = [
-            (lib.gvariant.mkTuple [
-              "xkb"
-              "us"
-            ])
-            (lib.gvariant.mkTuple [
-              "xkb"
-              "bg+phonetic"
-            ])
+        "org/gnome/settings-daemon/plugins/power" = {
+          sleep-inactive-ac-type = lib.gvariant.mkString "nothing";
+        };
+
+        "org/gnome/shell" = {
+          enabled-extensions = lib.gvariant.mkArray [
+            "dash-to-dock@micxgx.gmail.com"
+            "multi-monitor-panel@coolssor"
+            "another-window-session-manager@gmail.com"
+            # TODO: not sure about this one
+            "user-theme@gnome-shell-extensions.gcampax.github.com"
           ];
+
+          favorite-apps = lib.gvariant.mkArray [
+            "google-chrome.desktop"
+            "code.desktop"
+            "kitty.desktop"
+            "org.gnome.Nautilus.desktop"
+          ];
+
+          last-selected-power-profile = lib.gvariant.mkString "performance";
         };
 
-        "org/gnome/desktop/session" = {
-          idle-delay = lib.gvariant.mkUint32 900;
-        };
-
-        # Neutralize GNOME/libinput acceleration so the YeetMouse kernel module
-        # (Windows EPP curve) is the sole source of pointer acceleration.
-        # "flat" = pure 1:1 in libinput, speed 0.0 = no extra scaling.
-        "org/gnome/desktop/peripherals/mouse" = {
-          accel-profile = lib.gvariant.mkString "flat";
-          speed = lib.gvariant.mkDouble 0.0;
+        "org/gnome/shell/extensions/dash-to-dock" = {
+          custom-theme-shrink = lib.gvariant.mkBoolean true;
+          dash-max-icon-size = lib.gvariant.mkInt32 42;
+          disable-overview-on-startup = lib.gvariant.mkBoolean true;
+          dock-fixed = lib.gvariant.mkBoolean true;
+          dock-position = lib.gvariant.mkString "LEFT";
+          extend-height = lib.gvariant.mkBoolean true;
         };
       };
     }

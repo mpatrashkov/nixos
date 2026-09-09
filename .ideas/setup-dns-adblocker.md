@@ -1,12 +1,12 @@
 ---
 title: "Setup DNS Adblocker"
-status: idea
+status: planned
 priority: high
 tags:
   - network
   - security
 created: 2026-08-09
-updated: 2026-08-09
+updated: 2026-08-10
 ---
 
 # Setup DNS Adblocker
