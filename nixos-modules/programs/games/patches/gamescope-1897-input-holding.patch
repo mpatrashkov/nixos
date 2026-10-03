@@ -1,7 +1,6 @@
-diff --git a/src/Backends/SDLBackend.cpp b/src/Backends/SDLBackend.cpp
-index 87bde7e..24c8858 100644
---- a/src/Backends/SDLBackend.cpp
-+++ b/src/Backends/SDLBackend.cpp
+diff -ruN a/src/Backends/SDLBackend.cpp b/src/Backends/SDLBackend.cpp
+--- a/src/Backends/SDLBackend.cpp	2026-10-03 11:28:05.745867843 +0300
++++ b/src/Backends/SDLBackend.cpp	2026-10-03 11:28:05.794689232 +0300
 @@ -1,6 +1,7 @@
  // For the nested case, reads input from the SDL window and send to wayland
  
@@ -19,7 +18,7 @@ index 87bde7e..24c8858 100644
  #include "sdlscancodetable.hpp"
  
  static int g_nOldNestedRefresh = 0;
-@@ -194,6 +197,10 @@ namespace gamescope
+@@ -195,6 +198,10 @@
  		uint32_t m_uUserEventIdBase = 0u;
  		std::vector<const char *> m_pszInstanceExtensions;
  
@@ -30,7 +29,7 @@ index 87bde7e..24c8858 100644
  		std::thread m_SDLThread;
  		std::atomic<SDLInitState> m_eSDLInit = { SDLInitState::SDLInit_Waiting };
  
-@@ -394,6 +401,7 @@ namespace gamescope
+@@ -395,6 +402,7 @@
  
  	CSDLBackend::CSDLBackend()
  		: m_Connector{ this }
@@ -38,7 +37,7 @@ index 87bde7e..24c8858 100644
  		, m_SDLThread{ [this](){ this->SDLThreadFunc(); } }
  	{
  	}
-@@ -400,6 +408,17 @@ namespace gamescope
+@@ -408,6 +416,17 @@
  
  	bool CSDLBackend::Init()
  	{
@@ -56,7 +55,7 @@ index 87bde7e..24c8858 100644
  		m_eSDLInit.wait( SDLInitState::SDLInit_Waiting );
  
  		return m_eSDLInit == SDLInitState::SDLInit_Success;
-@@ -664,6 +683,7 @@ namespace gamescope
+@@ -673,6 +692,7 @@
  
  				case SDL_MOUSEMOTION:
  				{
@@ -64,7 +63,7 @@ index 87bde7e..24c8858 100644
  					if ( m_bApplicationGrabbed )
  					{
  						if ( g_bWindowFocused )
-@@ -689,6 +709,7 @@ namespace gamescope
+@@ -698,6 +718,7 @@
  				case SDL_MOUSEBUTTONDOWN:
  				case SDL_MOUSEBUTTONUP:
  				{
@@ -72,7 +71,7 @@ index 87bde7e..24c8858 100644
  					wlserver_lock();
  					wlserver_mousebutton( SDLButtonToLinuxButton( event.button.button ),
  										event.button.state == SDL_PRESSED,
-@@ -699,6 +720,7 @@ namespace gamescope
+@@ -708,6 +729,7 @@
  
  				case SDL_MOUSEWHEEL:
  				{
@@ -80,7 +79,7 @@ index 87bde7e..24c8858 100644
  					wlserver_lock();
  					wlserver_mousewheel( -event.wheel.x, -event.wheel.y, fake_timestamp );
  					wlserver_unlock();
-@@ -731,6 +753,7 @@ namespace gamescope
+@@ -740,6 +762,7 @@
  
  				case SDL_KEYDOWN:
  				{
@@ -88,7 +87,7 @@ index 87bde7e..24c8858 100644
  					// If this keydown event is super + one of the shortcut keys, consume the keydown event, since the corresponding keyup
  					// event will be consumed by the next case statement when the user releases the key
  					if ( event.key.keysym.mod & KMOD_LGUI )
-@@ -747,7 +770,39 @@ namespace gamescope
+@@ -756,7 +779,39 @@
  				[[fallthrough]];
  				case SDL_KEYUP:
  				{
@@ -128,7 +127,7 @@ index 87bde7e..24c8858 100644
  
  					if ( event.type == SDL_KEYUP && ( event.key.keysym.mod & KMOD_LGUI ) )
  					{
-@@ -781,14 +836,6 @@ namespace gamescope
+@@ -790,14 +845,6 @@
  							case KEY_S:
  								gamescope::CScreenshotManager::Get().TakeScreenshot( true );
  								break;
@@ -143,10 +142,9 @@ index 87bde7e..24c8858 100644
  							default:
  								handled = false;
  						}
-diff --git a/src/Backends/WaylandBackend.cpp b/src/Backends/WaylandBackend.cpp
-index abdf782..6619fc7 100644
---- a/src/Backends/WaylandBackend.cpp
-+++ b/src/Backends/WaylandBackend.cpp
+diff -ruN a/src/Backends/WaylandBackend.cpp b/src/Backends/WaylandBackend.cpp
+--- a/src/Backends/WaylandBackend.cpp	2026-10-03 11:28:05.745867843 +0300
++++ b/src/Backends/WaylandBackend.cpp	2026-10-03 11:28:05.802610670 +0300
 @@ -12,6 +12,7 @@
  #include "Utils/TempFiles.h"
  
@@ -164,7 +162,7 @@ index abdf782..6619fc7 100644
  #include "drm_include.h"
  
  #define WL_FRACTIONAL_SCALE_DENOMINATOR 120
-@@ -844,6 +847,11 @@ namespace gamescope
+@@ -854,6 +857,11 @@
          wl_surface *m_pCursorSurface = nullptr;
          std::shared_ptr<INestedHints::CursorInfo> m_pDefaultCursorInfo;
          wl_surface *m_pDefaultCursorSurface = nullptr;
@@ -176,7 +174,7 @@ index abdf782..6619fc7 100644
      };
      const wl_registry_listener CWaylandBackend::s_RegistryListener =
      {
-@@ -1949,11 +1957,24 @@ namespace gamescope
+@@ -1964,11 +1972,24 @@
      };
  
      CWaylandBackend::CWaylandBackend()
@@ -201,7 +199,7 @@ index abdf782..6619fc7 100644
          g_nOutputWidth = g_nPreferredOutputWidth;
          g_nOutputHeight = g_nPreferredOutputHeight;
          g_nOutputRefresh = g_nNestedRefresh;
-@@ -2893,8 +2914,36 @@ namespace gamescope
+@@ -2933,8 +2954,36 @@
  
      void CWaylandInputThread::HandleKey( uint32_t uKey, bool bPressed )
      {
@@ -238,7 +236,7 @@ index abdf782..6619fc7 100644
              switch ( uKey )
              {
                  case KEY_F:
-@@ -3038,6 +3087,8 @@ namespace gamescope
+@@ -3078,6 +3127,8 @@
  
  	void CWaylandInputThread::Wayland_Pointer_Enter( wl_pointer *pPointer, uint32_t uSerial, wl_surface *pSurface, wl_fixed_t fSurfaceX, wl_fixed_t fSurfaceY )
  	{
@@ -247,7 +245,7 @@ index abdf782..6619fc7 100644
  		if ( !IsGamescopeToplevel( pSurface ) )
  			return;
  
-@@ -3049,6 +3100,8 @@ namespace gamescope
+@@ -3089,6 +3140,8 @@
  	}
  	void CWaylandInputThread::Wayland_Pointer_Leave( wl_pointer *pPointer, uint32_t uSerial, wl_surface *pSurface )
  	{
@@ -256,16 +254,16 @@ index abdf782..6619fc7 100644
  		if ( !IsGamescopeToplevel( pSurface ) )
  			return;
  
-@@ -3057,6 +3110,8 @@ namespace gamescope
+@@ -3097,6 +3150,8 @@
  	}
  	void CWaylandInputThread::Wayland_Pointer_Motion( wl_pointer *pPointer, uint32_t uTime, wl_fixed_t fSurfaceX, wl_fixed_t fSurfaceY )
  	{
 +		if (g_bMouseDisabled) return;
 +
+ 		// Ignore any pointer events for which the `enter` event surface didn't pass `IsGamescopeToplevel` (libdecor frame)
  		if ( !m_bMouseEntered )
  			return;
- 
-@@ -3065,6 +3120,7 @@ namespace gamescope
+@@ -3106,6 +3161,7 @@
  		if ( !pPlane )
  			return;
  
@@ -273,25 +271,25 @@ index abdf782..6619fc7 100644
          if ( m_pRelativePointer.load() != nullptr )
              return;
  
-@@ -3091,6 +3147,8 @@ namespace gamescope
+@@ -3132,6 +3188,8 @@
      }
      void CWaylandInputThread::Wayland_Pointer_Button( wl_pointer *pPointer, uint32_t uSerial, uint32_t uTime, uint32_t uButton, uint32_t uState )
      {
 +        if (g_bMouseDisabled) return;
 +
-         // Don't do any motion/movement stuff if we don't have kb focus
-         if ( !cv_wayland_mouse_warp_without_keyboard_focus && !m_bKeyboardEntered )
+         // Ignore any pointer events for which the `enter` event surface didn't pass `IsGamescopeToplevel` (libdecor frame)
+         if ( !m_bMouseEntered )
              return;
-@@ -3114,6 +3172,8 @@ namespace gamescope
+@@ -3171,6 +3229,8 @@
      }
      void CWaylandInputThread::Wayland_Pointer_Axis_Value120( wl_pointer *pPointer, uint32_t uAxis, int32_t nValue120 )
      {
 +        if (g_bMouseDisabled) return;
 +
-         if ( !cv_wayland_mouse_warp_without_keyboard_focus && !m_bKeyboardEntered )
+         // Ignore any pointer events for which the `enter` event surface didn't pass `IsGamescopeToplevel` (libdecor frame)
+         if ( !m_bMouseEntered )
              return;
- 
-@@ -3124,6 +3184,8 @@ namespace gamescope
+@@ -3184,6 +3244,8 @@
      }
      void CWaylandInputThread::Wayland_Pointer_Frame( wl_pointer *pPointer )
      {
@@ -300,7 +298,7 @@ index abdf782..6619fc7 100644
          defer( m_uAxisSource = WL_POINTER_AXIS_SOURCE_WHEEL );
          double flX = m_flScrollAccum[0];
          double flY = m_flScrollAccum[1];
-@@ -3178,6 +3240,8 @@ namespace gamescope
+@@ -3238,6 +3300,8 @@
      }
      void CWaylandInputThread::Wayland_Keyboard_Enter( wl_keyboard *pKeyboard, uint32_t uSerial, wl_surface *pSurface, wl_array *pKeys )
      {
@@ -309,7 +307,7 @@ index abdf782..6619fc7 100644
  		if ( !IsGamescopeToplevel( pSurface ) )
  			return;
  
-@@ -3204,6 +3268,8 @@ namespace gamescope
+@@ -3264,6 +3328,8 @@
      }
      void CWaylandInputThread::Wayland_Keyboard_Leave( wl_keyboard *pKeyboard, uint32_t uSerial, wl_surface *pSurface )
      {
@@ -318,7 +316,7 @@ index abdf782..6619fc7 100644
  		if ( !IsGamescopeToplevel( pSurface ) )
  			return;
  
-@@ -3217,6 +3283,8 @@ namespace gamescope
+@@ -3277,6 +3343,8 @@
      }
      void CWaylandInputThread::Wayland_Keyboard_Key( wl_keyboard *pKeyboard, uint32_t uSerial, uint32_t uTime, uint32_t uKey, uint32_t uState )
      {
@@ -327,7 +325,7 @@ index abdf782..6619fc7 100644
          if ( !m_bKeyboardEntered )
              return;
  
-@@ -3244,6 +3312,8 @@ namespace gamescope
+@@ -3304,6 +3372,8 @@
  
      void CWaylandInputThread::Wayland_RelativePointer_RelativeMotion( zwp_relative_pointer_v1 *pRelativePointer, uint32_t uTimeHi, uint32_t uTimeLo, wl_fixed_t fDx, wl_fixed_t fDy, wl_fixed_t fDxUnaccel, wl_fixed_t fDyUnaccel )
      {
@@ -336,10 +334,9 @@ index abdf782..6619fc7 100644
  		// Don't do any motion/movement stuff if we don't have kb focus
  		if ( !m_pBackend->m_bPointerLocked || ( !cv_wayland_mouse_relmotion_without_keyboard_focus && !m_bKeyboardEntered ) )
  			return;
-diff --git a/src/LibInputHandler.cpp b/src/LibInputHandler.cpp
-index 145a5be..c98c8fc 100644
---- a/src/LibInputHandler.cpp
-+++ b/src/LibInputHandler.cpp
+diff -ruN a/src/LibInputHandler.cpp b/src/LibInputHandler.cpp
+--- a/src/LibInputHandler.cpp	2026-10-03 11:28:05.745867843 +0300
++++ b/src/LibInputHandler.cpp	2026-10-03 11:28:05.837083294 +0300
 @@ -1,21 +1,31 @@
  #include "LibInputHandler.h"
  
@@ -372,7 +369,7 @@ index 145a5be..c98c8fc 100644
  // That may change in the future...
  // but for now, this solves that problem.
  
-@@ -27,11 +37,46 @@ namespace gamescope
+@@ -27,11 +37,46 @@
      {
          .open_restricted = []( const char *pszPath, int nFlags, void *pUserData ) -> int
          {
@@ -419,7 +416,7 @@ index 145a5be..c98c8fc 100644
              close( nFd );
          },
      };
-@@ -64,18 +108,43 @@ namespace gamescope
+@@ -64,18 +109,43 @@
              return false;
          }
  
@@ -474,7 +471,7 @@ index 145a5be..c98c8fc 100644
          }
  
          return true;
-@@ -105,6 +174,7 @@ namespace gamescope
+@@ -105,6 +175,7 @@
              {
                  case LIBINPUT_EVENT_POINTER_MOTION:
                  {
@@ -482,7 +479,7 @@ index 145a5be..c98c8fc 100644
                      libinput_event_pointer *pPointerEvent = libinput_event_get_pointer_event( pEvent );
  
                      double flDx = libinput_event_pointer_get_dx( pPointerEvent );
-@@ -120,6 +190,7 @@ namespace gamescope
+@@ -120,6 +191,7 @@
  
                  case LIBINPUT_EVENT_POINTER_MOTION_ABSOLUTE:
                  {
@@ -490,7 +487,7 @@ index 145a5be..c98c8fc 100644
                      libinput_event_pointer *pPointerEvent = libinput_event_get_pointer_event( pEvent );
  
                      double flX = libinput_event_pointer_get_absolute_x( pPointerEvent );
-@@ -135,6 +206,7 @@ namespace gamescope
+@@ -135,6 +207,7 @@
  
                  case LIBINPUT_EVENT_POINTER_BUTTON:
                  {
@@ -498,7 +495,7 @@ index 145a5be..c98c8fc 100644
                      libinput_event_pointer *pPointerEvent = libinput_event_get_pointer_event( pEvent );
  
                      uint32_t uButton = libinput_event_pointer_get_button( pPointerEvent );
-@@ -148,6 +220,7 @@ namespace gamescope
+@@ -148,6 +221,7 @@
  
                  case LIBINPUT_EVENT_POINTER_SCROLL_WHEEL:
                  {
@@ -506,7 +503,7 @@ index 145a5be..c98c8fc 100644
                      libinput_event_pointer *pPointerEvent = libinput_event_get_pointer_event( pEvent );
  
                      static constexpr libinput_pointer_axis eAxes[] =
-@@ -174,7 +247,35 @@ namespace gamescope
+@@ -174,7 +248,35 @@
                      libinput_event_keyboard *pKeyboardEvent = libinput_event_get_keyboard_event( pEvent );
                      uint32_t uKey = libinput_event_keyboard_get_key( pKeyboardEvent );
                      libinput_key_state eState = libinput_event_keyboard_get_key_state( pKeyboardEvent );
@@ -542,10 +539,9 @@ index 145a5be..c98c8fc 100644
                      wlserver_lock();
                  wlserver_key( uKey, eState == LIBINPUT_KEY_STATE_PRESSED, ++    s_uSequence );
                      wlserver_unlock();
-diff --git a/src/main.cpp b/src/main.cpp
-index 1397028..be5b7af 100644
---- a/src/main.cpp
-+++ b/src/main.cpp
+diff -ruN a/src/main.cpp b/src/main.cpp
+--- a/src/main.cpp	2026-10-03 11:28:05.747544170 +0300
++++ b/src/main.cpp	2026-10-03 11:28:05.837083294 +0300
 @@ -2,6 +2,8 @@
  
  #include <X11/Xlib.h>
@@ -553,9 +549,9 @@ index 1397028..be5b7af 100644
 +#include <bits/getopt_core.h>
 +#include <cstddef>
  #include <cstdio>
+ #include <format>
  #include <thread>
- #include <mutex>
-@@ -21,6 +23,8 @@
+@@ -22,6 +24,8 @@
  #include <float.h>
  #include <climits>
  
@@ -564,7 +560,7 @@ index 1397028..be5b7af 100644
  #include "main.hpp"
  #include "steamcompmgr.hpp"
  #include "rendervulkan.hpp"
-@@ -157,6 +161,10 @@ const struct option *gamescope_options = (struct option[]){
+@@ -161,6 +165,10 @@
  	{ "allow-deferred-backend", no_argument, nullptr, 0 },
  	{ "keep-alive", no_argument, nullptr, 0 },
  
@@ -575,7 +571,7 @@ index 1397028..be5b7af 100644
  	{} // keep last
  };
  
-@@ -222,7 +230,10 @@ const char usage[] =
+@@ -228,7 +236,10 @@
  	"  -f, --fullscreen               make the window fullscreen\n"
  	"  -g, --grab                     grab the keyboard\n"
  	"  --force-grab-cursor            always use relative mouse mode instead of flipping dependent on cursor visibility.\n"
@@ -587,7 +583,7 @@ index 1397028..be5b7af 100644
  	"\n"
  	"Embedded mode options:\n"
  	"  -O, --prefer-output            list of connectors in order of preference (ex: DP-1,DP-2,DP-3,HDMI-A-1)\n"
-@@ -304,6 +315,11 @@ bool g_bForceRelativeMouse = false;
+@@ -310,6 +321,11 @@
  
  bool g_bGrabbed = false;
  
@@ -598,8 +594,8 @@ index 1397028..be5b7af 100644
 +
  float g_mouseSensitivity = 1.0;
  
- GamescopeUpscaleFilter g_upscaleFilter = GamescopeUpscaleFilter::LINEAR;
-@@ -835,6 +851,16 @@ int main(int argc, char **argv)
+ GamescopeUpscaleFilter g_wantedUpscaleFilter = GamescopeUpscaleFilter::LINEAR;
+@@ -859,6 +875,16 @@
  								
  						}
  					}
@@ -616,20 +612,19 @@ index 1397028..be5b7af 100644
  				}
  				break;
  			case '?':
-diff --git a/src/main.hpp b/src/main.hpp
-index 2e6fb83..58cc424 100644
---- a/src/main.hpp
-+++ b/src/main.hpp
+diff -ruN a/src/main.hpp b/src/main.hpp
+--- a/src/main.hpp	2026-10-03 11:28:05.747544170 +0300
++++ b/src/main.hpp	2026-10-03 11:28:05.837083294 +0300
 @@ -3,6 +3,8 @@
  #include <getopt.h>
  
  #include <atomic>
 +#include <vector>
 +#include <string>
- 
- extern const char *gamescope_optstring;
- extern const struct option *gamescope_options;
-@@ -26,6 +28,13 @@ extern bool g_bFullscreen;
+ #include <optional>
+ #include <string_view>
+ #include <utility>
+@@ -34,6 +36,13 @@
  
  extern bool g_bGrabbed;
  
@@ -643,11 +638,10 @@ index 2e6fb83..58cc424 100644
  extern float g_mouseSensitivity;
  extern const char *g_sOutputName;
  
-diff --git a/src/steamcompmgr.cpp b/src/steamcompmgr.cpp
-index c4cee70..754a432 100644
---- a/src/steamcompmgr.cpp
-+++ b/src/steamcompmgr.cpp
-@@ -2424,7 +2424,7 @@ static void paint_pipewire()
+diff -ruN a/src/steamcompmgr.cpp b/src/steamcompmgr.cpp
+--- a/src/steamcompmgr.cpp	2026-10-03 11:28:05.792150113 +0300
++++ b/src/steamcompmgr.cpp	2026-10-03 11:28:05.837083294 +0300
+@@ -3025,7 +3025,7 @@
  gamescope::ConVar<int> cv_cursor_composite{ "cursor_composite", 1, "0 = Never composite a cursor. 1 = Composite cursor when not nested. 2 = Always composite a cursor manually" };
  bool ShouldDrawCursor()
  {
@@ -656,7 +650,7 @@ index c4cee70..754a432 100644
  		return true;
  
  	if ( cv_cursor_composite == 0 )
-@@ -2433,6 +2433,10 @@ bool ShouldDrawCursor()
+@@ -3034,6 +3034,10 @@
  	if ( g_bForceRelativeMouse )
  		return true;
  

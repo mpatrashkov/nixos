@@ -35,7 +35,7 @@
     };
 
     opencode-src = {
-      url = "github:anomalyco/opencode/v1.18.15";
+      url = "github:anomalyco/opencode/v1.18.34";
       flake = false;
     };
 

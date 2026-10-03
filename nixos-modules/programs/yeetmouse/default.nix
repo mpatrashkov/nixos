@@ -23,6 +23,11 @@ let
     #  1. `t[0]`/`t[1]` is invalid Nix list indexing (parses as function application).
     #  2. `value = length params.data;` yields an integer, but the udev rule
     #     interpolates it into a string without `toString`.
+    #
+    # Also: GCC 16 (used after the nixpkgs bump) treats the `u8"..."` string
+    # literals in the GUI's main.cpp as `const char8_t*`, which no longer
+    # implicitly convert to `const char*` and hard-errors. Append `-fpermissive`
+    # to the GUI CXXFLAGS so this is a warning again rather than a build failure.
     postPatch = ''
       substituteInPlace nix/module.nix \
         --replace-fail \
@@ -31,6 +36,10 @@ let
         --replace-fail \
           'value = length params.data;' \
           'value = toString (length params.data);'
+      substituteInPlace nix/package.nix \
+        --replace-fail \
+          '"CXXFLAGS=-Wno-sign-compare -Wno-unused-function -Wno-return-type -isystem $sourceRoot/gui/External"' \
+          '"CXXFLAGS=-fpermissive -Wno-sign-compare -Wno-unused-function -Wno-return-type -isystem $sourceRoot/gui/External"'
     '';
   };
 
