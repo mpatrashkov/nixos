@@ -1,7 +1,9 @@
 { pkgs, inputs, ... }:
 
 let
-  opencode-version = (builtins.fromJSON (builtins.readFile "${inputs.opencode-src}/packages/opencode/package.json")).version;
+  opencode-version =
+    (builtins.fromJSON (builtins.readFile "${inputs.opencode-src}/packages/opencode/package.json"))
+    .version;
   opencode-latest = pkgs.opencode.overrideAttrs (old: {
     version = opencode-version;
     src = inputs.opencode-src;
@@ -16,8 +18,10 @@ let
   });
 
   # Bump the tag in flake.nix's pi-src, then update npmDepsHash + modelData hash.
-  pi-version = (builtins.fromJSON (builtins.readFile "${inputs.pi-src}/packages/coding-agent/package.json")).version;
-  pi-latest = pkgs.pi-coding-agent.overrideAttrs (_: rec {
+  pi-version =
+    (builtins.fromJSON (builtins.readFile "${inputs.pi-src}/packages/coding-agent/package.json"))
+    .version;
+  pi-latest = pkgs.pi-coding-agent.overrideAttrs (old: rec {
     version = pi-version;
     src = inputs.pi-src;
     npmDepsHash = "sha256-GOh5WG+rRgzoy/yVHY5PoEKJZGQcEGhISrDDJxkP8W4=";
@@ -37,6 +41,11 @@ let
         --strip-components=4 \
         package/dist/providers/data
     '';
+    # Pi requires wl-clipboard for copy functionality.
+    postFixup = (old.postFixup or "") + ''
+      wrapProgram "$out/bin/pi" \
+        --prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.wl-clipboard ]}
+    '';
   });
 in
 {
@@ -45,6 +54,9 @@ in
     pkgs.gemini-cli
     pkgs.antigravity-cli
     opencode-latest
+
     pi-latest
+    # Pi requires wl-clipboard for copy functionality. TODO: move to the override above if possible
+    # pkgs.wl-clipboard
   ];
 }
