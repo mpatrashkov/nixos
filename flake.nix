@@ -39,6 +39,11 @@
       flake = false;
     };
 
+    pi-src = {
+      url = "github:earendil-works/pi/v1.1.0";
+      flake = false;
+    };
+
     another-window-session-manager-src = {
       url = "github:nlpsuge/gnome-shell-extension-another-window-session-manager/cf23fef152ce90692fc1df984f6fd945725334be";
       flake = false;

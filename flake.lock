@@ -372,6 +372,23 @@
         "type": "github"
       }
     },
+    "pi-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1791408813,
+        "narHash": "sha256-lwjspkMGrW+8Fl/yBEDEFsHZJA57OKOhmVQmi6zfej4=",
+        "owner": "earendil-works",
+        "repo": "pi",
+        "rev": "abe508e1b89912adde45528136c3221eb69acdd7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "earendil-works",
+        "ref": "v1.1.0",
+        "repo": "pi",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "ags": "ags",
@@ -383,6 +400,7 @@
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-small": "nixpkgs-small",
         "opencode-src": "opencode-src",
+        "pi-src": "pi-src",
         "stylix": "stylix",
         "tmux-fzf-links-src": "tmux-fzf-links-src",
         "tmux-super-fingers-src": "tmux-super-fingers-src",
