@@ -56,7 +56,5 @@ in
     opencode-latest
 
     pi-latest
-    # Pi requires wl-clipboard for copy functionality. TODO: move to the override above if possible
-    # pkgs.wl-clipboard
   ];
 }
