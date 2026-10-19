@@ -88,11 +88,12 @@ in
 
       set -g mouse on
 
-      # makes Enter keys work in pi harness
+      # Forward extended keys only when the application requests them (e.g. Pi).
+      # Do not enable Kitty's keyboard protocol on the outer terminal: tmux's
+      # extended-key parser is not a full Kitty protocol implementation.
+      # Kitty maps Shift+Enter explicitly in its stow-managed configuration.
       set -g extended-keys on
       set -g extended-keys-format csi-u
-      set -as terminal-features ',xterm-kitty:extkeys'
-      set -as terminal-overrides ',xterm-kitty:Eneks=\E[>1u:Dseks=\E[<u'
 
       set -g status-right '#{?client_prefix,#[bg=yellow]#[fg=black] PREFIX #[default] ,}"#{=21:pane_title}"'
 

@@ -50,6 +50,7 @@
         };
 
         "org/gnome/desktop/wm/keybindings" = {
+          show-desktop = lib.gvariant.mkArray [ "<Super>d" ];
           switch-applications = lib.gvariant.mkEmptyArray (lib.gvariant.type.string);
           switch-applications-backward = lib.gvariant.mkEmptyArray (lib.gvariant.type.string);
           switch-windows = lib.gvariant.mkArray [ "<Alt>Tab" ];
@@ -72,21 +73,21 @@
         };
 
         "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-          name = "Audio Switch: HDMI Monitor";
-          command = "switch-audio hdmi";
           binding = "F22";
+          command = "switch-audio hdmi";
+          name = "Audio Switch: HDMI Monitor";
         };
 
         "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
-          name = "Audio Switch: FiiO K11";
-          command = "switch-audio fiio";
           binding = "F23";
+          command = "switch-audio fiio";
+          name = "Audio Switch: FiiO K11";
         };
 
         "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
-          name = "Audio Switch: Logitech Headset";
-          command = "switch-audio logitech";
           binding = "F24";
+          command = "switch-audio logitech";
+          name = "Audio Switch: Logitech Headset";
         };
 
         "org/gnome/settings-daemon/plugins/power" = {
