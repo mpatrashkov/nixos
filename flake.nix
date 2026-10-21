@@ -10,6 +10,10 @@
     ags.url = "github:Aylur/ags";
     stylix.url = "github:danth/stylix";
 
+    wallpaper-daemon = {
+      url = "path:/home/miro/dev/wallpaper-daemon";
+    };
+
     yeetmouse = {
       url = "github:AndyFilter/YeetMouse?dir=nix";
       inputs.nixpkgs.follows = "nixpkgs";

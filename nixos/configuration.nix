@@ -1,5 +1,6 @@
 {
   pkgs,
+  inputs,
   ...
 }:
 
@@ -7,7 +8,16 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
+    inputs.wallpaper-daemon.nixosModules.default
   ];
+
+  services.wallpaper-daemon = {
+    enable = true;
+    rotateInterval = "1h";
+    fetchInterval = "6h";
+    country = "US";
+    locale = "en-US";
+  };
 
   myNixOS.services.smb.enable = false;
 
