@@ -10,8 +10,14 @@
     ags.url = "github:Aylur/ags";
     stylix.url = "github:danth/stylix";
 
-    wallpaper-daemon = {
-      url = "path:/home/miro/dev/wallpaper-daemon";
+    # TODO: re-enable once published (see .ideas/publish-wallpaper-daemon.md).
+    # wallpaper-daemon = {
+    #   url = "path:/home/miro/dev/wallpaper-daemon";
+    # };
+
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL/main";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     yeetmouse = {
@@ -86,7 +92,9 @@
     in
     {
       nixosConfigurations = {
-        nixos = tools.mkSystem ./nixos/configuration.nix;
+        # Attribute names match each host's networking.hostName so `nh os` picks the right one.
+        nixos = tools.mkSystem ./hosts/desktop/configuration.nix;
+        wsl = tools.mkSystem ./hosts/wsl/configuration.nix;
       };
 
       nixosModules.default = ./nixos-modules;

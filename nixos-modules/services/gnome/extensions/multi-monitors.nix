@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, config, ... }:
 let
   multiMonitors = pkgs.stdenv.mkDerivation {
     pname = "multi-monitor-panel";
@@ -25,7 +25,10 @@ in
 {
   imports = [ ];
 
-  environment.systemPackages = [
-    multiMonitors
-  ];
+  # Plain `imports` from gnome/default.nix aren't gated by its enable option.
+  config = lib.mkIf config.myNixOS.services.gnome.enable {
+    environment.systemPackages = [
+      multiMonitors
+    ];
+  };
 }

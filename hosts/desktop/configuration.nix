@@ -8,16 +8,25 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    inputs.wallpaper-daemon.nixosModules.default
+    # TODO: re-enable once wallpaper-daemon is published (see .ideas/publish-wallpaper-daemon.md).
+    # The local `path:` input can't be fetched on other hosts (e.g. WSL).
+    # inputs.wallpaper-daemon.nixosModules.default
   ];
 
-  services.wallpaper-daemon = {
-    enable = true;
-    rotateInterval = "1h";
-    fetchInterval = "6h";
-    country = "US";
-    locale = "en-US";
-  };
+  # services.wallpaper-daemon = {
+  #   enable = true;
+  #   rotateInterval = "1h";
+  #   fetchInterval = "6h";
+  #   country = "US";
+  #   locale = "en-US";
+  # };
+
+  networking.hostName = "nixos";
+
+  # Windows stores the hardware clock in local time, while Linux
+  # expects it to be in UTC. This fixes the time showing incorrectly
+  # when dual-booting.
+  time.hardwareClockInLocalTime = true;
 
   myNixOS.services.smb.enable = false;
 

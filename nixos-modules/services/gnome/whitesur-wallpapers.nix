@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ pkgs, lib, config, inputs, ... }:
 let
   whitesur-wallpapers = pkgs.stdenvNoCC.mkDerivation {
     pname = "whitesur-wallpapers";
@@ -52,5 +52,8 @@ let
   };
 in
 {
-  environment.systemPackages = [ whitesur-wallpapers ];
+  # Plain `imports` from gnome/default.nix aren't gated by its enable option.
+  config = lib.mkIf config.myNixOS.services.gnome.enable {
+    environment.systemPackages = [ whitesur-wallpapers ];
+  };
 }

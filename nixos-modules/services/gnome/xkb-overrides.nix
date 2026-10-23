@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, config, ... }:
 let
   # A standalone patched copy of xkeyboard-config.  We deliberately do NOT use
   # `nixpkgs.overlays` here: overlaying xkeyboard-config would force a
@@ -22,11 +22,14 @@ let
   });
 in
 {
-  # X server (used by GDM) reads XKB data from here.
-  services.xserver.xkb.dir = "${xkeyboard-config-patched}/etc/X11/xkb";
+  # Plain `imports` from gnome/default.nix aren't gated by its enable option.
+  config = lib.mkIf config.myNixOS.services.gnome.enable {
+    # X server (used by GDM) reads XKB data from here.
+    services.xserver.xkb.dir = "${xkeyboard-config-patched}/etc/X11/xkb";
 
-  # libxkbcommon (used by mutter on Wayland) runtime override.
-  # https://xkbcommon.org/doc/current/group__include-path.html
-  environment.sessionVariables.XKB_CONFIG_ROOT =
-    "${xkeyboard-config-patched}/etc/X11/xkb";
+    # libxkbcommon (used by mutter on Wayland) runtime override.
+    # https://xkbcommon.org/doc/current/group__include-path.html
+    environment.sessionVariables.XKB_CONFIG_ROOT =
+      "${xkeyboard-config-patched}/etc/X11/xkb";
+  };
 }
