@@ -6,6 +6,7 @@
 {
   imports = [
     inputs.nixos-wsl.nixosModules.default
+    ./wslg.nix
   ];
 
   wsl.enable = true;
@@ -16,6 +17,14 @@
 
   # CLI/dev only: no GNOME, audio, DNS stack, bootloader or GUI apps.
   myNixOS.desktop.enable = false;
+
+  # Kitty runs through WSLg as the Windows terminal.
+  myNixOS.programs.terminal.enable = true;
+  myNixOS.services.fonts.enable = true;
+  fonts.fontconfig.defaultFonts.monospace = [ "CaskaydiaCove Nerd Font Mono" ];
+
+  # Expose .desktop files (kitty) in the Windows Start menu.
+  wsl.startMenuLaunchers = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
