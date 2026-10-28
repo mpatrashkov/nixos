@@ -11,27 +11,34 @@ Do **not** introduce `home-manager`, `home.file`, `programs.<x>.enable` under a 
 
 # NixOS Configuration Workflow
 
-Whenever you implement a NixOS configuration change that I have requested, you MUST stop and use the user interaction tool to ask me how to proceed.
-**CRITICAL**: You must provide a short `header` for the question that is 12 characters or less (e.g., `header: "NixOS Action"`).
+Whenever you implement a requested NixOS configuration change, stop before activation and ask how to proceed. Use the user interaction tool if available, otherwise ask in plain chat and wait for an explicit answer. Implementation approval is not activation approval.
 
-Present the following options:
+Use a short question header (12 characters or less), e.g. **NixOS Action**, and present:
 
-1. **Apply the change (switch)**: This will stage the changes, prompt for a commit message, commit, push, and apply the configuration.
-2. **Verify the configuration (test)**: This will stage the changes and test the configuration without applying it permanently.
+1. **Apply the change (switch)**: collect a change description, finalize the source snapshot, push, and apply permanently.
+2. **Verify the configuration (test)**: snapshot and test without publishing or making it the boot default.
 3. **Do nothing**
 
-Both options run autonomously via the Bash tool. Passwordless sudo for `nh` is configured for user `miro` in `nixos-modules/services/users.nix`, and `--bypass-root-check` is required because `nh` otherwise refuses to run as root. Stream output back to me.
+After switch is selected, ask separately for the description with a short header such as **Commit Msg**, then run exactly:
 
-**Command reference (do not confuse these):**
-- `./scripts/nix-test` — stages changes and tests the config without making it permanent (`nh os test`)
-- `./scripts/nix-switch "<msg>"` — stages, commits, pushes, and applies the config permanently (`nh os switch`)
+`./scripts/nix-switch "<description>"`
 
-* If I select "Apply the change (switch)", immediately ask me for the commit message using a text input prompt. **CRITICAL**: Use a short `header` (max 12 chars), e.g., `header: "Git Commit"`. Once provided, run:
-  `./scripts/nix-switch "<commit_message>"`
-  Run the command exactly as shown — no output redirection.
-* If I select "Verify the configuration (test)", run:
-  `./scripts/nix-test`
-  Run the command exactly as shown — no output redirection (no `2>&1 | tail -N` or similar). The raw output must be streamed directly to the Bash tool output so the user can see it in full.
+After test is selected, run exactly:
+
+`./scripts/nix-test`
+
+Use Bash with no output redirection or truncation. Passwordless sudo for `nh` is configured in `nixos-modules/services/users.nix`; wrappers retain `--bypass-root-check`. Report failures and never automatically switch after a test.
+
+## Source control and generation labels
+
+- Load `.agents/skills/nixos-rebuild/SKILL.md` for rebuild work and the global `jujutsu` skill for JJ operations.
+- Installing JJ does not migrate this repository. Until `.jj` is explicitly initialized, wrappers use Git. Once colocated JJ is initialized, wrappers use JJ; do not mix Git index-based mutations into that workflow.
+- Git switch stages/commits and pushes. Git test uses a temporary index and unpublished commit, preserving the real index and branch. Both include all nonignored work; inspect and report unrelated changes before deployment.
+- JJ switch finalizes the intended nonempty `@`, advances only the configured publishing bookmark without backwards moves, pushes it, then creates an empty child. JJ test snapshots `@` without publishing. Never guess `@-` when the current change is empty.
+- Configure `nixos.publish-bookmark` and `nixos.publish-remote` with `jj config set --repo` only during an approved migration after checking branch/upstream/remotes. The current Git branch is `main` and remote is `origin`, but verify before use.
+- Rebuilds export the exact captured commit into a temporary source tree. Generated `.nixos-generation.json` metadata belongs only there, never in a commit. Labels use sanitized descriptions and immutable commit IDs, with `test-` on tests; Limine's `Generation N` titles and hover descriptions remain unchanged.
+- Ordinary wrappers do not update inputs. Use `nix-update-test` or `nix-update-switch` only when input updates were requested. They update the lockfile **before** snapshotting, so the label identifies the updated source. To test/switch an already-reviewed update, use ordinary wrappers rather than updating again.
+- Do not initialize JJ, rewrite published history, move publishing bookmarks, push, or activate as an unapproved side effect of editing skills/dotfiles.
 
 ---
 

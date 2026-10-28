@@ -1,6 +1,8 @@
 ## Scripts
 
-Helper scripts live in `scripts/` and are run with `zx` (e.g. `zx scripts/rollback-test-changes.ts`). The root `package.json`/`pnpm-lock.yaml` exist solely to provide their dependencies; run `pnpm install` from the repo root to set them up.
+Helper scripts live in `scripts/`. TypeScript helpers use `zx` (e.g. `zx scripts/rollback-test-changes.ts`); the root `package.json`/`pnpm-lock.yaml` provide their dependencies.
+
+NixOS rebuilds use TypeScript via `zx`, with tiny shell launchers preserving `./scripts/nix-test` and `./scripts/nix-switch "<description>"`. See [JJ setup, rebuilds, and generation descriptions](docs/jujutsu.md), and follow the approval policy in `AGENTS.md`.
 
 ## Useful commands
 
@@ -16,4 +18,4 @@ gdctl set -LM DP-4 -ps 1
 
 ## Future improvements
 
-- Decide if `npins` is a suitable flake replacement, as flakes have to many limitation regarding pure elevation. See `nixos-modules/features/generations/default.nix`.
+- Decide if `npins` is a suitable flake replacement. Generation descriptions no longer require an impure environment variable or Git hook.

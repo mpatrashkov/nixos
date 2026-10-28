@@ -5,6 +5,7 @@
     with pkgs;
     [
       git
+      jujutsu
       pre-commit
       github-cli
     ]

@@ -1,0 +1,7 @@
+[user]
+name = "Miroslav Patrashkov"
+email = "mpatrashkov2002@outlook.com"
+
+[ui]
+editor = "nvim"
+pager = "less -FRX"

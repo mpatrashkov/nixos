@@ -250,18 +250,6 @@
         "type": "github"
       }
     },
-    "last-commit-message": {
-      "flake": false,
-      "locked": {
-        "path": "./last-commit-message",
-        "type": "path"
-      },
-      "original": {
-        "path": "./last-commit-message",
-        "type": "path"
-      },
-      "parent": []
-    },
     "nix-index-database": {
       "inputs": {
         "nixpkgs": [
@@ -433,7 +421,6 @@
         "another-window-session-manager-src": "another-window-session-manager-src",
         "hatter-icon-theme-src": "hatter-icon-theme-src",
         "home-manager": "home-manager",
-        "last-commit-message": "last-commit-message",
         "nix-index-database": "nix-index-database",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": "nixpkgs_2",

@@ -15,12 +15,12 @@ Updates custom GitHub-sourced packages in the NixOS configuration.
 
 2. If the JSON array is empty, tell the user all packages are up to date and stop.
 
-3. Use the Question tool (`multiple: true`) to ask the user which packages to update.
+3. Use the interaction tool if available, otherwise plain chat, to ask which packages to update. Wait for the answer.
    Label each option as `"owner/repo  (currentRev → latestRev)"`.
 
 4. For each selected package, read the specified `file` and update the package to `latestRev`
    with the new hash `newHash`. Use your judgement to make the correct edits.
 
-5. Run `git diff` to confirm the edits look correct.
+5. Inspect the diff (`jj diff` in an initialized JJ checkout, otherwise `git diff`).
 
-6. Trigger the standard NixOS Action workflow (Test → Switch).
+6. Load `.agents/skills/nixos-rebuild/SKILL.md` and follow AGENTS.md's NixOS Action approval workflow. Test does not imply permission to switch.

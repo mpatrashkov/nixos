@@ -87,9 +87,9 @@ After editing, run `git diff --no-color nixos-modules/services/gnome/default.nix
 
 ### 8. Trigger NixOS Action workflow
 
-Ask the user via the user interaction tool (`header: "NixOS Action"`) to choose:
+Follow AGENTS.md and load `.agents/skills/nixos-rebuild/SKILL.md`. Ask via the interaction tool if available, otherwise in plain chat (**NixOS Action**), and wait for a choice:
 
-- **Apply (switch)** — prompt for commit message (`header: "Git Commit"`), then run `./scripts/nix-switch "<msg>"` with no output redirection.
+- **Apply (switch)** — prompt for a change description (`header: "Commit Msg"`), then run `./scripts/nix-switch "<msg>"` with no output redirection.
 - **Verify (test)** — run `./scripts/nix-test` with no output redirection.
 - **Do nothing**
 

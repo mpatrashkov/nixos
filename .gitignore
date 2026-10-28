@@ -1,4 +1,8 @@
+# Legacy local label file; safe to delete after migration.
 last-commit-message
+# Generated only inside temporary build snapshots, never committed.
+.nixos-generation.json
+.jj/
 .plans/
 node_modules/
 .sync-gnome.log
