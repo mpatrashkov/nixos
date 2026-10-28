@@ -1,0 +1,24 @@
+[[actions]]
+name = "review_change"
+key = "ctrl+o"
+scope = "revisions"
+desc = "review whole change in Neovim"
+lua = '''
+local revision = context.commit_id()
+if not revision then
+  flash("Select a change first")
+  return
+end
+
+local function shell_quote(value)
+  return "'" .. value:gsub("'", "'\\''") .. "'"
+end
+
+exec_shell("jj review -r " .. shell_quote(revision))
+'''
+
+[[bindings]]
+key = "ctrl+o"
+scope = "revisions.details"
+action = "review_change"
+desc = "review whole change in Neovim"

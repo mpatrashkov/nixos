@@ -5,3 +5,31 @@ email = "mpatrashkov2002@outlook.com"
 [ui]
 editor = "nvim"
 pager = "less -FRX"
+
+[merge-tools.nvimdiff]
+# JJ diff generators get null stdin and piped stdout; reconnect the TUI to its terminal.
+program = "sh"
+diff-args = [
+  "-c",
+  'exec nvim -n -R -d -- "$1" "$2" </dev/tty >/dev/tty 2>&1',
+  "nvimdiff",
+  "$left",
+  "$right",
+]
+diff-invocation-mode = "file-by-file"
+
+[aliases]
+review = ["diff", "--tool", "nvim-review", "--no-pager"]
+
+[merge-tools.nvim-review]
+program = "sh"
+diff-invocation-mode = "dir"
+diff-do-chdir = false
+conflict-marker-style = "snapshot"
+diff-args = [
+  "-c",
+  '''JJ_REVIEW_LEFT="$1" JJ_REVIEW_RIGHT="$2" exec nvim -n -i NONE -c 'lua require("jj_review").start()' </dev/tty >/dev/tty 2>&1''',
+  "nvim-review",
+  "$left",
+  "$right",
+]
