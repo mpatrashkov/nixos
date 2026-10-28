@@ -11,6 +11,7 @@
   # Extensions
   imports = [
     ./extensions/multi-monitors.nix
+    ./extensions/blur-my-shell.nix
     # Disabling AWSM fow now, as I can't make it work for apps with multiple windows (e.g. Chrome, VSCode, Alacritty)
     # ./extensions/another-window-session-manager.nix
     ./whitesur-wallpapers.nix
@@ -97,6 +98,7 @@
         "org/gnome/shell" = {
           enabled-extensions = lib.gvariant.mkArray [
             "dash-to-dock@micxgx.gmail.com"
+            "blur-my-shell@aunetx"
             "multi-monitor-panel@coolssor"
             "another-window-session-manager@gmail.com"
             # TODO: not sure about this one
