@@ -1,4 +1,9 @@
-{ lib, pkgs, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 let
   # nixpkgs currently packages v72, before the unified blur backend.
   blurMyShell = pkgs.gnomeExtensions.blur-my-shell.overrideAttrs {
@@ -45,68 +50,71 @@ let
   };
 in
 {
-  environment.systemPackages = [ blurMyShell ];
+  # Imports are unconditional, so follow the parent module's opt-in switch.
+  config = lib.mkIf config.myNixOS.services.gnome.enable {
+    environment.systemPackages = [ blurMyShell ];
 
-  # Separate from the locked GNOME settings: these are editable defaults.
-  # User overrides take precedence; capture the final look in Nix after tuning.
-  programs.dconf.profiles.user.databases = [
-    {
-      lockAll = false;
-      settings = {
-        "org/gnome/shell/extensions/blur-my-shell" = {
-          pipelines = lib.gvariant.mkArray [
-            (lib.gvariant.mkDictionaryEntry "pipeline_default" glassPipeline)
-          ];
+    # Separate from the locked GNOME settings: these are editable defaults.
+    # User overrides take precedence; capture the final look in Nix after tuning.
+    programs.dconf.profiles.user.databases = [
+      {
+        lockAll = false;
+        settings = {
+          "org/gnome/shell/extensions/blur-my-shell" = {
+            pipelines = lib.gvariant.mkArray [
+              (lib.gvariant.mkDictionaryEntry "pipeline_default" glassPipeline)
+            ];
+          };
+
+          "org/gnome/shell/extensions/blur-my-shell/panel" = {
+            blur = true;
+            static-blur = false;
+            pipeline = "pipeline_default";
+            override-background = true;
+            style-panel = lib.gvariant.mkInt32 2; # Dark tint, light text.
+            force-light-text = true;
+          };
+
+          "org/gnome/shell/extensions/blur-my-shell/dash-to-dock" = {
+            blur = true;
+            static-blur = false;
+            pipeline = "pipeline_default";
+            override-background = true;
+            style-dash-to-dock = lib.gvariant.mkInt32 2; # Dark tint.
+          };
+
+          "org/gnome/shell/extensions/blur-my-shell/popup" = {
+            blur = true;
+            static-blur = false;
+            pipeline = "pipeline_default";
+            override-background = true;
+            preserve-shell-theme = true;
+            style-popup = lib.gvariant.mkInt32 2; # Dark tint.
+          };
+
+          "org/gnome/shell/extensions/blur-my-shell/overview" = {
+            blur = true;
+            pipeline = "pipeline_default";
+            style-components = lib.gvariant.mkInt32 2; # Dark overview components.
+          };
+
+          "org/gnome/shell/extensions/blur-my-shell/appfolder" = {
+            blur = true;
+            pipeline = "pipeline_default";
+            style-dialogs = lib.gvariant.mkInt32 3; # Dark folder dialogs.
+          };
+
+          "org/gnome/shell/extensions/blur-my-shell/lockscreen" = {
+            blur = true;
+            pipeline = "pipeline_default";
+          };
+
+          "org/gnome/shell/extensions/blur-my-shell/applications".blur = false;
+          "org/gnome/shell/extensions/blur-my-shell/screenshot".blur = false;
+          "org/gnome/shell/extensions/blur-my-shell/window-list".blur = false;
+          "org/gnome/shell/extensions/blur-my-shell/coverflow-alt-tab".blur = false;
         };
-
-        "org/gnome/shell/extensions/blur-my-shell/panel" = {
-          blur = true;
-          static-blur = false;
-          pipeline = "pipeline_default";
-          override-background = true;
-          style-panel = lib.gvariant.mkInt32 2; # Dark tint, light text.
-          force-light-text = true;
-        };
-
-        "org/gnome/shell/extensions/blur-my-shell/dash-to-dock" = {
-          blur = true;
-          static-blur = false;
-          pipeline = "pipeline_default";
-          override-background = true;
-          style-dash-to-dock = lib.gvariant.mkInt32 2; # Dark tint.
-        };
-
-        "org/gnome/shell/extensions/blur-my-shell/popup" = {
-          blur = true;
-          static-blur = false;
-          pipeline = "pipeline_default";
-          override-background = true;
-          preserve-shell-theme = true;
-          style-popup = lib.gvariant.mkInt32 2; # Dark tint.
-        };
-
-        "org/gnome/shell/extensions/blur-my-shell/overview" = {
-          blur = true;
-          pipeline = "pipeline_default";
-          style-components = lib.gvariant.mkInt32 2; # Dark overview components.
-        };
-
-        "org/gnome/shell/extensions/blur-my-shell/appfolder" = {
-          blur = true;
-          pipeline = "pipeline_default";
-          style-dialogs = lib.gvariant.mkInt32 3; # Dark folder dialogs.
-        };
-
-        "org/gnome/shell/extensions/blur-my-shell/lockscreen" = {
-          blur = true;
-          pipeline = "pipeline_default";
-        };
-
-        "org/gnome/shell/extensions/blur-my-shell/applications".blur = false;
-        "org/gnome/shell/extensions/blur-my-shell/screenshot".blur = false;
-        "org/gnome/shell/extensions/blur-my-shell/window-list".blur = false;
-        "org/gnome/shell/extensions/blur-my-shell/coverflow-alt-tab".blur = false;
-      };
-    }
-  ];
+      }
+    ];
+  };
 }

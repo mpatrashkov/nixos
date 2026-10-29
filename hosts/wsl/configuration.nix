@@ -15,12 +15,19 @@
   networking.hostName = "wsl";
   nixpkgs.hostPlatform = "x86_64-linux";
 
-  # CLI/dev only: no GNOME, audio, DNS stack, bootloader or GUI apps.
-  myNixOS.desktop.enable = false;
+  myNixOS = {
+    profiles = {
+      base.enable = true;
+      development.enable = true;
+    };
 
-  # Kitty runs through WSLg as the Windows terminal.
-  myNixOS.programs.terminal.enable = true;
-  myNixOS.services.fonts.enable = true;
+    # Keep the existing WSLg applications without enabling a full desktop.
+    programs = {
+      terminal.enable = true;
+      slack.enable = true;
+    };
+    services.fonts.enable = true;
+  };
   fonts.fontconfig.defaultFonts.monospace = [ "CaskaydiaCove Nerd Font Mono" ];
 
   # Expose .desktop files (kitty) in the Windows Start menu.

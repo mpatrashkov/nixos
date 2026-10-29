@@ -28,7 +28,24 @@
   # when dual-booting.
   time.hardwareClockInLocalTime = true;
 
-  myNixOS.services.smb.enable = false;
+  myNixOS = {
+    profiles = {
+      base.enable = true;
+      development.enable = true;
+      desktop.enable = true;
+      gaming.enable = true;
+      dns.enable = true;
+    };
+
+    services = {
+      boot.enable = true;
+      keychron.enable = true;
+      networking.enable = true;
+      smb.enable = false;
+    };
+
+    programs.yeetmouse.enable = true;
+  };
 
   environment.pathsToLink = [ "/libexec" ];
 

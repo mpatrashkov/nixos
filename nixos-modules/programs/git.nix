@@ -1,14 +1,11 @@
-{ pkgs, lib, config, ... }:
+{ pkgs, ... }:
 
 {
-  environment.systemPackages =
-    with pkgs;
-    [
-      git
-      jujutsu
-      jjui
-      pre-commit
-      github-cli
-    ]
-    ++ lib.optional config.myNixOS.desktop.enable github-desktop;
+  environment.systemPackages = with pkgs; [
+    git
+    jujutsu
+    jjui
+    pre-commit
+    github-cli
+  ];
 }
