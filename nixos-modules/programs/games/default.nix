@@ -21,7 +21,7 @@
   # from upstream and the last commit re-adds a stray `subprojects/glm`
   # gitlink with no `.gitmodules` entry, which breaks the build. The patch
   # below is the 6 PR commits cherry-picked onto the nixpkgs gamescope tag
-  # (3.16.23), with conflicts resolved and the broken gitlink dropped.
+  # (3.16.29), with conflicts resolved and the broken gitlink dropped.
   # Remove this overlay once the PR is merged upstream.
   nixpkgs.overlays = [
     (final: prev: {

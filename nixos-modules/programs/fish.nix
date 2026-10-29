@@ -25,7 +25,7 @@
       end
     '';
     shellAliases = {
-      ls = "eza --icons -l -s=type -I=node_modules --hyperlink";
+      ls = "eza --icons=always -l -s=type -I=node_modules --hyperlink=always";
       cat = "bat";
       nsp = "nix-shell -p (tv nixpkgs)";
     };

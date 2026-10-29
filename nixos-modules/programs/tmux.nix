@@ -1,27 +1,17 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 let
   tmux-fzf-links = pkgs.tmuxPlugins.mkTmuxPlugin {
     pluginName = "fzf-links";
     version = "1.4.15";
-    src = pkgs.fetchFromGitHub {
-      owner = "alberti42";
-      repo = "tmux-fzf-links";
-      rev = "1.4.15";
-      hash = "sha256-ZAZNOBE4n7tXpszNFw6Ri8BlV9s/4x9H2NovqRmOrCY=";
-    };
+    src = inputs.tmux-fzf-links-src;
     rtpFilePath = "fzf-links.tmux";
   };
 
   tmux-super-fingers = pkgs.tmuxPlugins.mkTmuxPlugin {
     pluginName = "super-fingers";
     version = "unstable-2026-05-08";
-    src = pkgs.fetchFromGitHub {
-      owner = "artemave";
-      repo = "tmux_super_fingers";
-      rev = "523dc9b7a79f1ceb8d9be72e22c263c4a7cd3bdf";
-      hash = "sha256-GiOkSADuWz19ndsVlKiKatPnplUpmukoZTPakIXWqF0=";
-    };
+    src = inputs.tmux-super-fingers-src;
     rtpFilePath = "tmux_super_fingers.tmux";
     postInstall =
       let
@@ -97,6 +87,13 @@ in
       set -gq allow-passthrough on
 
       set -g mouse on
+
+      # Forward extended keys only when the application requests them (e.g. Pi).
+      # Do not enable Kitty's keyboard protocol on the outer terminal: tmux's
+      # extended-key parser is not a full Kitty protocol implementation.
+      # Kitty maps Shift+Enter explicitly in its stow-managed configuration.
+      set -g extended-keys on
+      set -g extended-keys-format csi-u
 
       set -g status-right '#{?client_prefix,#[bg=yellow]#[fg=black] PREFIX #[default] ,}"#{=21:pane_title}"'
 

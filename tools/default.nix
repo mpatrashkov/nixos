@@ -26,18 +26,6 @@ rec {
       ];
     };
 
-  mkHome =
-    sys: config:
-    inputs.home-manager.lib.homeManagerConfiguration {
-      pkgs = pkgsFor sys;
-      extraSpecialArgs = {
-        inherit inputs tools outputs;
-      };
-      modules = [
-        config
-      ];
-    };
-
   # =========================== Helpers ============================ #
 
   filesIn = dir: (map (fname: dir + "/${fname}") (builtins.attrNames (builtins.readDir dir)));
@@ -49,7 +37,7 @@ rec {
 
   # ========================== Extenders =========================== #
 
-  # Evaluates nixos/home-manager module and extends it's options / config
+  # Evaluates nixos module and extends it's options / config
   extendModule =
     { path, ... }@args:
     { pkgs, ... }@margs:

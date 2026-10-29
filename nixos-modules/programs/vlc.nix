@@ -1,16 +1,11 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 let
   vlc-pause-click-plugin = pkgs.stdenv.mkDerivation rec {
     pname = "vlc-pause-click-plugin";
     version = "2.2.0";
 
-    src = pkgs.fetchFromGitHub {
-      owner = "nurupo";
-      repo = "vlc-pause-click-plugin";
-      rev = version;
-      sha256 = "13h4cszbl9vn8sig803hqsz2pp47in9lhp7ha3009dcb0jyxy454";
-    };
+    src = inputs.vlc-pause-click-plugin-src;
 
     nativeBuildInputs = [ pkgs.pkg-config ];
     buildInputs = [ pkgs.vlc ];

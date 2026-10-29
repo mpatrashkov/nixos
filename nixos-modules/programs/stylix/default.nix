@@ -5,7 +5,9 @@
   ...
 }:
 let
-  hatter-icon-theme = pkgs.callPackage ./hatter-icon-theme.nix { };
+  hatter-icon-theme = pkgs.callPackage ./hatter-icon-theme.nix {
+    hatter-icon-theme-src = inputs.hatter-icon-theme-src;
+  };
 in
 {
   imports = [

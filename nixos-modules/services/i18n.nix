@@ -20,9 +20,4 @@
     LC_TELEPHONE = "bg_BG.UTF-8";
     LC_TIME = "en_GB.UTF-8";
   };
-
-  # Windows stores the hardware clock in local time, while Linux
-  # expects it to be in UTC. This fixes the time showing incorrectly
-  # when dual-booting.
-  time.hardwareClockInLocalTime = true;
 }

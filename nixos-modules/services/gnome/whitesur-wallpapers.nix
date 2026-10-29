@@ -1,15 +1,10 @@
-{ pkgs, ... }:
+{ pkgs, lib, config, inputs, ... }:
 let
   whitesur-wallpapers = pkgs.stdenvNoCC.mkDerivation {
     pname = "whitesur-wallpapers";
     version = "unstable-2026-05-17";
 
-    src = pkgs.fetchFromGitHub {
-      owner = "vinceliuice";
-      repo = "WhiteSur-wallpapers";
-      rev = "5c1d7ca20b8de0a7efe443792c19e49277262e02";
-      hash = "sha256-JnSItAAqbIlnreV5uLAtR3LRCgQm3K0eplM6K58WHHc=";
-    };
+    src = inputs.whitesur-wallpapers-src;
 
     dontBuild = true;
     dontConfigure = true;
@@ -57,5 +52,8 @@ let
   };
 in
 {
-  environment.systemPackages = [ whitesur-wallpapers ];
+  # Plain `imports` from gnome/default.nix aren't gated by its enable option.
+  config = lib.mkIf config.myNixOS.services.gnome.enable {
+    environment.systemPackages = [ whitesur-wallpapers ];
+  };
 }

@@ -9,29 +9,6 @@ Do **not** introduce `home-manager`, `home.file`, `programs.<x>.enable` under a 
 
 ---
 
-# Primary Workflow: Planning Mode
-
-Whenever I request a new feature, a bug fix, a refactor, or any significant change to the codebase, you MUST follow this Cursor-inspired planning workflow:
-
-1. **Resolve Open Questions First:** Before writing the plan, identify any ambiguities, missing details, or decision points you would otherwise leave open in the plan (e.g. "should X be configurable?", "which module should this live in?", "do you want Y behavior or Z?"). Ask me these questions *up front* using the user interaction tool — do not proceed to drafting a plan that contains unresolved questions, TODOs, or "we could do X or Y" sections. The final plan must reflect concrete decisions only.
-    **CRITICAL**: Use a short `header` (max 12 chars), e.g., `header: "Plan Qs"`.
-    - Prefer multiple-choice questions when the option space is small and known.
-    - Use a text input prompt for open-ended details.
-    - Batch related questions into a single interaction where possible rather than asking serially.
-    - If you have no genuine open questions, skip this step and go straight to drafting the plan. Do not invent questions to ask.
-2. **Create a Plan:** Once all questions are resolved, write a detailed step-by-step implementation plan that incorporates my answers. The plan must be self-contained and decision-complete.
-3. **Save the Plan:** Use the appropriate file writing tool to autonomously save this plan as a markdown file in the `.plans/` directory (e.g., `/home/miro/flake/.plans/add-new-feature.md`). **Execute the tool immediately without asking for my permission.**
-4. **Display the Plan:** After saving, print the full plan content inline in the chat as a fenced markdown block so I can read it without opening the file in another editor.
-5. **Ask for Approval:** Stop and prompt the user to ask if I approve the plan. Use the user interaction tool to present multiple-choice options.
-    **CRITICAL**: You must provide a short `header` for the question that is 12 characters or less (e.g., `header: "Plan Apprvl"`).
-    Present the following options:
-    - **Approve**: Go ahead and implement the plan.
-    - **Wait**: I will manually edit the plan file, wait for my next message before proceeding.
-    - **Cancel**: Abort the planning phase.
-6. **Implementation:** Only after I explicitly select "Approve" (or provide my edits and give the go-ahead), read the plan file (to ensure you have any manual edits) and implement the changes exactly as described in the plan.
-
----
-
 # NixOS Configuration Workflow
 
 Whenever you implement a NixOS configuration change that I have requested, you MUST stop and use the user interaction tool to ask me how to proceed.
@@ -55,3 +32,41 @@ Both options run autonomously via the Bash tool. Passwordless sudo for `nh` is c
 * If I select "Verify the configuration (test)", run:
   `./scripts/nix-test`
   Run the command exactly as shown — no output redirection (no `2>&1 | tail -N` or similar). The raw output must be streamed directly to the Bash tool output so the user can see it in full.
+
+---
+
+# Idea & Experiment Tracking
+
+Two directories at the repo root track improvement ideas and active experiments:
+
+- **`.ideas/`** — one markdown file per idea (`<slug>.md`)
+- **`.experiments/`** — one subdirectory per experiment (`<slug>/idea.md` + supporting files)
+
+Both use the same frontmatter schema:
+
+```yaml
+---
+title: ""
+status: idea        # idea | planned | in_progress | testing | done | abandoned
+priority: medium    # high | medium | low
+tags: []
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+---
+```
+
+**Status pipeline:** `idea → planned → in_progress → testing → done / abandoned`
+
+Slug naming: kebab-case derived from the title (e.g. `Add ZRAM Swap` → `add-zram-swap`).
+
+Templates: `.ideas/_template.md` and `.experiments/_template/idea.md`.
+
+## Agent Responsibilities
+
+1. **Read for context** — Before starting any task, glob `.ideas/*.md` and `.experiments/*/idea.md`, filter by matching tags or keywords in the title, and read relevant files to inform your approach.
+
+2. **File new ideas** — When the user mentions something worth tracking (a new improvement, a future task, an experiment idea) and no file exists for it yet, immediately create `.ideas/<slug>.md` with appropriate frontmatter. Use today's date for `created` and `updated`. Set `status: idea` unless the user specifies otherwise.
+
+3. **Update status** — When an idea moves through the pipeline (e.g. you start implementing it, finish it, or it is abandoned), update the `status` and `updated` fields in its frontmatter in-place.
+
+4. **Add findings to experiments** — When working inside an experiment, append notes, results, and observations to `.experiments/<slug>/findings.md` (create it if absent). Place code artifacts (patches, config snippets) as separate files in the same folder.

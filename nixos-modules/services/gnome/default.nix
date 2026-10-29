@@ -14,6 +14,7 @@
     # Disabling AWSM fow now, as I can't make it work for apps with multiple windows (e.g. Chrome, VSCode, Alacritty)
     # ./extensions/another-window-session-manager.nix
     ./whitesur-wallpapers.nix
+    ./xkb-overrides.nix
   ];
   environment.systemPackages = with pkgs.gnomeExtensions; [
     dash-to-dock
@@ -23,17 +24,70 @@
     {
       lockAll = true;
       settings = {
+        "org/gnome/desktop/input-sources" = {
+          sources = [
+            (lib.gvariant.mkTuple [
+              "xkb"
+              "us"
+            ])
+            (lib.gvariant.mkTuple [
+              "xkb"
+              "bg+phonetic"
+            ])
+          ];
+        };
+
+        # Neutralize GNOME/libinput acceleration so the YeetMouse kernel module
+        # (Windows EPP curve) is the sole source of pointer acceleration.
+        # "flat" = pure 1:1 in libinput, speed 0.0 = no extra scaling.
+        "org/gnome/desktop/peripherals/mouse" = {
+          accel-profile = lib.gvariant.mkString "flat";
+          speed = lib.gvariant.mkDouble 0.0;
+        };
+
+        "org/gnome/desktop/session" = {
+          idle-delay = lib.gvariant.mkUint32 900;
+        };
+
         "org/gnome/desktop/wm/keybindings" = {
+          show-desktop = lib.gvariant.mkArray [ "<Super>d" ];
           switch-applications = lib.gvariant.mkEmptyArray (lib.gvariant.type.string);
           switch-applications-backward = lib.gvariant.mkEmptyArray (lib.gvariant.type.string);
           switch-windows = lib.gvariant.mkArray [ "<Alt>Tab" ];
           switch-windows-backward = lib.gvariant.mkArray [ "['<Shift><Alt>Tab']" ];
         };
+
         "org/gnome/mutter" = {
           experimental-features = lib.gvariant.mkArray [
             "scale-monitor-framebuffer"
             "xwayland-native-scaling"
           ];
+        };
+
+        "org/gnome/settings-daemon/plugins/media-keys" = {
+          custom-keybindings = [
+            "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+            "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
+            "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/"
+          ];
+        };
+
+        "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+          binding = "F22";
+          command = "switch-audio hdmi";
+          name = "Audio Switch: HDMI Monitor";
+        };
+
+        "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
+          binding = "F23";
+          command = "switch-audio fiio";
+          name = "Audio Switch: FiiO K11";
+        };
+
+        "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
+          binding = "F24";
+          command = "switch-audio logitech";
+          name = "Audio Switch: Logitech Headset";
         };
 
         "org/gnome/settings-daemon/plugins/power" = {
@@ -60,27 +114,12 @@
         };
 
         "org/gnome/shell/extensions/dash-to-dock" = {
-          dock-position = lib.gvariant.mkString "LEFT";
-          dock-fixed = lib.gvariant.mkBoolean true;
-          extend-height = lib.gvariant.mkBoolean true;
+          custom-theme-shrink = lib.gvariant.mkBoolean true;
+          dash-max-icon-size = lib.gvariant.mkInt32 42;
           disable-overview-on-startup = lib.gvariant.mkBoolean true;
-        };
-
-        "org/gnome/desktop/input-sources" = {
-          sources = [
-            (lib.gvariant.mkTuple [
-              "xkb"
-              "us"
-            ])
-            (lib.gvariant.mkTuple [
-              "xkb"
-              "bg+phonetic"
-            ])
-          ];
-        };
-
-        "org/gnome/desktop/session" = {
-          idle-delay = lib.gvariant.mkUint32 900;
+          dock-fixed = lib.gvariant.mkBoolean true;
+          dock-position = lib.gvariant.mkString "LEFT";
+          extend-height = lib.gvariant.mkBoolean true;
         };
       };
     }
