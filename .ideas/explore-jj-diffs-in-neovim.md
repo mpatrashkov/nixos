@@ -4,7 +4,7 @@ status: testing
 priority: medium
 tags: [jj, jujutsu, neovim, diffs, tooling]
 created: 2026-10-28
-updated: 2026-10-29
+updated: 2026-10-30
 ---
 
 Make browsing JJ changes and diffs easy from Neovim. Consider jjui in an embedded terminal for graph/revision browsing and a JJ external diff tool for native Neovim comparisons. Existing Neovim configuration includes Diffview, which is Git-oriented; do not assume Git HEAD represents JJ's working-copy parent. User approved starting a new JJ change and installing jjui. Added `pkgs.jjui` to `nixos-modules/programs/git.nix`; jjui 0.10.11 is now available on the running system.
@@ -45,6 +45,12 @@ User approved this replacement; implemented on 2026-10-29. Prior embedded design
 - End-to-end disposable-repository tests through the actual `jj review` tool passed with full Neovim configuration and a pseudo-terminal: three changed files (modified/added/deleted), file switching via direct viewer callbacks, two read-only nonmodifiable panes, live temporary directories, paths with spaces/apostrophes, and successful `q` callback exit. Repeated explicit-revision invocation passed and working-file SHA-256 sums were unchanged.
 - Direct action syntax/execution test confirmed the jjui shortcut passes only the selected revision. Tests stayed under `/tmp`, with no timed jjui keystrokes.
 - Rewrote `docs/jj-neovim.md` with the new session-based workflow and keys. Manual user verification of actual jjui-to-review interaction remains pending. No NixOS rebuild, publication, or history mutation performed.
+
+## Local review annotations (2026-10-30)
+
+Added the shared [review annotation interface](neovim-review-annotations.md) to dedicated `jj review` / jjui Ctrl-o sessions. Uses hunk's documented mount hooks and pinned viewer buffer names; comment-list jumps use the viewer's own file-opening callback rather than writable working files. Private state and generated reports persist by exact comparison identity, including before/after sides, without depending on JJ's temporary paths. Reports are handed to Pi manually; no direct session bridge or automatic code edits.
+
+Actual configured-tool checks passed in a disposable JJ repository under a pseudo-terminal: file/side navigation, modified/added/deleted files, absent-pane rejection, filenames with spaces/apostrophes/Unicode, reopening the same comparison, historical revisions, merge comparison, surviving report files after JJ cleanup, and unchanged working-file hashes. Manual interactive verification remains pending. No NixOS rebuild, publication, or history mutation in this checkout.
 
 ## Superseded plan: embedded jjui sidebar and native Neovim diff panes
 

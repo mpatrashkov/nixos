@@ -38,10 +38,46 @@ sessions to unload them.
 | `[h` / `]h` | Previous/next diff hunk |
 | `g?` | Show viewer key help |
 | `q` | Close the review and return to its caller |
+| `<leader>ra` in a diff | Comment on current line or visually selected lines |
+| `<leader>rl` | List annotations and jump to a file/side/passage |
+| `<leader>re` / `<leader>rd` in a diff | Edit/delete an annotation at the cursor |
+| `<leader>rr` | Open the local Markdown report and show its path |
+| `:ReviewHelp` | Show annotation help and report location |
 
 The file list uses flat paths. Both file panes are read-only snapshots; this
 workflow does not select, stage, split, or write changes. JJui itself remains a
 full, potentially mutating history UI.
+
+## Annotations and report handoff
+
+Comments use the same interface as [Pi plan reviews](pi-plan-review.md): a small
+multiline window, **`:w`** or **Ctrl-s** to save, **q** in normal mode to cancel
+(with a prompt for edits). Escape leaves insert mode. Selections cover whole
+lines. Saved comments have visible range markers. Before/after panes have distinct
+anchors; absent, empty, binary, symlink, and oversized (>16 MiB) panes cannot receive
+line comments. Sidebar mappings provide only list/report actions, not annotation
+of the file list itself.
+
+`<leader>rl` navigates through the viewer's own file-opening callback, updating
+both panes before focusing the annotated side. It never opens a writable working
+file. `<leader>rr` opens a read-only generated report; q closes only that split.
+The notification and `:ReviewHelp` give its absolute path. Give that **`report.md`**
+path to Pi in ordinary chat when you want it acted on. There is no direct JJ-to-Pi
+connection, automatic turn, approval, or code change.
+
+Local JSON/report storage, permissions, concurrent-review locks, manual retention,
+and save-error behavior are described in [the plan-review guide](pi-plan-review.md#local-persistence-and-reports).
+For JJ, identity uses the canonical workspace root and a deterministic comparison
+manifest (logical path, before/after side, entry kind, raw-byte SHA-256). Temporary
+directory names are excluded. The fingerprint is **not a JJ commit ID**: identical
+comparisons in the same workspace intentionally share annotations. Changes to either
+side start a new identity; comments are never silently reanchored. Reports retain
+quoted passages after JJ removes its temporary comparison directories.
+
+The adapter uses hunk.nvim's documented mount hooks and the pinned viewer's buffer
+names/tree context. Unexpected viewer content fails explicitly rather than
+attaching misleading annotations. Restart Neovim/jjui after updating; ordinary
+Neovim buffers and the older explicit `nvimdiff` tool have no annotation mappings.
 
 ## Implementation
 
@@ -53,8 +89,11 @@ full, potentially mutating history UI.
   external diff generators null stdin and piped stdout.
 - Directory paths are passed as quoted shell arguments and environment values,
   never interpolated into Lua or Ex commands.
-- The small `jj_review.lua` launcher calls the viewer API. It does not manage
-  windows, file switching, terminal focus, or communication between editors.
+- The small `jj_review.lua` launcher initializes local annotations and calls the
+  viewer API. `review_annotations/jj.lua` adapts the pinned viewer's mount hooks
+  and navigation callbacks; shared storage/UI modules also serve Pi plans.
+- Snapshot hashing uses the existing coreutils `sha256sum`. No extra plugin or
+  system package is required.
 - JJ waits for the review editor to exit, so its temporary directories remain
   available throughout the review. Closing/reopening captures a fresh snapshot;
   the viewer does not watch subsequent working-copy edits.

@@ -7,6 +7,7 @@ function M.start()
   local right = vim.env.JJ_REVIEW_RIGHT
   local ok, result = pcall(function()
     assert(left and right, "Launch this viewer using jj review or jjui Ctrl-o")
+    require("review_annotations.jj").start(left, right)
     return require("hunk").view(left, right)
   end)
 
