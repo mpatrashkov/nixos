@@ -22,6 +22,10 @@ User reported the PC froze during/after the approved devenv switch attempt and r
 - Current-boot bounded query found no matching USB warning entries; system failed-unit list is empty. Boot timestamps show a clock discontinuity, so avoid treating wall-clock differences across boots as reliable elapsed time.
 - The switch command runner timed out after 120 seconds, killing the unprivileged coordinator while root nh/Nix remained. No second switch, rollback, driver changes, reboot command, or process-kill recovery was initiated by the assistant.
 
+## Successful retry
+
+The user explicitly approved retrying application after reboot. The standard switch wrapper succeeded, publishing revision `0b28dd2d0db2dc3eb9c57548772ec0ab70182d4a` and activating `Retry-devenv-deployment-0b28dd2d0db2` as both current system and persistent default. Post-switch system/user failed-unit lists are empty, devenv checks pass, and a bounded current-boot query found no matching stall/USB warning messages. No kernel or USB-driver workaround was introduced. The earlier freeze's root cause remains unresolved.
+
 ## Next investigation
 
 Correlate the earliest RCU stall stack/CPU state with USB warnings and netns cleanup using bounded journal queries. Investigate the running kernel/USB-audio behavior and Shure MV6 connection before retrying deployment. Do not conclude that devenv package removals caused the kernel freeze merely from timing. Any kernel/configuration workaround requires review and separate activation approval.

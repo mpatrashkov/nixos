@@ -61,6 +61,9 @@ in
         lockAll = false;
         settings = {
           "org/gnome/shell/extensions/blur-my-shell" = {
+            # This preset already uses v77's format. Skip the v8 migration, which
+            # assumes backend defaults include all upstream stock presets.
+            settings-version = lib.gvariant.mkInt32 8;
             pipelines = lib.gvariant.mkArray [
               (lib.gvariant.mkDictionaryEntry "pipeline_default" glassPipeline)
             ];

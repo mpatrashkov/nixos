@@ -1,6 +1,6 @@
 ---
 title: "Set up a project devenv and localize repository tooling"
-status: testing
+status: done
 priority: medium
 tags: [devenv, tooling, nix, scripts, development]
 created: 2026-10-30
@@ -9,7 +9,7 @@ updated: 2026-10-30
 
 ## Goal
 
-Provide a reproducible development environment for this configuration repository, expose its public scripts as commands, and stop installing repository-specific tooling globally. Implementation completed on 2026-10-30. Development-shell validation passed; NixOS package removals await separately approved test/switch. No publication or activation has occurred.
+Provide a reproducible development environment for this configuration repository, expose its public scripts as commands, and stop installing repository-specific tooling globally. Implementation completed on 2026-10-30. Development-shell validation passed and the separately approved permanent switch succeeded on retry. See the rollout notes below.
 
 ## Findings
 
@@ -98,4 +98,7 @@ After the shell works:
 ## Approved retry (2026-10-30)
 
 - After the forced reboot, the user explicitly requested another apply attempt. No old nh/Nix processes remain, and a bounded current-boot kernel query found no matching RCU stalls, hung-task messages, or USB warning flood.
-- Current `@` contains only the rollout and freeze-investigation notes, on top of the published devenv implementation. Retry will finalize this nonempty current change as `Retry devenv deployment`, including these notes; no system configuration or inputs were changed since the first attempt.
+- Current `@` contained only the rollout and freeze-investigation notes, on top of the published devenv implementation. Retry finalized this nonempty current change as `Retry devenv deployment`, including these notes; no system configuration or inputs were changed since the first attempt.
+- Retry succeeded: published revision `0b28dd2d0db2dc3eb9c57548772ec0ab70182d4a` and permanently activated label `Retry-devenv-deployment-0b28dd2d0db2`. Both `/run/current-system` and `/nix/var/nix/profiles/system` resolve to the target system.
+- Post-switch `devenv test` passed; nixd/nixfmt remain in the global system profile; system and user failed-service lists are empty. A bounded current-boot query found no matching RCU stalls, hung-task messages, or USB warning flood. This successful retry does not establish the cause of the earlier freeze.
+- Wrapper left an empty child after publication. These completion notes are an unpublished working-copy edit; no further publication or activation was performed.
