@@ -1,11 +1,19 @@
-# Configuration Tooling: No Home Manager
+# Configuration Tooling: NixOS and Stow, with a Stylix Exception
 
-**Home Manager is deprecated in this repo. Do not use it.** When you need to manage user-level files, dotfiles, or per-user configuration, choose between:
+**Home Manager is not the general-purpose configuration tool in this repo.** It is allowed only for the Stylix theming integration described below. For other user-level files, dotfiles, or per-user configuration, choose between:
 
 1. **NixOS configuration** (preferred for system-integrated config) — declare files, services, and packages via NixOS modules under `nixos-modules/`. Use `environment.etc`, system-level services, `users.users.<name>.packages`, or activation scripts as appropriate.
 2. **Stow** (preferred for plain dotfiles in `$HOME`) — place dotfiles in the stow directory structure and let GNU Stow symlink them into place.
 
-Do **not** introduce `home-manager`, `home.file`, `programs.<x>.enable` under a `home-manager` namespace, or any `home.nix` / `homeConfigurations` entries. If you find yourself reaching for Home Manager to solve a problem, stop and pick NixOS config or stow instead. If neither fits cleanly, ask before proceeding.
+## Exception: Stylix-managed themes
+
+Home Manager may be enabled through its NixOS integration so Stylix can manage user-session themes reliably, including icon and cursor themes, GTK/Qt styling, fonts, and theme-related application settings. The Home Manager input, NixOS module, minimal user configuration, and Stylix-generated files/settings needed for this integration are permitted.
+
+Keep this exception narrowly scoped to theming. Do not migrate unrelated dotfiles, packages, programs, or services into Home Manager. Avoid overlapping ownership between Stylix/Home Manager, NixOS dconf settings, and Stow-managed files.
+
+Outside this exception, do **not** introduce `home.file`, `programs.<x>.enable` under a `home-manager` namespace, or standalone `home.nix` / `homeConfigurations` entries. Use NixOS configuration or Stow instead. If neither fits cleanly, ask before proceeding.
+
+Enabling or changing the integration is a NixOS configuration change and must follow the activation-approval workflow below.
 
 ---
 

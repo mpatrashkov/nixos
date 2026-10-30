@@ -10,10 +10,9 @@
     ags.url = "github:Aylur/ags";
     stylix.url = "github:danth/stylix";
 
-    # TODO: re-enable once published (see .ideas/publish-wallpaper-daemon.md).
-    # wallpaper-daemon = {
-    #   url = "path:/home/miro/dev/wallpaper-daemon";
-    # };
+    # Private repository: rebuilding hosts need GitHub SSH access.
+    # Keep its own nixpkgs pin for the Zig 0.17 toolchain.
+    wallpaper-daemon.url = "git+ssh://git@github.com/mpatrashkov/wallpaper-daemon.git?ref=main";
 
     nixos-wsl = {
       url = "github:nix-community/NixOS-WSL/main";

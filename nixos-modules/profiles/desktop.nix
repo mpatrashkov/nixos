@@ -2,12 +2,16 @@
 
 {
   myNixOS = {
+    # Home Manager is limited to Stylix's user-session theming integration.
+    features.home-manager.enable = lib.mkDefault true;
+
     services = {
       audio.enable = lib.mkDefault true;
       default-applications.enable = lib.mkDefault true;
       fonts.enable = lib.mkDefault true;
       geoclue.enable = lib.mkDefault true;
       gnome.enable = lib.mkDefault true;
+      wallpaper-daemon.enable = lib.mkDefault true;
     };
 
     programs = {

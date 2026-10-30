@@ -2,6 +2,7 @@
   pkgs,
   inputs,
   lib,
+  config,
   ...
 }:
 let
@@ -43,6 +44,23 @@ in
     sansSerif = {
       package = pkgs.ubuntu-sans;
       name = "Ubuntu Sans";
+    };
+  };
+
+  home-manager.users.miro = lib.mkIf config.myNixOS.features.home-manager.enable {
+    stylix = {
+      # Do not generate configuration for Stow-managed applications.
+      autoEnable = false;
+      targets = {
+        fontconfig.enable = true;
+        gtk.enable = true;
+        qt.enable = true;
+        gnome = {
+          enable = true;
+          # Wallpaper selection belongs to wallpaper-daemon.
+          image.enable = false;
+        };
+      };
     };
   };
 

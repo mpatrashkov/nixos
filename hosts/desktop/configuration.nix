@@ -8,18 +8,7 @@
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    # TODO: re-enable once wallpaper-daemon is published (see .ideas/publish-wallpaper-daemon.md).
-    # The local `path:` input can't be fetched on other hosts (e.g. WSL).
-    # inputs.wallpaper-daemon.nixosModules.default
   ];
-
-  # services.wallpaper-daemon = {
-  #   enable = true;
-  #   rotateInterval = "1h";
-  #   fetchInterval = "6h";
-  #   country = "US";
-  #   locale = "en-US";
-  # };
 
   networking.hostName = "nixos";
 

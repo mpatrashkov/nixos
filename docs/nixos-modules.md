@@ -38,7 +38,9 @@ A new module remains disabled until explicitly selected by a host or added to a 
 
 The loader's `imports` and option declarations are unconditional. Imported configuration fragments must respect their parent module's switch. Check upstream modules for enabled-by-default behavior too; `programs/nix-index-database.nix` explicitly connects the upstream switch to ours.
 
-Do not add documentation or other non-module files to these auto-discovered directories. Do not select the deprecated Home Manager feature in a profile.
+Do not add documentation or other non-module files to these auto-discovered directories.
+
+The desktop profile selects Home Manager only for Stylix's user-session theming integration, as permitted by `AGENTS.md`. Stylix's Home Manager targets are limited to GNOME, GTK, Qt, and fontconfig; wallpaper selection stays with wallpaper-daemon. General application configuration and dotfiles remain managed through NixOS or Stow. WSL does not select this feature.
 
 ## Evaluation checks
 

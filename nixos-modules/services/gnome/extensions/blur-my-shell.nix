@@ -7,11 +7,11 @@
 let
   # nixpkgs currently packages v72, before the unified blur backend.
   blurMyShell = pkgs.gnomeExtensions.blur-my-shell.overrideAttrs {
-    version = "76";
+    version = "77";
     src = pkgs.fetchzip {
-      name = "blur-my-shell-v76";
-      url = "https://github.com/aunetx/blur-my-shell/releases/download/v76/blur-my-shell%40aunetx.shell-extension.zip";
-      hash = "sha256-QU0+Y10jhYk0kYOrb94jRYi8TXZD/WvZkw6IqI7Qcrw=";
+      name = "blur-my-shell-v77";
+      url = "https://github.com/aunetx/blur-my-shell/releases/download/v77/blur-my-shell%40aunetx.shell-extension.zip";
+      hash = "sha256-xHjPnNNmGP2VcsfCPiIZrxFhwiXytrLOf82LZxjhgfU=";
       stripRoot = false;
     };
   };
