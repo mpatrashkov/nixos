@@ -107,6 +107,62 @@ async function showSnapshot(ctx: ExtensionContext, snapshot: string, metadata: R
   });
 }
 
+interface ReviewAction {
+  decision: string | undefined;
+  annotations: AnnotationResult;
+}
+
+function reviewChoices(ctx: ExtensionContext, annotations: AnnotationResult): string[] {
+  const choices = ["Keep pending (discuss in chat)", "Reopen Neovim (continue annotating)"];
+
+  if (annotations.count > 0) {
+    choices.push("Submit feedback for revision");
+    ctx.ui.notify(`${annotations.count} annotation(s) saved locally: ${annotations.report}. ` +
+      "Submit for revision, or reopen and remove comments before approving.", "info");
+  } else {
+    choices.push("Approve implementation");
+  }
+
+  return choices;
+}
+
+async function reviewSnapshot(
+  ctx: ExtensionContext,
+  snapshot: string,
+  metadata: ReviewMetadata,
+  signal?: AbortSignal,
+): Promise<ReviewAction | undefined> {
+  while (!signal?.aborted) {
+    // A previous editor receipt must never authorize a failed subsequent review.
+    await rm(metadata.result, { force: true });
+    await showSnapshot(ctx, snapshot, metadata);
+
+    if (signal?.aborted) {
+      return undefined;
+    }
+
+    const annotations = await readAnnotationResult(metadata);
+    const choices = reviewChoices(ctx, annotations);
+    const decision = await ctx.ui.select("Plan review — closing Neovim is not approval", choices);
+
+    if (signal?.aborted) {
+      return undefined;
+    }
+
+    if (decision === "Reopen Neovim (continue annotating)") {
+      continue;
+    }
+
+    if (decision && !choices.includes(decision)) {
+      return { decision: "unexpected", annotations };
+    }
+
+    return { decision, annotations };
+  }
+
+  return undefined;
+}
+
 export async function reviewPlan(
   ctx: ExtensionContext,
   file: string,
@@ -148,31 +204,20 @@ export async function reviewPlan(
       version: 1, path, sha256, workspace: await realpath(ctx.cwd), result: join(directory, "result.json"),
     };
     await writeFile(snapshot, content, { mode: 0o400 });
-    await showSnapshot(ctx, snapshot, metadata);
+    const action = await reviewSnapshot(ctx, snapshot, metadata, signal);
 
-    if (signal?.aborted) {
+    if (!action) {
       return pending("Review cancelled. Do not implement the plan.");
     }
 
-    const annotations = await readAnnotationResult(metadata);
-    const choices = ["Keep pending (discuss in chat)"];
+    const { decision, annotations } = action;
 
-    if (annotations.count > 0) {
-      choices.push("Submit feedback for revision");
-      ctx.ui.notify(`${annotations.count} annotation(s) saved locally: ${annotations.report}. ` +
-        "Submit for revision, or reopen and remove comments before approving.", "info");
-    } else {
-      choices.push("Approve implementation");
-    }
-
-    const decision = await ctx.ui.select("Plan review — closing Neovim is not approval", choices);
-
-    if (!decision || decision === "Keep pending (discuss in chat)" || signal?.aborted) {
+    if (!decision || decision === "Keep pending (discuss in chat)") {
       return { ...pending("Plan not approved. Wait for the user's feedback in chat."),
         report: annotations.report, annotationCount: annotations.count };
     }
 
-    if (!choices.includes(decision)) {
+    if (decision !== "Approve implementation" && decision !== "Submit feedback for revision") {
       return pending("Unexpected review choice. No approval or feedback submission was accepted.");
     }
 

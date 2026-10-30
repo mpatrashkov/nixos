@@ -1,230 +1,211 @@
-local M = {}
-local uv = vim.uv
-local limit = 16 * 1024 * 1024
+local files = require("review_annotations.files")
+local snapshot = require("review_annotations.snapshot")
+local report = require("review_annotations.report")
 
-function M.read(path)
-  local info = assert(uv.fs_lstat(path), "Cannot stat " .. path)
-  assert(info.type == "file" and info.size <= limit, "Not a regular file <= 16 MiB: " .. path)
-  local fd = assert(uv.fs_open(path, "r", 0))
-  local content, err = uv.fs_read(fd, info.size, 0)
-  uv.fs_close(fd)
-  assert(content, err)
-  assert(#content == info.size, "File changed or incomplete read: " .. path)
-  return content
+local Store = {}
+Store.__index = Store
+
+local function entry_key(side, path)
+  return side .. "\0" .. path
 end
 
-function M.hash(content)
-  -- sha256sum accepts binary stdin without Vim string/NUL conversions.
-  local result = vim.system({ "sha256sum" }, { stdin = content, text = true }):wait()
-  assert(result.code == 0, result.stderr)
-  return assert(result.stdout:match("^(%x+)"))
-end
+local function validate_note(note, data, lookup)
+  assert(type(note) == "table" and note.version == 1, "Invalid annotation schema")
+  assert(note.fingerprint == data.fingerprint, "Annotation fingerprint mismatch")
 
-function M.canonical(path)
-  return assert(uv.fs_realpath(path), "Cannot resolve " .. path)
-end
+  for _, key in ipairs({ "id", "created", "updated", "path", "side", "quote", "comment" }) do
+    assert(type(note[key]) == "string", "Invalid annotation field: " .. key)
+    assert(snapshot.valid_utf8(note[key]), "Invalid annotation encoding: " .. key)
+  end
 
-function M.atomic(path, content)
-  local temporary = path .. "." .. uv.os_getpid() .. ".tmp"
-  local fd = assert(uv.fs_open(temporary, "wx", 384))
-  local ok, err = pcall(function()
-    assert(uv.fs_write(fd, content, 0) == #content, "Incomplete write: " .. temporary)
-    assert(uv.fs_fsync(fd))
-  end)
-  uv.fs_close(fd)
-  if ok then
-    ok, err = uv.fs_rename(temporary, path)
-  end
-  if not ok then
-    uv.fs_unlink(temporary)
-    error(err)
-  end
-end
+  assert(note.id ~= "", "Empty annotation ID")
+  assert(#note.comment <= 65536 and note.comment:find("%S"), "Comment must be nonempty and <= 64 KiB")
+  assert(type(note.first) == "number" and note.first % 1 == 0, "Invalid first line")
+  assert(type(note.last) == "number" and note.last % 1 == 0, "Invalid last line")
 
-function M.lines(content)
-  if content == "" or content:find("\0", 1, true) then
-    return nil
-  end
-  local lines = vim.split(content, "\n", { plain = true })
-  if lines[#lines] == "" then
-    table.remove(lines)
-  end
-  return lines
-end
-
-function M.entry(path, side, logical)
-  local info = assert(uv.fs_lstat(path), "Cannot stat " .. path)
-  local entry = { side = side, path = logical, kind = info.type }
-  if info.type == "link" then
-    entry.hash = M.hash(assert(uv.fs_readlink(path)))
-  elseif info.type == "file" then
-    -- Hash the same bytes used for passage anchors. Bound retained text and
-    -- fingerprint large files without reading them into Lua.
-    if info.size <= limit then
-      local content = M.read(path)
-      entry.hash = M.hash(content)
-      entry.lines = M.lines(content)
-    else
-      local result = vim.system({ "sha256sum", "--", path }, { text = true }):wait()
-      assert(result.code == 0, result.stderr)
-      entry.hash = assert(result.stdout:match("^\\?(%x+)"))
-    end
-  else
-    error("Unsupported comparison entry: " .. path .. " (" .. info.type .. ")")
-  end
-  return entry
-end
-
-function M.scan(root, side)
-  local entries = {}
-  local function walk(relative)
-    local directory = root .. "/" .. relative
-    local scan = assert(uv.fs_scandir(directory), "Cannot scan " .. directory)
-    while true do
-      local name = uv.fs_scandir_next(scan)
-      if not name then
-        break
-      end
-      local logical = relative .. name
-      local full = root .. "/" .. logical
-      local info = assert(uv.fs_lstat(full))
-      if info.type == "directory" then
-        walk(logical .. "/")
-      else
-        entries[#entries + 1] = M.entry(full, side, logical)
-      end
-    end
-  end
-  walk("")
-  table.sort(entries, function(a, b)
-    return a.path < b.path
-  end)
-  return entries
-end
-
-function M.manifest(entries)
-  local manifest = {}
-  for _, entry in ipairs(entries) do
-    -- Arrays keep the serialized fingerprint independent of object key ordering.
-    manifest[#manifest + 1] = { entry.side, entry.path, entry.kind, entry.hash }
-  end
-  return manifest
-end
-
-function M.quote(entry, first, last)
-  assert(entry and entry.lines, "This pane has no supported text passage (absent, empty, binary, symlink or oversized file)")
-  assert(first >= 1 and last >= first and last <= #entry.lines, "Invalid passage range")
-  return table.concat(entry.lines, "\n", first, last)
-end
-
-local function block(text)
-  local width = 3
-  for ticks in text:gmatch("`+") do
-    width = math.max(width, #ticks + 1)
-  end
-  local fence = string.rep("`", width)
-  return fence .. "text\n" .. text .. "\n" .. fence
-end
-
-function M.report(data)
-  local out = {
-    "# Local review annotations", "", "Review data, not implementation or deployment approval.", "",
-    "Kind: " .. data.kind, "", "Workspace:\n" .. block(data.workspace), "",
-    "Target:\n" .. block(data.target), "", "Snapshot SHA-256: " .. data.fingerprint, "",
-  }
-  for i, note in ipairs(data.annotations) do
-    vim.list_extend(out, {
-      "## Comment " .. i, "", block(note.path), "",
-      "Side: " .. note.side .. "; lines " .. note.first .. "–" .. note.last, "",
-      "Quoted passage:", "", block(note.quote), "", "Feedback:", "", block(note.comment), "",
-    })
-  end
-  if #data.annotations == 0 then
-    out[#out + 1] = "No annotations."
-  end
-  return table.concat(out, "\n") .. "\n"
+  local item = lookup[entry_key(note.side, note.path)]
+  assert(snapshot.quote(item, note.first, note.last) == note.quote, "Stale passage")
 end
 
 local function validate(data, expected, lookup)
   assert(type(data) == "table" and data.version == 1, "Unsupported annotation schema")
+
   for _, key in ipairs({ "kind", "workspace", "target", "fingerprint" }) do
     assert(data[key] == expected[key], "Annotation identity mismatch: " .. key)
   end
+
   assert(vim.deep_equal(data.manifest, expected.manifest), "Annotation manifest mismatch")
   assert(type(data.annotations) == "table" and vim.islist(data.annotations), "Invalid annotations")
-  local ids = {}
+
+  local seen = {}
+
   for _, note in ipairs(data.annotations) do
-    assert(type(note) == "table" and note.version == 1 and note.fingerprint == data.fingerprint, "Invalid anchor")
-    for _, key in ipairs({ "id", "created", "updated", "path", "side", "quote", "comment" }) do
-      assert(type(note[key]) == "string", "Invalid annotation " .. key)
-    end
-    assert(not ids[note.id] and note.id ~= "", "Duplicate/empty annotation ID")
-    ids[note.id] = true
-    assert(#note.comment <= 65536 and note.comment:find("%S"), "Invalid comment")
-    assert(type(note.first) == "number" and note.first % 1 == 0, "Invalid first line")
-    assert(type(note.last) == "number" and note.last % 1 == 0, "Invalid last line")
-    assert(M.quote(lookup[note.side .. "\0" .. note.path], note.first, note.last) == note.quote, "Stale passage")
+    validate_note(note, data, lookup)
+    assert(not seen[note.id], "Duplicate annotation ID")
+    seen[note.id] = true
   end
 end
 
-function M.open(identity, entries)
+local function load(self)
+  local path = self.directory .. "/annotations.json"
+
+  if vim.uv.fs_lstat(path) then
+    local decoded, data = pcall(vim.json.decode, files.read(path))
+    assert(decoded, "Corrupt annotation JSON; preserve the file and repair it explicitly")
+
+    validate(data, self.expected, self.lookup)
+    self.data = data
+  end
+
+  self:write_report()
+end
+
+function Store.open(identity, entries)
   identity.version = 1
-  identity.manifest = M.manifest(entries)
+  identity.workspace = assert(vim.uv.fs_realpath(identity.workspace))
+  identity.manifest = snapshot.manifest(entries)
   identity.annotations = {}
-  local lookup = {}
-  for _, entry in ipairs(entries) do
-    lookup[entry.side .. "\0" .. entry.path] = entry
-  end
+
   local root = vim.fn.stdpath("state") .. "/review-annotations"
-  vim.fn.mkdir(root, "p", 448)
-  assert(uv.fs_lstat(root).type == "directory", "Annotation root must not be a symlink")
-  assert(uv.fs_chmod(root, 448))
-  local key = M.hash(vim.json.encode({ identity.kind, identity.workspace, identity.target, identity.fingerprint }))
+  local key = files.hash(vim.json.encode({
+    identity.kind, identity.workspace, identity.target, identity.fingerprint,
+  }))
   local directory = root .. "/" .. key
-  if not uv.fs_lstat(directory) then
-    assert(uv.fs_mkdir(directory, 448))
+
+  files.private_directory(root)
+  files.private_directory(directory)
+
+  local self = setmetatable({
+    directory = directory,
+    report = directory .. "/report.md",
+    data = identity,
+    expected = vim.deepcopy(identity),
+    lookup = {},
+    sequence = 0,
+  }, Store)
+
+  for _, item in ipairs(entries) do
+    self.lookup[entry_key(item.side, item.path)] = item
   end
-  assert(uv.fs_lstat(directory).type == "directory", "Annotation directory must not be a symlink")
-  assert(uv.fs_chmod(directory, 448))
-  local lock = directory .. "/lock"
-  local fd, err = uv.fs_open(lock, "wx", 384)
-  assert(fd, "Review is locked: " .. lock .. ". Close the other review. "
-    .. "For a stale lock, verify the recorded PID/host before manually removing it. " .. tostring(err))
-  uv.fs_write(fd, vim.json.encode({ pid = uv.os_getpid(), host = uv.os_gethostname(), created = os.date("!%Y-%m-%dT%H:%M:%SZ") }), 0)
-  uv.fs_close(fd)
-  local session = { directory = directory, report = directory .. "/report.md", lookup = lookup, data = identity }
-  function session.close()
-    if not session.closed then
-      assert(uv.fs_unlink(lock))
-      session.closed = true
-    end
-  end
-  function session.save(notes)
-    assert(not session.closed, "Review is closed")
-    local next_data = vim.deepcopy(session.data)
-    next_data.annotations = notes
-    validate(next_data, identity, lookup)
-    local json = vim.json.encode(next_data)
-    local report = M.report(next_data)
-    assert(#json <= limit and #report <= limit, "Annotation store/report exceeds 16 MiB")
-    M.atomic(directory .. "/annotations.json", json)
-    session.data = next_data
-    -- JSON is authoritative. Report failure is visible and can be retried.
-    M.atomic(session.report, report)
-  end
-  local ok, failure = pcall(function()
-    local path = directory .. "/annotations.json"
-    if uv.fs_lstat(path) then
-      session.data = vim.json.decode(M.read(path))
-      validate(session.data, identity, lookup)
-    end
-    M.atomic(session.report, M.report(session.data))
-  end)
+
+  self.release = files.lock(directory)
+  local ok, err = pcall(load, self)
+
   if not ok then
-    session.close()
-    error(failure)
+    self:close()
+    error(err)
   end
-  return session
+
+  return self
 end
 
-return M
+function Store:close()
+  self.release()
+  self.closed = true
+end
+
+function Store:write_report()
+  assert(not self.closed, "Review is closed")
+  local content = report.render(self.data)
+  assert(#content <= files.limit, "Report exceeds 16 MiB")
+
+  files.atomic(self.report, content)
+  return content
+end
+
+function Store:save(notes)
+  assert(not self.closed, "Review is closed")
+  local data = vim.tbl_extend("force", self.data, { annotations = notes })
+  validate(data, self.expected, self.lookup)
+
+  local json = vim.json.encode(data)
+  local markdown = report.render(data)
+  assert(#json <= files.limit and #markdown <= files.limit, "Annotation store/report exceeds 16 MiB")
+
+  files.atomic(self.directory .. "/annotations.json", json)
+  self.data = data
+  files.atomic(self.report, markdown)
+end
+
+function Store:entry(path, side)
+  return self.lookup[entry_key(side, path)]
+end
+
+function Store:create(path, side, first, last)
+  local passage = snapshot.quote(self:entry(path, side), first, last)
+  local timestamp = os.date("!%Y-%m-%dT%H:%M:%SZ")
+  self.sequence = self.sequence + 1
+
+  return {
+    version = 1,
+    id = vim.uv.os_getpid() .. "-" .. vim.uv.hrtime() .. "-" .. self.sequence,
+    fingerprint = self.data.fingerprint,
+    created = timestamp,
+    updated = timestamp,
+    path = path,
+    side = side,
+    first = first,
+    last = last,
+    quote = passage,
+    comment = "",
+  }
+end
+
+function Store:put(note, comment, existing)
+  local notes = vim.deepcopy(self.data.annotations)
+  local saved = vim.deepcopy(note)
+  saved.comment = comment
+  saved.updated = os.date("!%Y-%m-%dT%H:%M:%SZ")
+
+  for index, other in ipairs(notes) do
+    if other.id == note.id then
+      notes[index] = saved
+      self:save(notes)
+      return
+    end
+  end
+
+  assert(not existing, "Annotation was removed")
+  notes[#notes + 1] = saved
+  self:save(notes)
+end
+
+function Store:remove(id)
+  local notes = {}
+
+  for _, note in ipairs(self.data.annotations) do
+    if note.id ~= id then
+      notes[#notes + 1] = note
+    end
+  end
+
+  assert(#notes < #self.data.annotations, "Annotation was removed")
+  self:save(notes)
+end
+
+function Store:at(path, side, row)
+  local notes = {}
+
+  for _, note in ipairs(self.data.annotations) do
+    if note.path == path and note.side == side and note.first <= row and note.last >= row then
+      notes[#notes + 1] = note
+    end
+  end
+
+  return notes
+end
+
+function Store:finish()
+  local content = self:write_report()
+
+  return {
+    version = 1,
+    path = self.data.target,
+    sha256 = self.data.fingerprint,
+    report = self.report,
+    reportSha256 = files.hash(content),
+    count = #self.data.annotations,
+  }
+end
+
+return Store

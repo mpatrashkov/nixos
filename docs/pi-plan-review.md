@@ -34,10 +34,17 @@ rules still take precedence.
    private, read-only `plan.md` snapshot. Markview renders Markdown as usual.
 3. Navigate normally, search with `/`, and press **q** (or `:q`) to return to Pi.
 4. Annotate passages using the keys below, or simply read the plan.
-5. After returning, Pi offers **Keep pending** (the default). With saved comments,
-   it also offers **Submit feedback for revision**; without comments, it offers
-   **Approve implementation**. Remove comments in a reopened review before
-   approving a plan that no longer needs revision.
+5. After returning, Pi offers **Keep pending** (the default) and **Reopen Neovim
+   (continue annotating)**. Reopen as often as needed to read the same snapshot
+   and edit saved annotations; the decision menu appears again after each exit.
+   With saved comments, Pi also offers **Submit feedback for revision**; without
+   comments, it offers **Approve implementation**. Remove comments in a reopened
+   review before approving a plan that no longer needs revision.
+
+Save annotation drafts before closing. Reopening restores saved comments, not
+unsaved drafts, and does not make the plan itself editable or load a changed
+version of the original file. Each editor run must produce a fresh valid result;
+a receipt from an earlier run cannot authorize a later failed review.
 
 Closing Neovim, Escape, an editor failure, or declining review does **not**
 approve anything or submit feedback. Pending tool results stop the agent's
@@ -57,12 +64,16 @@ These mappings exist only on review source buffers (Space is the leader):
 | `<leader>rr` | Open the local Markdown report and display its path |
 | `:ReviewHelp` | Show annotation keys and report location |
 
-Comments use a small multiline window. **`:w`** or **Ctrl-s** saves; **q** in
+Comments open in Insert mode in a small multiline window. **`:w`** or **Ctrl-s** saves; **q** in
 normal mode cancels, prompting before discarding edits. Escape leaves insert
 mode; it does not submit. Saved comments appear as range highlights and a marker,
 not edits to the source. All selections cover whole lines. When comments overlap,
 choose the one to edit/delete from a list. Annotate the source snapshot, not a
 Markview-generated preview buffer. **q** in a report closes just its split.
+
+Saves are direct Lua calls. The draft closes only after persistence succeeds;
+save errors retain the draft for retry. There is no background operation or
+save-acknowledgment protocol.
 
 ### Local persistence and reports
 
@@ -110,10 +121,35 @@ review records the decision without starting one.
 
 Terminal handoff requires **interactive Pi**, a working terminal, and `nvim` on
 `PATH`. RPC/JSON/print use returns a pending tool result without launching a
-process. The tool accepts regular `.md` files up to 1 MiB. The annotation module
-uses `sha256sum` (already provided by coreutils on this system) for binary-safe
-hashing. Temporary snapshots
+process. The tool accepts regular `.md` files up to 1 MiB. Temporary snapshots
 are deleted on normal completion and error paths.
+
+## Plain Lua implementation
+
+Annotations run inside Neovim using direct Lua calls—no TypeScript backend,
+custom IPC, Node requirement, native library, or build step. Pi's own extension
+remains TypeScript; it still independently validates the review receipt and
+report before offering feedback submission or approval.
+
+The code under `lua/review_annotations/` uses focused modules:
+
+- `files.lua`: private files, atomic writes, lock ownership, binary-safe hashes.
+- `snapshot.lua`: comparison manifests, text verification, passage anchors.
+- `store.lua` and `report.lua`: version-1 data, annotation operations, Markdown.
+- `ui.lua` and `draft.lua`: mappings, markers, selections, comment windows.
+- `init.lua` and `jj.lua`: review lifecycle and the hunk viewer adapter.
+
+SHA-256 uses the existing coreutils `sha256sum` for raw-byte compatibility,
+including embedded NULs. Scanning/hashing and saves are synchronous; large
+comparisons can briefly pause the editor. No custom background process or protocol
+is needed. Existing version-1 annotations, identity directories, and reports are
+compatible with both preceding implementations; no data migration is needed.
+
+On clean exit, Lua finalizes the report and releases its lock before publishing
+Pi's receipt. Unfinished drafts, invalid state, and finalization/lock failures
+withhold that receipt. Saved annotations remain on disk. A hard crash may leave
+a stale lock: verify the recorded Neovim PID/host before removing it, never simply
+delete a live lock. Unsupported/lossy text encodings cannot receive line comments.
 
 ## Markview keys
 
@@ -128,7 +164,7 @@ code-block injections with Neovim 0.12. This configuration uses `main`, preserve
 the existing parser list, and explicitly enables highlighting/indentation with
 the new API.
 
-On a fresh machine, install Neovim 0.12+, a C compiler, curl/tar, and the
+On a fresh machine, provide Neovim 0.12+, coreutils, a C compiler, curl/tar, and the
 `tree-sitter` CLI (0.26.1+). After the dependency is available, use `:Lazy restore`
 and `:TSUpdate` when moving from the old configuration. Let parser installation
 finish before reviewing. The NixOS module declares the required compiler/CLI.

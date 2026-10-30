@@ -4,7 +4,7 @@ status: testing
 priority: medium
 tags: [pi, neovim, planning, jj, review, annotations]
 created: 2026-10-30
-updated: 2026-10-30
+updated: 2026-10-31
 ---
 
 Add annotations available only in dedicated review contexts: plans opened from Pi and code diffs opened through `jj review` / jjui. Reuse a shared Neovim interaction while preserving read-only source snapshots and explicit plan approval.
@@ -34,3 +34,21 @@ Temporary checks only (no retained test suite):
 - Ordinary full-config Neovim has no annotation mappings or ReviewHelp command. Stow link resolves to the repository. `git diff --check` passed.
 
 Still verify manually: rendered Markdown/source selection, scratch-window feel, Pi TUI handoff and feedback loop, jjui Ctrl-o return/focus, and report sharing. Restart review editors and `/reload` Pi first.
+
+## TypeScript backend rewrite (2026-10-31)
+
+The user successfully used annotations to request a revision of the rewrite plan and approved its revised version. Implemented that approved [TypeScript rewrite](rewrite-review-annotations-in-typescript.md) in dedicated JJ change `loqryumu`, separate from the shortcut-menu work.
+
+During the TypeScript iteration, `review-annotations/*.ts` ran behind native Lua UI/stdio adapters, replacing `store.lua`. Node 24+ is required on PATH (provided by devenv); there are no runtime npm dependencies or compilation step. Version-1 identities, saved annotations and report bytes remain compatible. Asynchronous saves preserved drafts on failure or newer edits, and only clean, acknowledged finalization could publish Pi's receipt. Existing keys and explicit feedback/approval behavior are unchanged.
+
+Parity, backend/transport failure handling, actual Pi/Neovim interaction, and actual JJ historical/merge reviews passed with disposable data. All temporary validation scripts/tests and fixtures were deleted; no retained test suite. At that stage, strict type-checking was available as `pnpm check:review-annotations` (removed by the Lua simplification below). Fresh-editor manual appearance/focus confirmation was still pending. No NixOS change or publication.
+
+## Simplified plain Lua implementation (2026-10-31)
+
+The user subsequently chose [plain Lua with readable, small functions](simplify-review-annotations-in-lua.md). This supersedes the TypeScript runtime above. The current code uses direct calls between focused filesystem, snapshot, storage/report, draft, UI, and review-lifecycle modules. The custom stdio/process bridge, TypeScript files, dev dependencies, and type-check command are removed. Pi's extension stays TypeScript, but the Neovim annotations have no Node/build requirement.
+
+Version-1 identities, saved annotations/IDs, report bytes, mappings, read-only sources, and explicit feedback/approval behavior remain compatible. Synchronous saves keep drafts on failure; clean finalization closes the owned lock before emitting Pi's receipt. A coreutils hash command preserves binary-safe SHA-256. Temporary compatibility, UI, actual Pi, and actual JJ historical/merge checks passed and were deleted afterward. Interactive appearance/focus confirmation remains pending; no NixOS activation or publication.
+
+## Annotation draft focus (2026-10-31)
+
+At the user's request, newly opened annotation windows now enter Insert mode automatically, for both adding and editing comments in Pi and JJ reviews. Existing save/cancel behavior is unchanged. A disposable headless Neovim check verified Insert mode, immediate typing, Ctrl-s save, draft closure, and return to Normal mode. No test files or generated review state were retained.

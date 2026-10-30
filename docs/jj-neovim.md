@@ -53,8 +53,10 @@ full, potentially mutating history UI.
 Comments use the same interface as [Pi plan reviews](pi-plan-review.md): a small
 multiline window, **`:w`** or **Ctrl-s** to save, **q** in normal mode to cancel
 (with a prompt for edits). Escape leaves insert mode. Selections cover whole
-lines. Saved comments have visible range markers. Before/after panes have distinct
-anchors; absent, empty, binary, symlink, and oversized (>16 MiB) panes cannot receive
+lines. Saves are direct Lua calls: the draft closes only after persistence
+succeeds, and a failed save leaves it editable for retry. Saved comments have
+visible range markers. Before/after panes have distinct anchors; absent,
+empty, binary, invalid-UTF-8, symlink, and oversized (>16 MiB) panes cannot receive
 line comments. Sidebar mappings provide only list/report actions, not annotation
 of the file list itself.
 
@@ -92,8 +94,12 @@ Neovim buffers and the older explicit `nvimdiff` tool have no annotation mapping
 - The small `jj_review.lua` launcher initializes local annotations and calls the
   viewer API. `review_annotations/jj.lua` adapts the pinned viewer's mount hooks
   and navigation callbacks; shared storage/UI modules also serve Pi plans.
-- Snapshot hashing uses the existing coreutils `sha256sum`. No extra plugin or
-  system package is required.
+- `lua/review_annotations/` handles snapshots, annotation operations, persistence,
+  reports, and UI with direct Lua calls. There is no Node backend, custom IPC,
+  native library, or build step. Binary-safe hashes use coreutils `sha256sum`.
+- Existing version-1 stores retain their identities and reports. See the
+  [implementation guide](pi-plan-review.md#plain-lua-implementation) for module
+  responsibilities, synchronous-save behavior, and stale-lock recovery.
 - JJ waits for the review editor to exit, so its temporary directories remain
   available throughout the review. Closing/reopening captures a fresh snapshot;
   the viewer does not watch subsequent working-copy edits.
