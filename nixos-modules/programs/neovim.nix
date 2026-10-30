@@ -10,6 +10,7 @@
 
   environment.systemPackages = with pkgs; [
     gcc # Required for nvim-treesitter parser compilation
+    tree-sitter # Current nvim-treesitter generates parsers with the CLI
     gnumake
     ripgrep
     fd
