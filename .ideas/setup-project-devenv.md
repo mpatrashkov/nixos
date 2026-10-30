@@ -84,4 +84,18 @@ After the shell works:
 - Ephemeral mocked smoke checks passed for all four rebuild entry points (mode/update/description forwarding and exit status), all four Stow scripts (common/host tier resolution without touching HOME links), and both TypeScript aliases (argument boundaries and exit status). Temporary fixtures were removed; no persistent test suite was added.
 - Nix formatting and whitespace checks passed. Full NixOS top-level derivation evaluation succeeded without building or activating; existing xorg.xhost and gemini-cli warnings remain unrelated. The evaluated global package list retains nixd/nixfmt and excludes the four localized tools.
 - `flake.lock`, `pnpm-lock.yaml`, and `nixos-modules/programs/nixd.nix` are unchanged. No JJ config/bookmark/index mutations or publication were performed. Unrelated `.ideas/investigate-kitty-launch-regression.md` was present before implementation and remains untouched; deployment wrappers would include it.
-- Remaining: explicit NixOS Action approval, then the chosen wrapper in the activated environment. Direnv trust (`direnv allow`) remains the user's explicit choice.
+- User approved permanent application. Direnv trust (`direnv allow`) remains the user's explicit choice.
+
+## Switch attempt (2026-10-30)
+
+- Ran the approved `./scripts/nix-switch "setup devenv"` inside devenv, reusing the existing JJ description.
+- Published exact revision `e2b2d6b2f7c1831c67f34bb47c030ee7ec4bf663` to `main@origin`. Generation label: `setup-devenv-e2b2d6b2f7c1`. The wrapper created an empty child; do not rerun switch against that child or automatically select its parent.
+- The command runner timed out after 120 seconds while `sudo nh os switch` was running. Subsequent checks found the root nh process (51620) and Nix child (51621) still present; Nix was in uninterruptible sleep (D state). Activation success is not established.
+- At inspection, `/run/current-system` remained `test-setup-devenv-e2cd96927dac`, and the persistent system profile remained `Reenable-home-manager-and-wallpaper-daemon-ea02aa7c4673`. These are not the published target label.
+- System journal inspection found a large stream of USB audio kernel warnings (`snd_usb_audio`, `usb_submit_urb`, `BOGUS urb flags`) on the running kernel. No causal link to the stalled Nix process is established. Did not change drivers, reboot, kill processes, retry deployment, or roll back publication.
+- Source export remained at `/tmp/nixos-rebuild-5xZSYE/source` while the surviving process could still need it. This rollout note was a new, unpublished working-copy edit after the published source snapshot.
+
+## Approved retry (2026-10-30)
+
+- After the forced reboot, the user explicitly requested another apply attempt. No old nh/Nix processes remain, and a bounded current-boot kernel query found no matching RCU stalls, hung-task messages, or USB warning flood.
+- Current `@` contains only the rollout and freeze-investigation notes, on top of the published devenv implementation. Retry will finalize this nonempty current change as `Retry devenv deployment`, including these notes; no system configuration or inputs were changed since the first attempt.
