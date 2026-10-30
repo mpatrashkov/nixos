@@ -33,6 +33,8 @@ An existing installed `commit-msg` pre-commit launcher is harmless: the updated 
 
 ## Rebuild commands
 
+Enter `devenv shell` and install the project dependencies with `pnpm install --frozen-lockfile` before running rebuilds. zx and pre-commit are project-scoped; editors and agent command sessions must inherit the environment. See the [development environment setup](../README.md#development-environment).
+
 Follow AGENTS.md's deployment approval policy. Do not invoke these merely to smoke-test a skill.
 
 ```bash

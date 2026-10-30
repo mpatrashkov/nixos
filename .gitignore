@@ -5,5 +5,12 @@ last-commit-message
 .jj/
 .plans/
 node_modules/
+# Local devenv/direnv state and overrides (keep devenv.lock tracked).
+.devenv/
+.direnv/
+devenv.local.nix
+devenv.local.yaml
+.env
+.env.local
 .sync-gnome.log
 .host

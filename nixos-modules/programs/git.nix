@@ -5,7 +5,6 @@
     git
     jujutsu
     jjui
-    pre-commit
     github-cli
   ];
 }

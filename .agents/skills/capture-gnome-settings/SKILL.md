@@ -89,7 +89,7 @@ After editing, run `git diff --no-color nixos-modules/services/gnome/default.nix
 
 Follow AGENTS.md and load `.agents/skills/nixos-rebuild/SKILL.md`. Ask via the interaction tool if available, otherwise in plain chat (**NixOS Action**), and wait for a choice:
 
-- **Apply (switch)** — prompt for a change description (`header: "Commit Msg"`), then run `./scripts/nix-switch "<msg>"` with no output redirection.
+- **Apply (switch)** — follow the rebuild skill's description selection: use a user-supplied description, otherwise reuse the intended current change's existing description or infer one from the reviewed changes. Do not prompt for a description. State it, then run `./scripts/nix-switch "<msg>"` with no output redirection.
 - **Verify (test)** — run `./scripts/nix-test` with no output redirection.
 - **Do nothing**
 

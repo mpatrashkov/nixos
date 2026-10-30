@@ -23,11 +23,11 @@ Whenever you implement a requested NixOS configuration change, stop before activ
 
 Use a short question header (12 characters or less), e.g. **NixOS Action**, and present:
 
-1. **Apply the change (switch)**: collect a change description, finalize the source snapshot, push, and apply permanently.
+1. **Apply the change (switch)**: reuse or infer a change description, finalize the source snapshot, push, and apply permanently.
 2. **Verify the configuration (test)**: snapshot and test without publishing or making it the boot default.
 3. **Do nothing**
 
-After switch is selected, ask separately for the description with a short header such as **Commit Msg**, then run exactly:
+After switch is selected, use an explicitly supplied description if the user provided one; otherwise reuse the intended current change's existing nonempty description. If it has no description, infer a concise, accurate name from the reviewed changes and let the switch wrapper set it. Do not prompt for a description. In JJ, inspect `@` rather than borrowing `@-` or moving to another change; an empty/conflicted change still requires the normal safety checks. State the selected description, then run exactly:
 
 `./scripts/nix-switch "<description>"`
 

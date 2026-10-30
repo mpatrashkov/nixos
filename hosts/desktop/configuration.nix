@@ -74,8 +74,6 @@
     obsidian
 
     mkcert
-
-    pnpm
   ];
 
   services.gvfs.enable = true;

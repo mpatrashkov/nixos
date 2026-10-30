@@ -9,6 +9,7 @@ Read and follow the repository's AGENTS.md: it is the authoritative approval pol
 
 ## Before deployment
 
+- Run inside the repository's activated devenv environment with `pnpm install --frozen-lockfile` completed. zx and pre-commit are project-scoped; do not rely on global installations or change the approved wrapper commands below. Preparing the environment does not authorize deployment.
 - Inspect the diff, repository status, and validation results. Report unrelated changes: wrappers include all nonignored work in the selected snapshot.
 - In a colocated JJ checkout, load the `jujutsu` skill. Verify the intended change is `@`, nonempty for switch, and non-conflicted. Do not automatically select `@-` when `@` is empty.
 - JJ switch requires repository settings `nixos.publish-bookmark` and `nixos.publish-remote`; inspect them and bookmark tracking. Configure them only as part of an approved migration, not by guessing.
@@ -16,7 +17,13 @@ Read and follow the repository's AGENTS.md: it is the authoritative approval pol
 
 ## Approval and commands
 
-Present **NixOS Action**: apply/switch, verify/test, or do nothing. For switch, ask for the change description separately (**Commit Msg**), then invoke exactly:
+Present **NixOS Action**: apply/switch, verify/test, or do nothing. After switch approval, select the description without another prompt:
+
+1. Use a description explicitly supplied by the user, if any.
+2. Otherwise reuse the intended current change's existing nonempty description. In JJ, inspect `@` with `jj --ignore-working-copy log -r @ --no-graph -T description`; do not borrow `@-` or an unrelated Git HEAD subject.
+3. If the current change is undescribed, infer a concise, accurate name from the reviewed diff. Pass it to the switch wrapper, which sets the JJ description or Git commit message; no separate describe/commit operation is needed.
+
+State the selected description, then invoke exactly:
 
 ```bash
 ./scripts/nix-switch "<description>"
