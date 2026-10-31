@@ -1,11 +1,15 @@
 ---
 name: manage-dotfiles
-description: Manages stow-based dotfiles in ./dotfiles/. Handles adding files to existing packages, creating new packages, removing packages, adopting files from $HOME, and editing tracked files. Bypasses Planning Mode — this skill is the workflow.
+description: Manages stow-based dotfiles in ./dotfiles/. Handles adding files to existing packages, creating new packages, removing packages, adopting files from $HOME, and editing tracked files. Runs directly unless the user explicitly requests plan-first work or Neovim plan review.
 ---
 
 # Skill: Manage Dotfiles (Stow)
 
-This skill is the workflow for any task that touches `./dotfiles/`. Do NOT invoke Planning Mode — follow this skill instead.
+This skill owns implementation for tasks that touch `./dotfiles/`. Run it directly when the user has not explicitly requested planning.
+
+If the user invokes `/skill:plan-review` or explicitly requests plan-first work/Neovim plan review, follow that planning workflow before implementation. During planning, inspect sources and symlinks and write only the plan and required idea tracking; do not edit implementation files, adopt/remove files, or run mutating Stow scripts. Keep the request active through feedback and follow-up turns until the exact plan is approved or the user explicitly cancels/changes it. A request to “continue” is not approval.
+
+After plan approval, follow the applicable operation A–E below, including its verification and source-control/NixOS restrictions. Explicit planning controls when implementation starts; this skill controls how it is performed. If instructions remain incompatible, explain the conflict and ask rather than silently bypassing review.
 
 The repo uses GNU Stow to symlink files into `$HOME`. Dotfiles are organized into **tiers**: a shared `common` tier plus one tier per machine. The active machine tier is named by the untracked `.host` file at the repo root. Within a tier, each subdirectory is a **package** whose internal tree mirrors `$HOME`.
 

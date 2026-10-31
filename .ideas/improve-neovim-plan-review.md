@@ -4,7 +4,7 @@ status: testing
 priority: medium
 tags: [ai, pi, planning, neovim, markdown]
 created: 2026-10-30
-updated: 2026-10-30
+updated: 2026-11-01
 ---
 
 Improve reading agent plans in Neovim and support annotations that return to the agent for iterative revision.
@@ -40,3 +40,7 @@ Implemented the approved [shared review-annotations plan](../.plans/neovim-revie
 - Pi explicitly distinguishes pending, feedback-for-revision, and implementation approval. Saving/closing never submits; saved comments offer feedback rather than approval. Changed plans and unfinished drafts withhold both actions.
 - The same UI supports JJ's read-only before/after review, with manual report handoff to Pi rather than cross-session routing.
 - Temporary headless/full-config and actual Pi-loader checks passed, including feedback/approval continuation boundaries. Manual interactive appearance/key verification remains pending. No retained test suite, NixOS activation, publication, or history mutation.
+
+## Explicit planning precedence correction (2026-11-01)
+
+The original statement that specialized workflows take precedence is superseded for **explicit planning requests** by [Honor explicit plan-review requests](honor-explicit-plan-review.md). Explicit `/skill:plan-review` or plain-language plan-first/Neovim plan-review requests now gate implementation even for specialized tasks. Specialized skills still own implementation after approval; their direct workflows remain available when planning was not requested. Separate deployment/publication approvals are unchanged. This removes an instruction conflict, not a tool-level security boundary.

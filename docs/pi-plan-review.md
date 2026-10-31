@@ -16,7 +16,20 @@ After installation, run `/reload` in Pi (or restart it), then:
 ```
 
 You can also ask for a plan and Neovim review in ordinary chat. The explicit
-skill command is more reliable because it loads the workflow directly.
+skill command loads the workflow directly. It also applies to tasks with a
+specialized implementation skill, including a small dotfile change:
+
+```text
+/skill:plan-review Plan a Neovim word-wrapping improvement; do not implement before review
+```
+
+Explicit planning controls **when** implementation begins; specialized skills
+control **how** approved implementation is performed. Their default planning
+bypasses apply only when planning has not been explicitly requested. An ordinary
+dotfile edit without such a request may still use the direct Stow workflow.
+Keep explicit planning active through feedback, revisions, and follow-up turns
+until the exact plan is approved or the user explicitly cancels/changes the
+request. A small change or “continue” alone does not authorize implementation.
 
 The agent investigates, writes a self-contained Markdown plan, and calls
 `review_plan` once the plan is ready. The default path is `.plans/<task>.md`,
@@ -24,8 +37,21 @@ unless the repository or active experiment has another convention.
 
 The skill is **instructions, not a security-enforced read-only mode**. It tells
 the agent not to implement while planning; it does not disable tools or try to
-classify shell commands. Existing specialized workflows and repository approval
-rules still take precedence.
+classify shell commands. Follow higher-priority safety/repository restrictions,
+specialized implementation rules, and separate deployment/publication approvals.
+If instructions remain incompatible, explain the conflict and ask rather than
+silently skipping review.
+
+`/skill:plan-review <task>` starts investigation, plan writing, and review.
+`/review-plan <path>` reviews an already saved plan; it does not start planning
+from a task description.
+
+After changing these instructions, use `/reload` to refresh skill discovery,
+advertised descriptions, and extensions. Check the loaded-resource listing and
+`/skill:plan-review` command in a **fresh session** before judging the fix.
+Reloading does not remove stale skill bodies or descriptions already present in
+an existing conversation. These instruction changes remove a known conflict;
+they do not provide tool-level enforcement.
 
 ## Review
 

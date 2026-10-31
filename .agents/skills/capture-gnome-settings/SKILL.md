@@ -1,6 +1,6 @@
 ---
 name: capture-gnome-settings
-description: Captures live GNOME dconf changes via `dconf watch` and writes them into `nixos-modules/services/gnome/default.nix`, then triggers the NixOS Action workflow. Bypasses Planning Mode — this skill is the workflow.
+description: Captures live GNOME dconf changes via `dconf watch` and writes them into `nixos-modules/services/gnome/default.nix`, then triggers the NixOS Action workflow. Runs directly unless the user explicitly requests plan-first work or Neovim plan review.
 ---
 
 # Skill: Capture GNOME Settings
@@ -15,7 +15,11 @@ This skill records GNOME settings the user changes through the GNOME UI and conv
 
 ## Workflow
 
-When the user invokes `/capture-gnome-settings`, follow these steps in order. Do NOT invoke Planning Mode — this skill replaces it.
+When the user invokes `/capture-gnome-settings`, follow these steps in order unless an explicit planning request is active.
+
+If the user invokes `/skill:plan-review` or explicitly requests plan-first work/Neovim plan review, follow that workflow before step 1. Read-only inspection and writing the plan/required idea tracking are allowed. Describe the capture process without truncating logs, editing `.gitignore`, launching the live watcher, or changing GNOME/Nix configuration. Keep planning active through feedback and follow-up turns until the exact plan is approved or the user explicitly cancels/changes the request; “continue” is not approval.
+
+After plan approval, resume the steps below. Preserve reset confirmations, unsupported-value handling, and the separate NixOS Action approval. Planning controls when implementation starts; this skill controls how it is performed. If instructions remain incompatible, explain the conflict and ask rather than silently bypassing review.
 
 ### 1. Prepare the log and gitignore
 

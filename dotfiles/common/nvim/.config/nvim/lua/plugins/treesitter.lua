@@ -8,6 +8,7 @@ return {
     local parsers = {
       "c",
       "lua",
+      "nix",
       "vim",
       "vimdoc",
       "query",

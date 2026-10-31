@@ -1,11 +1,15 @@
 ---
 name: plan-review
-description: Plan a change before implementing it, then offer a Neovim review and wait for explicit approval. Use when the user requests plan-first work or asks to review an implementation plan in Neovim.
+description: Plan a change before implementing it, then offer a Neovim review and wait for explicit approval. Explicit plan-first or Neovim plan-review requests apply even to tasks owned by specialized skills.
 ---
 
 # Plan first, review in Neovim
 
-This is an opt-in planning workflow, not a tool sandbox. Follow the repository's instructions and any specialized skill that owns the task. If such a skill explicitly bypasses planning, use that workflow instead; do not override its approval requirements.
+This is an opt-in planning workflow, not a tool sandbox. An explicit `/skill:plan-review` invocation or plain-language request for plan-first work/Neovim plan review controls **when** implementation may begin, including tasks owned by specialized skills. Specialized skills control **how** approved implementation is performed; their planning bypasses apply only when no explicit planning request is active.
+
+Before entering a specialized workflow, check for explicit planning intent for the current task. Keep that intent active through investigation, feedback, revisions, and follow-up turns until the exact plan is approved or the user explicitly cancels/changes the request. A small change, loading another skill, or a request to “continue” is not approval or cancellation. If instructions remain incompatible, explain the conflict and ask instead of silently implementing.
+
+Follow higher-priority safety and repository restrictions. Planning does not waive specialized implementation rules or separate deployment/publication approvals.
 
 ## Prepare
 

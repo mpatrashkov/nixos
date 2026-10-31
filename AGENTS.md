@@ -17,6 +17,16 @@ Enabling or changing the integration is a NixOS configuration change and must fo
 
 ---
 
+# Explicit Planning Requests
+
+When the user invokes `/skill:plan-review` or explicitly requests plan-first work/Neovim plan review, load and follow the planning skill before implementation—even for tasks owned by specialized skills. A specialized skill's planning bypass applies only when no explicit planning request is active. Planning controls **when** implementation starts; the specialized skill controls **how** approved implementation is performed.
+
+While planning, limit work to read-only investigation and writing the plan/required idea tracking. Save the complete plan, offer `review_plan`, and wait for explicit approval of that exact version. Keep the request active through feedback, revisions, and follow-up turns unless the user explicitly cancels/changes it; “continue” alone is not approval. If instructions remain incompatible, explain and ask rather than silently implementing.
+
+These are workflow instructions, not a tool sandbox. Higher-priority safety restrictions and separate publication/deployment/NixOS activation approvals remain in force.
+
+---
+
 # NixOS Configuration Workflow
 
 Whenever you implement a requested NixOS configuration change, stop before activation and ask how to proceed. Use the user interaction tool if available, otherwise ask in plain chat and wait for an explicit answer. Implementation approval is not activation approval.
