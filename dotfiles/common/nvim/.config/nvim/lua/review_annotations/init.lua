@@ -2,6 +2,7 @@ local files = require("review_annotations.files")
 local snapshot = require("review_annotations.snapshot")
 local Store = require("review_annotations.store")
 local UI = require("review_annotations.ui")
+local navigation = require("review_annotations.navigation")
 
 local M = {}
 
@@ -53,11 +54,13 @@ local function jump_to_plan(buf, note)
   if win == -1 then
     vim.cmd("split")
     vim.api.nvim_win_set_buf(0, buf)
+    navigation.window()
   else
     vim.api.nvim_set_current_win(win)
   end
 
   vim.api.nvim_win_set_cursor(0, { note.first, 0 })
+  vim.cmd("normal! zv")
 end
 
 function M.plan()
@@ -73,6 +76,7 @@ function M.plan()
     end, metadata.result)
 
     interface:attach(buf, metadata.path, "plan")
+    navigation.setup(buf)
     vim.keymap.set("n", "q", "<cmd>qa<cr>", { buffer = buf, desc = "Return to Pi" })
   end)
 

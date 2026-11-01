@@ -8,6 +8,9 @@ local basics = {
   { "n", "gg / G", "Movement", "First / last line" },
   { "n", "<C-d> / <C-u>", "Movement", "Scroll half a page down / up" },
   { "n", "%", "Movement", "Jump to matching bracket" },
+  { "n", "za", "Folding", "Toggle fold under cursor" },
+  { "n", "zc / zo", "Folding", "Close / open fold under cursor" },
+  { "n", "zM / zR", "Folding", "Close / open all folds" },
   { "n", "/ / ?", "Search", "Search forward / backward" },
   { "n", "n / N", "Search", "Next / previous search match" },
   { "n", "* / #", "Search", "Search word under cursor forward / backward" },
@@ -31,6 +34,7 @@ local basics = {
   { "i", "<Esc>", "Modes", "Return to Normal mode" },
   { "t", "<C-\\><C-n>", "Modes", "Leave terminal input mode" },
   -- Review mappings are buffer-local; keep a reference visible outside reviews too.
+  { "n", "]h / [h", "Plan review only", "Next / previous heading; accepts counts, reveals folds" },
   { "n", "<leader>ra", "Review only", "Add review comment on current line (Pi/JJ review)" },
   { "x", "<leader>ra", "Review only", "Annotate selected lines (Pi/JJ review)" },
   { "n", "<leader>rl", "Review only", "List / jump to review comments (Pi/JJ review)" },

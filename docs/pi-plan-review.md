@@ -78,6 +78,31 @@ automatic follow-up—even when a local report exists. Explicitly submitting
 feedback starts a revision turn: the agent reads the report, revises the plan,
 and requests fresh review. It does not authorize implementation.
 
+### Plan navigation and folding
+
+Plan source windows show **absolute line numbers**, matching annotation references.
+Sections start expanded. Markview renders Markdown; collapsing sections uses
+Neovim's native Treesitter folding, not a separate Markview command.
+
+| Key | Action |
+| --- | --- |
+| `]h` / `[h` | Next/previous heading (e.g. `3]h` skips forward three headings) |
+| `za` | Toggle the fold under the cursor |
+| `zc` / `zo` | Close/open the fold under the cursor |
+| `zM` / `zR` | Close/open all folds |
+| `<leader>?` | Search the shortcut reference |
+
+Heading jumps stop at document boundaries without wrapping, recognize ATX and
+Setext headings, and ignore heading-like text inside fenced code blocks. Heading
+and annotation jumps reveal folded destinations. A narrow fold column indicates
+collapsible sections. These settings/mappings apply to plan source windows, not
+ordinary editing or JJ diff views. The Markdown heading-fold query is shared
+runtime data, so other Markdown windows that independently enable Treesitter
+folding also use heading-only folds.
+
+Restart the review editor to load these Lua changes; no Pi extension reload is
+needed for navigation changes.
+
 ### Annotation keys
 
 These mappings exist only on review source buffers (Space is the leader):
