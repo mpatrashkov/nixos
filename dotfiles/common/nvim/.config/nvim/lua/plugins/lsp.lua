@@ -18,6 +18,14 @@ return {
       })
       vim.lsp.enable("svelte")
 
+      -- ZLS for Zig (use the project's compatible toolchain from PATH)
+      vim.lsp.config("zls", {
+        capabilities = capabilities,
+      })
+      if vim.fn.executable("zls") == 1 then
+        vim.lsp.enable("zls")
+      end
+
       -- clangd for C/C++ (only enable when clangd is on PATH, e.g. inside devenv)
       vim.lsp.config("clangd", {
         capabilities = capabilities,
