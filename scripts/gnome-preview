@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ ${1:-} == --help || ${1:-} == -h ]]; then
+  printf '%s\n' \
+    'Usage: gnome-preview [--dry-run] [--size WIDTHxHEIGHT]' \
+    '' \
+    'Build the current checkout and open a disposable nested GNOME Shell.' \
+    'Defaults: 1280x800. Close the Devkit window or press Ctrl-C to exit.' \
+    '--dry-run builds and prints diagnostics without starting GNOME.' \
+    'No NixOS activation, input updates, or real-desktop settings changes.'
+  exit 0
+fi
+
+if [[ $(uname -sm) != 'Linux x86_64' ]]; then
+  printf '%s\n' 'gnome-preview currently supports x86_64 Linux only.' >&2
+  exit 1
+fi
+
+if [[ ${XDG_SESSION_TYPE:-} != wayland || -z ${WAYLAND_DISPLAY:-} || -z ${XDG_RUNTIME_DIR:-} ]]; then
+  printf '%s\n' 'Run gnome-preview from a Wayland desktop with WAYLAND_DISPLAY and XDG_RUNTIME_DIR set.' >&2
+  exit 1
+fi
+
+repository=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+bundle=$(nix build --no-link --print-out-paths --no-write-lock-file \
+  "$repository#packages.x86_64-linux.gnome-preview")
+exec "$bundle/bin/gnome-preview" "$@"

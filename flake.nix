@@ -88,6 +88,10 @@
         wsl = tools.mkSystem ./hosts/wsl/configuration.nix;
       };
 
+      packages.${system}.gnome-preview = import ./scripts/gnome/preview.nix {
+        desktop = inputs.self.nixosConfigurations.nixos;
+      };
+
       nixosModules.default = ./nixos-modules;
     };
 }

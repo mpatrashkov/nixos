@@ -1,4 +1,9 @@
-{ pkgs, lib, config, ... }:
+{
+  pkgs,
+  lib,
+  config,
+  ...
+}:
 let
   multiMonitors = pkgs.stdenv.mkDerivation {
     pname = "multi-monitor-panel";
@@ -9,6 +14,8 @@ let
       rev = "fd1aa8f9c00b814f36ad84a885a753d3f26299a5";
       sha256 = "sha256-DYr+mzTN70IQXOWAKafQxTRQkBaRQIKy42kai9z72eE=";
     };
+    # Metadata for tools discovering the configured extension packages.
+    passthru.extensionUuid = "multi-monitor-panel@coolssor";
     nativeBuildInputs = [ pkgs.jq ];
     installPhase = ''
       # Patch metadata.json to add GNOME 50 support

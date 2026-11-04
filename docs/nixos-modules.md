@@ -42,6 +42,13 @@ Do not add documentation or other non-module files to these auto-discovered dire
 
 The desktop profile selects Home Manager only for Stylix's user-session theming integration, as permitted by `AGENTS.md`. Stylix's Home Manager targets are limited to GNOME, GTK, Qt, and fontconfig; wallpaper selection stays with wallpaper-daemon. General application configuration and dotfiles remain managed through NixOS or Stow. WSL does not select this feature.
 
+## GNOME previews
+
+Use `./scripts/gnome-preview` to inspect candidate GNOME settings and extension
+code in an isolated nested Shell without activating NixOS or logging out.
+See [GNOME configuration preview](gnome-preview.md) for the workflow, D-Bus
+restrictions, and limits of the stripped session.
+
 ## Evaluation checks
 
 ```sh
