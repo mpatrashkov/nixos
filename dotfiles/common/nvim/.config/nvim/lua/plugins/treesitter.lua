@@ -7,6 +7,7 @@ return {
     local treesitter = require("nvim-treesitter")
     local parsers = {
       "c",
+      "zig",
       "lua",
       "nix",
       "vim",

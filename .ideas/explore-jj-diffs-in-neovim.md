@@ -4,10 +4,14 @@ status: testing
 priority: medium
 tags: [jj, jujutsu, neovim, diffs, tooling]
 created: 2026-10-28
-updated: 2026-10-30
+updated: 2026-11-05
 ---
 
 Make browsing JJ changes and diffs easy from Neovim. Consider jjui in an embedded terminal for graph/revision browsing and a JJ external diff tool for native Neovim comparisons. Existing Neovim configuration includes Diffview, which is Git-oriented; do not assume Git HEAD represents JJ's working-copy parent. User approved starting a new JJ change and installing jjui. Added `pkgs.jjui` to `nixos-modules/programs/git.nix`; jjui 0.10.11 is now available on the running system.
+
+## Project-aware Diffview default (2026-11-05)
+
+The user approved replacing the default hunk viewer with the existing Diffview plugin while keeping annotations. Current changes use real working buffers for native LSP; historical single-parent comparisons use explicit Git IDs. A thin JJ launcher and isolated annotation adapter replace the default hunk launch, without custom LSP routing or diff UI. `jj review-legacy` retains the old hunk path for merged-parent comparisons and unsupported cases. Zig parser/query management is repaired. Automated configured-tool tests pass; actual jjui interaction remains a manual check. Details: [project-aware JJ review](project-aware-jj-neovim-review.md), plan `.plans/project-aware-jj-neovim-review.md`. Earlier implementation notes below describe the retained legacy path.
 
 ## Neovim diff viewer (2026-10-29)
 

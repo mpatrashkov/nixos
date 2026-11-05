@@ -69,14 +69,14 @@ local function mark_passage(buf, note)
   })
 end
 
-local function refresh_buffer(buf, anchor, notes)
+local function refresh_buffer(buf, anchor, notes, visible)
   if not vim.api.nvim_buf_is_valid(buf) then
     return
   end
 
   vim.api.nvim_buf_clear_namespace(buf, namespace, 0, -1)
 
-  if vim.api.nvim_buf_get_changedtick(buf) ~= anchor.tick then
+  if visible == false or vim.api.nvim_buf_get_changedtick(buf) ~= anchor.tick then
     return
   end
 
@@ -89,11 +89,15 @@ end
 
 function UI:refresh()
   for buf, anchor in pairs(self.buffers) do
-    refresh_buffer(buf, anchor, self.store.data.annotations)
+    refresh_buffer(buf, anchor, self.store.data.annotations, self.visible)
   end
 end
 
 function UI:anchor()
+  if self.context then
+    assert(self.context(), "Not in the managed review pane")
+  end
+
   local buf = vim.api.nvim_get_current_buf()
   local anchor = assert(self.buffers[buf], "Not an annotatable review source buffer")
 
@@ -184,17 +188,46 @@ function UI:report()
   vim.notify("Local review report: " .. self.store.report)
 end
 
-function UI:attach(buf, path, side)
+function UI:detach(buf)
+  self.buffers[buf] = nil
+  if not vim.api.nvim_buf_is_valid(buf) then
+    return
+  end
+
+  vim.api.nvim_buf_clear_namespace(buf, namespace, 0, -1)
+  for _, mapping in ipairs(self.saved_maps and self.saved_maps[buf] or {}) do
+    pcall(vim.keymap.del, mapping.mode, mapping.key, { buffer = buf })
+    if mapping.previous.buffer == 1 then
+      vim.api.nvim_buf_call(buf, function()
+        vim.fn.mapset(mapping.mode, false, mapping.previous)
+      end)
+    end
+  end
+  if self.saved_maps then
+    self.saved_maps[buf] = nil
+  end
+end
+
+function UI:attach(buf, path, side, verified_lines)
   local item = self.store:entry(path, side)
 
   if item and item.lines then
     local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
-    assert(vim.deep_equal(lines, item.lines), "Pane differs from verified snapshot")
+    assert(vim.deep_equal(lines, verified_lines or item.lines), "Pane differs from verified snapshot")
   end
 
   self.buffers[buf] = { path = path, side = side, tick = vim.api.nvim_buf_get_changedtick(buf) }
 
+  self.saved_maps = self.saved_maps or {}
+  self.saved_maps[buf] = self.saved_maps[buf] or {}
+
   local function map(mode, key, action, description)
+    local previous = vim.api.nvim_buf_call(buf, function()
+      return vim.fn.maparg(key, mode, false, true)
+    end)
+    self.saved_maps[buf][#self.saved_maps[buf] + 1] = {
+      mode = mode, key = key, previous = previous,
+    }
     vim.keymap.set(mode, key, UI.guard(action), { buffer = buf, desc = description })
   end
 

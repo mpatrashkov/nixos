@@ -19,7 +19,21 @@ diff-args = [
 diff-invocation-mode = "file-by-file"
 
 [aliases]
-review = ["diff", "--tool", "nvim-review", "--no-pager"]
+review = ["util", "exec", "--", "sh", "-c", 'exec sh "$HOME/.config/jj/review.sh" "$@"', "jj-review"]
+review-legacy = ["diff", "--tool", "nvim-review-legacy", "--no-pager"]
+
+[merge-tools.nvim-review-legacy]
+program = "sh"
+diff-invocation-mode = "dir"
+diff-do-chdir = false
+conflict-marker-style = "snapshot"
+diff-args = [
+  "-c",
+  '''JJ_REVIEW_MODE=legacy JJ_REVIEW_LEFT="$1" JJ_REVIEW_RIGHT="$2" exec nvim -n -i NONE -c 'lua require("jj_review").start()' </dev/tty >/dev/tty 2>&1''',
+  "nvim-review-legacy",
+  "$left",
+  "$right",
+]
 
 [merge-tools.nvim-review]
 program = "sh"
