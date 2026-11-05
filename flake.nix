@@ -41,7 +41,7 @@
     };
 
     pi-src = {
-      url = "github:earendil-works/pi/v1.1.0";
+      url = "github:earendil-works/pi/v1.5.0";
       flake = false;
     };
 

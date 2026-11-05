@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Install the reviewed subagents release using the Nix-managed Pi CLI.
+set -euo pipefail
+
+if [ "$#" -ne 0 ]; then
+  echo "usage: $(basename "$0")" >&2
+  exit 2
+fi
+
+if ! command -v pi >/dev/null 2>&1; then
+  echo "Pi is not on PATH. Apply the Pi upgrade before installing subagents." >&2
+  exit 1
+fi
+
+version=$(pi --version)
+if [[ ! "$version" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+  echo "Unsupported Pi version: $version (expected a stable release >=1.2.0)." >&2
+  exit 1
+fi
+
+major=${BASH_REMATCH[1]}
+minor=${BASH_REMATCH[2]}
+if (( 10#$major < 1 || (10#$major == 1 && 10#$minor < 2) )); then
+  echo "pi-subagents requires Pi >=1.2.0; found $version. Apply the Pi upgrade first." >&2
+  exit 1
+fi
+
+exec pi install npm:pi-subagents@0.85.0

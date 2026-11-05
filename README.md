@@ -34,6 +34,11 @@ NixOS rebuilds preserve `./scripts/nix-test` and `./scripts/nix-switch "<descrip
 
 VS Code tasks and agent commands must inherit this environment once global zx is removed. Start the editor/agent from `devenv shell` (for example, `code .`), or use a direnv-aware launcher. For one-off commands, use `devenv shell -- <command>`; the rebuild wrappers do not recursively bootstrap devenv.
 
+## Pi extensions
+
+See [Pi subagents](docs/pi-subagents.md) for the pinned package installation,
+verification, runtime requirements, and approval boundaries.
+
 ## Useful commands
 
 ### Reset monitor config - https://unix.stackexchange.com/a/801854
